@@ -1,0 +1,28 @@
+<div class="example-container mat-elevation-z8">
+  <mat-table #table [dataSource]="dataSource">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <ng-container matColumnDef="sport">
+      <mat-header-cell *matHeaderCellDef>Sport</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.sport}} </mat-cell>
+      <!-- note that "'of' expected" error reported by intellij is due to https://youtrack.jetbrains.com/issue/WEB-26939 -->
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>Team Name</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+      <!-- note that "'of' expected" error reported by intellij is due to https://youtrack.jetbrains.com/issue/WEB-26939 -->
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <!-- note that "'of' expected" error reported by intellij is due to https://youtrack.jetbrains.com/issue/WEB-26939 -->
+  </mat-table>
+</div>
+
+
+<!-- Copyright 2017 Google Inc. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->
