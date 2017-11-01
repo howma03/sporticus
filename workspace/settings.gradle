@@ -1,0 +1,4 @@
+rootProject.name = 'sporticus'
+include 'interfaces'
+include 'util'
+

@@ -1,0 +1,122 @@
+import groovy.json.JsonBuilder
+
+group 'com.sporticus'
+version '1.0-SNAPSHOT'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.3'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-$GradleVersion-all.zip"
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        // classpath 'io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE'
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE"
+        classpath 'org.springframework:springloaded:1.2.6.RELEASE'
+    }
+}
+
+ext {
+    buildStartTime = new Date().getTime()
+    buildNo = System.getenv("versionString") != null ? System.getenv("versionString") : "0.0.0"
+}
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'idea'
+apply plugin: 'findbugs'
+apply plugin: 'org.springframework.boot'
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencyManagement {
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-gradle-plugin
+    imports {
+        // http://platform.spring.io/platform/
+        // https://repo.spring.io/libs-milestone/io/spring/platform/platform-bom/
+
+        // mavenBom 'io.spring.platform:platform-bom:Athens-RELEASE'
+        // mavenBom 'io.spring.platform:platform-bom:Athens-SR1'
+        // mavenBom 'io.spring.platform:platform-bom:Athens-SR2'
+        // mavenBom 'io.spring.platform:platform-bom:Athens-SR3'
+        // mavenBom 'io.spring.platform:platform-bom:Athens-BUILD-SNAPSHOT'
+        mavenBom 'io.spring.platform:platform-bom:Brussels-RC1'
+        // mavenBom 'io.spring.platform:platform-bom:Brussels-BUILD-SNAPSHOT'
+
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://repo.spring.io/libs-milestone'
+    }
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+
+    compile("org.springframework.boot:spring-boot-devtools")
+
+    compile 'org.springframework.boot:spring-boot-starter-logging'
+    compile 'org.springframework.boot:spring-boot-starter-data-rest'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    // compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework.boot:spring-boot-starter-tomcat'
+
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.5.5'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.5.5'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.5'
+
+    compile 'javax.servlet:jstl:1.2'
+    compile 'org.apache.tomcat.embed:tomcat-embed-jasper'
+
+    // Version file related
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+
+    //client webjars
+    compile 'org.webjars:jquery:3.0.0-alpha1'
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'junit:junit:4.12'
+
+}
+
+task versionInfo {
+    def builder = new JsonBuilder()
+    builder(versionString: project.buildNo, buildTime: project.buildStartTime)
+    File versionFile = file('version.json')
+    versionFile.createNewFile()
+    versionFile.write(builder.toString(), 'UTF-8')
+}
+
+task copyVersionFile(type: Copy, dependsOn: versionInfo) {
+    from 'version.json'
+    into 'src/main/webapp/WEB-INF'
+}
+war.dependsOn copyVersionFile
+
+subprojects {
+    apply plugin: 'findbugs'
+
+    findbugs {
+        ignoreFailures = true
+    }
+}
+
+findbugs {
+    ignoreFailures = true
+}
