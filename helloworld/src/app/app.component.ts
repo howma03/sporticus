@@ -83,7 +83,8 @@ export class AppComponent {
         },
         {
           icon: 'hpe-logout',
-          title: 'Log Out'
+          title: 'Log Out',
+          select: () => this.doLogout()
         },
         {
           title: 'Show Tips'
