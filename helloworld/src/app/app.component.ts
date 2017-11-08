@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Breadcrumb, PageHeaderIconMenu, PageHeaderNavigationItem} from '@ux-aspects/ux-aspects';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -12,13 +13,31 @@ export class AppComponent {
   condensed: boolean = false;
 
   crumbs: Breadcrumb[] = [{
-    title: 'Archive'
+    title: 'Archive',
+    routerLink: 'home',
   }];
 
   items: PageHeaderNavigationItem[] = [
     {
       icon: 'hpe-home',
-      title: 'Home'
+      title: 'Home',
+      select: () => this.goHome()
+    },
+    {
+      title: 'Manage Sports',
+      select: () => this.goSports()
+    },
+    {
+      title: 'Manage Teams',
+      select: () => this.goTeams()
+    },
+    {
+      title: 'Manage Competitions',
+      select: () => this.goCompetitions()
+    },
+    {
+      title: 'Track Competitions',
+      select: () => this.goTrackCompetitions()
     },
     {
       icon: 'hpe-analytics',
@@ -94,12 +113,38 @@ export class AppComponent {
   ];
 
 
+
+
   sessionId = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {}
 
   doLogin(userName, password) {
     this.sessionId = true;
   }
 
+  goHome() {
+    this.router.navigate(['/home']);
+  }
+
+  goSports() {
+    this.router.navigate(['/manage-sports']);
+  }
+
+  goTeams() {
+    this.router.navigate(['/manage-teams']);
+  }
+
+  goCompetitions() {
+    this.router.navigate(['/manage-competitions']);
+  }
+
+  goTrackCompetitions() {
+    this.router.navigate(['/track-competitions']);
+  }
 
   doLogout() {
     this.sessionId = false;
