@@ -57,7 +57,7 @@ const appRoutes: Routes = [
     ColorServiceModule,
     RouterModule.forRoot(
       appRoutes,
-      { enableTracing: true } // <-- debugging purposes only
+      { useHash: true, enableTracing: true } // <-- debugging purposes only
     ),
     SparkModule,
     TrackCompetitionsModule,
