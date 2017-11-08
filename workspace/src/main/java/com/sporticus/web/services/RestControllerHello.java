@@ -37,8 +37,6 @@ public class RestControllerHello extends ControllerAbstract {
 
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public String get() {
-        // FIXME: BOB you can work here ;-)
-
         return new String("<b>Hello!</b>");
     }
 
