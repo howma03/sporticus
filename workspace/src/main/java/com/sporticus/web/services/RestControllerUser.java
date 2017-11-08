@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,9 +35,10 @@ public class RestControllerUser extends ControllerAbstract {
         this.serviceDetails = serviceDetails;
     }
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.GET,
+    @RequestMapping(value = "/authenticate/{username}/{password}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> authenticate(String userName, String password) {
+    public ResponseEntity<String> authenticate(@PathVariable("username") String userName,
+                                               @PathVariable("password") String password) {
 
         LOGGER.debug(() -> "GET:/papi/user/authenticate");
 
