@@ -10,7 +10,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class AppComponent {
   title = 'Sporticus';
 
-  condensed: boolean = false;
+  condensed: boolean = true;
 
   crumbs: Breadcrumb[] = [{
     title: 'Archive',
@@ -24,41 +24,24 @@ export class AppComponent {
       select: () => this.goHome()
     },
     {
-      title: 'Manage Sports',
-      select: () => this.goSports()
-    },
-    {
-      title: 'Manage Teams',
-      select: () => this.goTeams()
-    },
-    {
-      title: 'Manage Competitions',
-      select: () => this.goCompetitions()
-    },
-    {
       title: 'Track Competitions',
       select: () => this.goTrackCompetitions()
     },
     {
       icon: 'hpe-analytics',
-      title: 'Analytics',
+      title: 'Manage',
       children: [
         {
-          title: 'Bar Charts'
+          title: 'Sports',
+          select: () => this.goSports()
         },
         {
-          title: 'Pie Charts',
-          children: [
-            {
-              title: 'Daily View'
-            },
-            {
-              title: 'Weekly View'
-            },
-            {
-              title: 'Monthly View'
-            }
-          ]
+          title: 'Teams',
+          select: () => this.goTeams()
+        },
+        {
+          title: 'Competitions',
+          select: () => this.goCompetitions()
         }
       ]
     }
@@ -102,8 +85,8 @@ export class AppComponent {
         },
         {
           icon: 'hpe-logout',
-          title: 'Log Out',
-          select: () => this.doLogout()
+          title: 'Log Out'//,
+//          select: () => this.doLogout()
         },
         {
           title: 'Show Tips'

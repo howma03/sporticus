@@ -1,8 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+/*
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
-@import url('~@ux-aspects/ux-aspects/styles/ux-aspects.min.css');
+ */
 @import url('../node_modules/bootstrap/dist/css/bootstrap.css');
+@import url('~@ux-aspects/ux-aspects/styles/ux-aspects.min.css');
+/*
+@import url('~@micro-focus/quantum-ux-aspects');
 body {
   padding: 2em 23em;
   background:lightgray;
 }
+*/
