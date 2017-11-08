@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Breadcrumb, PageHeaderIconMenu, PageHeaderNavigationItem} from '@ux-aspects/ux-aspects';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -95,18 +95,15 @@ export class AppComponent {
     }
   ];
 
-
-
-
-  sessionId = false;
+  sessionId: String = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
   ) {}
 
-  doLogin(userName, password) {
-    this.sessionId = true;
+  onLogin(token) {
+    this.sessionId = token;
   }
 
   goHome() {
@@ -114,7 +111,7 @@ export class AppComponent {
   }
 
   doLogout() {
-    this.sessionId = false;
+    this.sessionId = null;
   }
 
 }

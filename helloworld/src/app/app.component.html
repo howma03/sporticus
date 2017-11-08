@@ -1,7 +1,5 @@
 <div *ngIf="!sessionId">
-  <input #userName value="Administrator" placeholder="User Name"/><br/>
-  <input #password type="password" value="Administrator" placeholder="Password"/><br/>
-  <button (click)='doLogin(userName.value, password.value)'>Login</button>
+  <app-login-overlay (login)="onLogin($event)"></app-login-overlay>
 </div>
 
 <div *ngIf="sessionId">
