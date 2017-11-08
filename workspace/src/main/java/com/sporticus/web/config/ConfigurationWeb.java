@@ -24,6 +24,7 @@ public class ConfigurationWeb extends WebMvcConfigurerAdapter {
     @Autowired
     private ResourceProperties resourceProperties;
     private String apiPath = "/api";
+    private String apiPublicPath = "/papi";
 
     @Bean
     public ViewResolver internalResourceViewResolver() {
@@ -55,6 +56,10 @@ public class ConfigurationWeb extends WebMvcConfigurerAdapter {
         return apiPath;
     }
 
+    protected String getApiPublicPath() {
+        return apiPublicPath;
+    }
+
     private class SinglePageAppResourceResolver extends PathResourceResolver {
         @Override
         protected Resource getResource(String resourcePath, Resource location) throws IOException {
@@ -63,6 +68,9 @@ public class ConfigurationWeb extends WebMvcConfigurerAdapter {
                 return resource;
             }
             if (getApiPath() != null && ("/" + resourcePath).startsWith(getApiPath())) {
+                return null;
+            }
+            if(getApiPublicPath() != null && ("/" + resourcePath).startsWith(getApiPublicPath())) {
                 return null;
             }
 

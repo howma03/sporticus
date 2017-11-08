@@ -1,4 +1,6 @@
 rootProject.name = 'sporticus'
+include 'domain'
+include 'domain-neo4j'
 include 'interfaces'
 include 'util'
 include 'web-client-angular'

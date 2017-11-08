@@ -16,6 +16,7 @@ buildscript {
         // classpath 'io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE'
         classpath "org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE"
         classpath 'org.springframework:springloaded:1.2.6.RELEASE'
+        classpath "com.eriwen:gradle-js-plugin:1.12.1"
     }
 }
 
@@ -30,6 +31,7 @@ apply plugin: 'war'
 apply plugin: 'idea'
 apply plugin: 'findbugs'
 apply plugin: 'org.springframework.boot'
+apply plugin: "com.eriwen.gradle.js"
 
 idea {
     module {
@@ -54,7 +56,6 @@ dependencyManagement {
         // mavenBom 'io.spring.platform:platform-bom:Athens-BUILD-SNAPSHOT'
         mavenBom 'io.spring.platform:platform-bom:Brussels-RC1'
         // mavenBom 'io.spring.platform:platform-bom:Brussels-BUILD-SNAPSHOT'
-
     }
 }
 
@@ -66,12 +67,13 @@ repositories {
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-devtools")
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile("org.springframework.boot:spring-boot-starter-tomcat")
+    compile 'org.springframework.boot:spring-boot-devtools'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-tomcat'
     compile 'org.springframework.boot:spring-boot-starter-logging'
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
-    // compile 'org.springframework.boot:spring-boot-starter-security'
+	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+	compile 'org.springframework.boot:spring-boot-starter-security'
 
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.8'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.8'
@@ -81,11 +83,26 @@ dependencies {
     compile 'javax.servlet:jstl:1.2'
     compile 'org.apache.tomcat.embed:tomcat-embed-jasper'
 
+	// compile 'mysql:mysql-connector-java:6.0.5'
+	compile 'mysql:mysql-connector-java:5.1.39'
+
+	// Mail related
+    compile 'org.apache.velocity:velocity:1.7'
+    compile 'com.amazonaws:aws-java-sdk:1.8.3'
+    compile 'javax.mail:mail:1.4.7'
+    compile 'javax.mail:javax.mail-api:1.5.5'
+
     // Version file related
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
 
     //client webjars
     compile 'org.webjars:jquery:3.0.0-alpha1'
+    compile 'org.webjars:sockjs-client:1.0.0'
+    compile 'org.webjars:stomp-websocket:2.3.3'
+    compile 'org.webjars:angularjs:1.3.14'
+
+    compile project (':util')
+    compile project (':domain')
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'junit:junit:4.12'
