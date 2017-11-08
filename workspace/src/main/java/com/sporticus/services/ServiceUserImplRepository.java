@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,11 @@ public class ServiceUserImplRepository implements IServiceUser {
 
     private final IRepositoryUser repositoryUser;
     private final IServiceMail serviceMail;
+
+    public static void main(String[] args){
+       final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
+       System.out.println("Password="+ENCODER.encode("S0uthern"));
+    }
 
     @Autowired
     public ServiceUserImplRepository(final IServiceMail serviceMail,
