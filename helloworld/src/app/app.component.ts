@@ -94,6 +94,8 @@ export class AppComponent {
   ];
 
 
+
+
   sessionId = false;
 
   doLogin(userName, password) {
