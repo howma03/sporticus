@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Breadcrumb, PageHeaderIconMenu, PageHeaderNavigationItem} from '@ux-aspects/ux-aspects';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -12,13 +13,15 @@ export class AppComponent {
   condensed: boolean = false;
 
   crumbs: Breadcrumb[] = [{
-    title: 'Archive'
+    title: 'Archive',
+    routerLink: 'home',
   }];
 
   items: PageHeaderNavigationItem[] = [
     {
       icon: 'hpe-home',
-      title: 'Home'
+      title: 'Home',
+      select: () => this.doHome()
     },
     {
       icon: 'hpe-analytics',
@@ -98,10 +101,19 @@ export class AppComponent {
 
   sessionId = false;
 
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {}
+
   doLogin(userName, password) {
     this.sessionId = true;
   }
 
+  doHome() {
+    debugger;
+    this.router.navigate(['/home']);
+  }
 
   doLogout() {
     this.sessionId = false;
