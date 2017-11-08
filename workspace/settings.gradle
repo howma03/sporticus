@@ -1,4 +1,5 @@
 rootProject.name = 'sporticus'
 include 'interfaces'
 include 'util'
+include 'web-client-angular'
 

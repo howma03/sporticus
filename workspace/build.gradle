@@ -5,7 +5,7 @@ version '1.0-SNAPSHOT'
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.3'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-$GradleVersion-all.zip"
+    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
 buildscript {
@@ -66,20 +66,17 @@ repositories {
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-
     compile("org.springframework.boot:spring-boot-devtools")
-
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-tomcat")
     compile 'org.springframework.boot:spring-boot-starter-logging'
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
-    compile 'org.springframework.boot:spring-boot-starter-web'
     // compile 'org.springframework.boot:spring-boot-starter-security'
-    compile 'org.springframework.boot:spring-boot-starter-tomcat'
 
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.5.5'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.5.5'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.5'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.8'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.8'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.8.8'
 
     compile 'javax.servlet:jstl:1.2'
     compile 'org.apache.tomcat.embed:tomcat-embed-jasper'
