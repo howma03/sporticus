@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RestControllerUser extends ControllerAbstract {
 
     private static final Logger LOGGER = LogFactory.getLogger(RestControllerUser.class.getName());
+
     private static final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
     @Autowired
@@ -41,7 +42,10 @@ public class RestControllerUser extends ControllerAbstract {
 
         final UserDetails userDetails = serviceDetails.loadUserByUsername(userName);
 
-        if(!userDetails.getPassword().equalsIgnoreCase(password)){
+        if(!userDetails.getPassword().equalsIgnoreCase(ENCODER.encode(password))){
+
+            LOGGER.info(()->"Passwords do not match");
+
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
