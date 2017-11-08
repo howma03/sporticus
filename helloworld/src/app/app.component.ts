@@ -25,7 +25,7 @@ export class AppComponent {
     },
     {
       title: 'Track Competitions',
-      select: () => this.goTrackCompetitions()
+      select: () => this.router.navigate(['/track-competitions'])
     },
     {
       icon: 'hpe-analytics',
@@ -33,15 +33,15 @@ export class AppComponent {
       children: [
         {
           title: 'Sports',
-          select: () => this.goSports()
+          select: () => this.router.navigate(['/manage-sports'])
         },
         {
           title: 'Teams',
-          select: () => this.goTeams()
+          select: () => this.router.navigate(['/manage-teams'])
         },
         {
           title: 'Competitions',
-          select: () => this.goCompetitions()
+          select: () => this.router.navigate(['/manage-competitions'])
         }
       ]
     }
@@ -111,22 +111,6 @@ export class AppComponent {
 
   goHome() {
     this.router.navigate(['/home']);
-  }
-
-  goSports() {
-    this.router.navigate(['/manage-sports']);
-  }
-
-  goTeams() {
-    this.router.navigate(['/manage-teams']);
-  }
-
-  goCompetitions() {
-    this.router.navigate(['/manage-competitions']);
-  }
-
-  goTrackCompetitions() {
-    this.router.navigate(['/track-competitions']);
   }
 
   doLogout() {
