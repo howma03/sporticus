@@ -44,7 +44,7 @@ public class RestControllerUser extends ControllerAbstract {
 
         final UserDetails userDetails = serviceDetails.loadUserByUsername(userName);
 
-        if(!userDetails.getPassword().equalsIgnoreCase(ENCODER.encode(password))){
+        if(!ENCODER.matches(password, userDetails.getPassword())){
 
             LOGGER.info(()->"Passwords do not match");
 
