@@ -111,7 +111,6 @@ export class AppComponent {
   }
 
   doHome() {
-    debugger;
     this.router.navigate(['/home']);
   }
 
