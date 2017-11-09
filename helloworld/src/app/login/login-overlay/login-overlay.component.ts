@@ -28,7 +28,7 @@ export class LoginOverlayComponent implements OnInit {
         this.loading = false;
         this.tryAgain = !success;
         if (success) {
-          this.router.navigate([{outlets: {overlay: null}}]);
+          this.router.navigate(['/main']);
         }
       }, fail => {
         this.loading = false;
