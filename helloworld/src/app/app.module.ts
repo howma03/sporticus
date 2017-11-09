@@ -31,12 +31,12 @@ const appRoutes: Routes = [
     component: LoginOverlayComponent,
     outlet: 'overlay'
   },
-  {path: '**', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'manage-sports', component: ManageSportsComponent, canActivate: [AuthGuard]},
   {path: 'manage-teams', component: ManageTeamsComponent, canActivate: [AuthGuard]},
   {path: 'manage-competitions', component: ManageCompetitionsComponent, canActivate: [AuthGuard]},
-  {path: 'track-competitions', component: TrackCompetitionsComponent, canActivate: [AuthGuard]}
+  {path: 'track-competitions', component: TrackCompetitionsComponent, canActivate: [AuthGuard]},
+  {path: '**', component: HomeComponent, canActivate: [AuthGuard]}
 ];
 
 
