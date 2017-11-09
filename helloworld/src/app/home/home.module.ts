@@ -8,6 +8,7 @@ import {AvailableChallengesTableComponent} from './available-challenges-table/av
 import {MyChallengesTableComponent} from './my-challenges-table/my-challenges-table.component';
 import {CheckboxModule, DashboardModule} from '@ux-aspects/ux-aspects';
 import {MyTeamsTableComponent} from './my-teams-table/my-teams-table.component';
+import {LogService} from './home/log.service';
 
 @NgModule({
   imports: [
@@ -27,6 +28,9 @@ import {MyTeamsTableComponent} from './my-teams-table/my-teams-table.component';
     AvailableChallengesTableComponent,
     MyChallengesTableComponent,
     MyTeamsTableComponent
+  ],
+  providers: [
+    LogService
   ]
 })
 export class HomeModule { }
