@@ -15,29 +15,7 @@ import {HomeModule} from './home/home.module';
 import {LoginModule} from "./login/login.module";
 import {ColorServiceModule, DashboardModule, PageHeaderModule, SparkModule} from '@ux-aspects/ux-aspects';
 import {HttpClientModule} from '@angular/common/http';
-import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from './home/home/home.component';
-import {ManageCompetitionsComponent} from './manage-competitions/manage-competitions/manage-competitions.component';
-import {ManageSportsComponent} from './manage-sports/manage-sports/manage-sports.component';
-import {ManageTeamsComponent} from './manage-teams/manage-teams/manage-teams.component';
-import {TrackCompetitionsComponent} from './track-competitions/track-competitions/track-competitions.component';
-import {LoginOverlayComponent} from "./login/login-overlay/login-overlay.component";
-import {AuthGuard} from "./login/auth.guard";
-
-
-const appRoutes: Routes = [
-  {
-    path: 'login',
-    component: LoginOverlayComponent,
-    outlet: 'overlay'
-  },
-  {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
-  {path: 'manage-sports', component: ManageSportsComponent, canActivate: [AuthGuard]},
-  {path: 'manage-teams', component: ManageTeamsComponent, canActivate: [AuthGuard]},
-  {path: 'manage-competitions', component: ManageCompetitionsComponent, canActivate: [AuthGuard]},
-  {path: 'track-competitions', component: TrackCompetitionsComponent, canActivate: [AuthGuard]},
-  {path: '**', component: HomeComponent, canActivate: [AuthGuard]}
-];
+import {AppRoutingModule} from "./app-routing.module";
 
 
 @NgModule({
@@ -56,16 +34,13 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     DashboardModule,
     ColorServiceModule,
-    RouterModule.forRoot(
-      appRoutes,
-      { enableTracing: true } // <-- debugging purposes only
-    ),
     SparkModule,
     TrackCompetitionsModule,
     MatTabsModule,
     MatGridListModule,
     PageHeaderModule,
-    LoginModule
+    LoginModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
