@@ -1,6 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
+
 import {AppComponent} from './app.component';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -20,24 +21,22 @@ import {ManageCompetitionsComponent} from './manage-competitions/manage-competit
 import {ManageSportsComponent} from './manage-sports/manage-sports/manage-sports.component';
 import {ManageTeamsComponent} from './manage-teams/manage-teams/manage-teams.component';
 import {TrackCompetitionsComponent} from './track-competitions/track-competitions/track-competitions.component';
+import {LoginOverlayComponent} from "./login/login-overlay/login-overlay.component";
+import {AuthGuard} from "./login/auth.guard";
 
 
 const appRoutes: Routes = [
-  { path: 'home', component: HomeComponent },
-  { path: 'manage-sports', component: ManageSportsComponent },
-  { path: 'manage-teams', component: ManageTeamsComponent },
-  { path: 'manage-competitions', component: ManageCompetitionsComponent },
-  { path: 'track-competitions', component: TrackCompetitionsComponent },
-  // {
-  //   path: 'manage-competitions',
-  //   component: ManageCompetitionsComponent,
-  //   data: { title: 'Heroes List' }
-  // },
-  // { path: '',
-  //   redirectTo: '/home',
-  //   pathMatch: 'full'
-  // },
-  { path: '**', component: HomeComponent }
+  {
+    path: 'login',
+    component: LoginOverlayComponent,
+    outlet: 'overlay'
+  },
+  {path: '**', component: HomeComponent, canActivate: [AuthGuard]},
+  {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+  {path: 'manage-sports', component: ManageSportsComponent, canActivate: [AuthGuard]},
+  {path: 'manage-teams', component: ManageTeamsComponent, canActivate: [AuthGuard]},
+  {path: 'manage-competitions', component: ManageCompetitionsComponent, canActivate: [AuthGuard]},
+  {path: 'track-competitions', component: TrackCompetitionsComponent, canActivate: [AuthGuard]}
 ];
 
 

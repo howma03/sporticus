@@ -85,8 +85,8 @@ export class AppComponent {
         },
         {
           icon: 'hpe-logout',
-          title: 'Log Out'//,
-//          select: () => this.doLogout()
+          title: 'Log Out',
+          select: () => this.doLogout()
         },
         {
           title: 'Show Tips'
@@ -95,23 +95,17 @@ export class AppComponent {
     }
   ];
 
-  sessionId: String = null;
-
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
+    private router: Router
   ) {}
-
-  onLogin(token) {
-    this.sessionId = token;
-  }
 
   goHome() {
     this.router.navigate(['/home']);
   }
 
   doLogout() {
-    this.sessionId = null;
+    this.router.navigate([{outlets: {overlay: 'login'}}]);
   }
 
 }

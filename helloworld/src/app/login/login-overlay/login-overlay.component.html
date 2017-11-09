@@ -1,3 +1,8 @@
-<input #userName value="Administrator" placeholder="User Name"/><br/>
-<input #password type="password" value="Administrator" placeholder="Password"/><br/>
-<button (click)='doLogin(userName.value, password.value)'>Login</button>
+<div *ngIf="loading">Logging in...</div>
+<div *ngIf="!loading">
+  <input #userName value="Administrator" placeholder="User Name"/><br/>
+  <input #password type="password" value="Administrator" placeholder="Password"/><br/>
+  <div *ngIf="tryAgain">User Name or Password was invalid. Please try again.</div>
+  <button (click)='doLogin(userName.value, password.value)'>Login</button>
+</div>
+

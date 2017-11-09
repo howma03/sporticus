@@ -1,42 +1,38 @@
-<div *ngIf="!sessionId">
-  <app-login-overlay (login)="onLogin($event)"></app-login-overlay>
+<router-outlet name="overlay"></router-outlet>
+
+<ux-page-header header="My Page" [crumbs]="crumbs" [items]="items"
+                [condensed]="condensed" [iconMenus]="iconMenus"></ux-page-header>
+
+<div style="text-align:center">
+  <!--h1>
+    Welcome to {{title}}!
+  </h1-->
+  <!--img width="300" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="-->
 </div>
 
-<div *ngIf="sessionId">
-  <ux-page-header header="My Page" [crumbs]="crumbs" [items]="items"
-                  [condensed]="condensed" [iconMenus]="iconMenus"></ux-page-header>
+<!--nav>
+  <a routerLink="/home" routerLinkActive="active">Home</a>
+  <a routerLink="/manage-sports" routerLinkActive="active">Manage Sports</a>
+  <a routerLink="/manage-teams" routerLinkActive="active">Manage Teams and Players</a>
+  <a routerLink="/manage-competitions" routerLinkActive="active">Manage Competitions</a>
+  <a routerLink="/track-competitions" routerLinkActive="active">Track Competitions</a>
+</nav-->
+<router-outlet></router-outlet>
 
-  <div style="text-align:center">
-    <!--h1>
-      Welcome to {{title}}!
-    </h1-->
-    <!--img width="300" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="-->
-  </div>
-
-  <!--nav>
-    <a routerLink="/home" routerLinkActive="active">Home</a>
-    <a routerLink="/manage-sports" routerLinkActive="active">Manage Sports</a>
-    <a routerLink="/manage-teams" routerLinkActive="active">Manage Teams and Players</a>
-    <a routerLink="/manage-competitions" routerLinkActive="active">Manage Competitions</a>
-    <a routerLink="/track-competitions" routerLinkActive="active">Track Competitions</a>
-  </nav-->
-  <router-outlet></router-outlet>
-
-  <!--mat-tab-group>
-    <mat-tab label="Home">
-      <app-home></app-home>
-    </mat-tab>
-    <mat-tab label="Manage Sports">
-      <app-manage-sports></app-manage-sports>
-    </mat-tab>
-    <mat-tab label="Manage Teams and Players">
-      <app-manage-teams></app-manage-teams>
-    </mat-tab>
-    <mat-tab label="Manage Competitions">
-      <app-manage-competitions></app-manage-competitions>
-    </mat-tab>
-    <mat-tab label="Track Competitions">
-      <app-track-competitions></app-track-competitions>
-    </mat-tab>
-  </mat-tab-group -->
-</div>
+<!--mat-tab-group>
+  <mat-tab label="Home">
+    <app-home></app-home>
+  </mat-tab>
+  <mat-tab label="Manage Sports">
+    <app-manage-sports></app-manage-sports>
+  </mat-tab>
+  <mat-tab label="Manage Teams and Players">
+    <app-manage-teams></app-manage-teams>
+  </mat-tab>
+  <mat-tab label="Manage Competitions">
+    <app-manage-competitions></app-manage-competitions>
+  </mat-tab>
+  <mat-tab label="Track Competitions">
+    <app-track-competitions></app-track-competitions>
+  </mat-tab>
+</mat-tab-group -->

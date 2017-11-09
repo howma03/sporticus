@@ -1,5 +1,6 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from "../auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login-overlay',
@@ -9,16 +10,31 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 export class LoginOverlayComponent implements OnInit {
 
-  constructor() {
+  constructor(private router: Router,
+              private loginService: AuthService) {
   }
 
   ngOnInit() {
+    this.loginService.endSession();
   }
 
-  @Output() login: EventEmitter<String> = new EventEmitter();
+  loading: boolean = false;
+  tryAgain: boolean = false;
 
-  doLogin(userName, password) {
-    this.login.emit("TOKEN");
+  doLogin(userName: string, password: string) {
+    this.loading = true;
+    this.loginService.getSession(userName, password)
+      .subscribe(success => {
+        this.loading = false;
+        this.tryAgain = !success;
+        if (success) {
+          this.router.navigate([{outlets: {overlay: null}}]);
+        }
+      }, fail => {
+        this.loading = false;
+        this.tryAgain = true;
+      });
+
   }
 
 }
