@@ -1,4 +1,10 @@
 {
+  "baseUrl": ".",
+  "paths": {
+    "ux-aspects": [
+      "bower_components/ux-aspects/dist"
+    ]
+  },
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
