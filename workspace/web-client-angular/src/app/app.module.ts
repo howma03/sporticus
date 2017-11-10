@@ -6,6 +6,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from "./app-routing.module";
 import {MainModule} from "./main/main.module";
 import {LandingModule} from "./landing/landing.module";
+import {RegistrationModule} from "./registration/registration.module";
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import {LandingModule} from "./landing/landing.module";
   ],
   imports: [
     BrowserModule,
+    RegistrationModule,
     HttpClientModule,
     LoginModule,
     MainModule,

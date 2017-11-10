@@ -1,8 +1,20 @@
 <div *ngIf="loading">Logging in...</div>
 <div *ngIf="!loading">
+
   <input #userName value="Administrator" placeholder="User Name"/><br/>
   <input #password type="password" value="Administrator" placeholder="Password"/><br/>
   <div *ngIf="tryAgain">User Name or Password was invalid. Please try again.</div>
-  <button (click)='doLogin(userName.value, password.value)'>Login</button>
+
+  <button type="button" class="btn" type="button btn-primary" style="width: 200px"
+          (click)='doLogin(userName.value, password.value)'>
+      Login
+  </button>
+
+  <button type="button" class="btn" type="button btn-primary" style="width: 200px"
+          (click)='gotoRegister()'>
+    Register
+  </button>
+
+
 </div>
 

@@ -37,4 +37,7 @@ export class LoginOverlayComponent implements OnInit {
 
   }
 
+  gotoRegister() {
+    this.router.navigate(['register'])
+  }
 }

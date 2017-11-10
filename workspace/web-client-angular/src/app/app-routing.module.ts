@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {LoginOverlayComponent} from "./login/login-overlay/login-overlay.component";
 import {LandingComponent} from "./landing/landing/landing.component";
+import {RegisterComponent} from "./registration/register/register.component";
 
 const appRoutes: Routes = [
   {
@@ -11,6 +12,10 @@ const appRoutes: Routes = [
   {
     path: 'login',
     component: LoginOverlayComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
   },
   {path: '', redirectTo: '/main/home', pathMatch: 'full'},
   {path: '**', redirectTo: '/main/home'}
