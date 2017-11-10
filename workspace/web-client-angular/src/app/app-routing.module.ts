@@ -1,8 +1,13 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {LoginOverlayComponent} from "./login/login-overlay/login-overlay.component";
+import {LandingComponent} from "./landing/landing/landing.component";
 
 const appRoutes: Routes = [
+  {
+    path: 'landing',
+    component: LandingComponent
+  },
   {
     path: 'login',
     component: LoginOverlayComponent
