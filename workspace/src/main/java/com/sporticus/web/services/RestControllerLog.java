@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/log")
 public class RestControllerLog extends ControllerAbstract {
 
-    @RequestMapping(value = "/hello", method = RequestMethod.POST,
+    @RequestMapping(value = "/record", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public String record(String message) {
+    public String record(String level, String message) {
+        // TODO: record the message
         return message;
     }
 

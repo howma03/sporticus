@@ -23,74 +23,33 @@ export class HeaderComponent implements OnInit {
 
   items: PageHeaderNavigationItem[] = [
     {
-      icon: 'hpe-home',
-      title: 'Home',
-      select: () => this.goHome()
-    },
-    {
+      icon: 'hpe-help',
       title: 'About',
       select: () => this.goAbout()
     },
     {
-      title: 'Contact',
-      select: () => this.goContact()
+      icon: 'hpe-link',
+      title: 'Clubs and Leagues',
+      select: () => this.goClubs()
     },
     {
-      icon: 'hpe-analytics',
+      icon: 'hpe-calculator',
       title: 'Prices',
-      children: [
-        {
-          title: 'Sports',
-          select: () => this.goPrices()
-        },
-        {
-          title: 'Teams',
-          select: () => this.goPrices()
-        },
-        {
-          title: 'Competitions',
-          select: () => this.goPrices()
-        }
-      ]
+      select: () => this.goPrices()
+    },
+    {
+      icon: 'hpe-lock',
+      title: 'Sign In',
+      select: () => this.goSignIn()
+    },
+    {
+      icon: 'hpe-action',
+      title: 'Sign Up',
+      select: () => this.goSignUp()
     }
   ];
 
-  iconMenus: PageHeaderIconMenu[] = [
-    {
-      icon: 'hpe-notification',
-      badge: 1,
-      dropdown: [
-        {
-          icon: 'hpe-chat',
-          title: 'Welcome to Sporticus',
-          subtitle: '4 minutes ago',
-          divider: true
-        }
-      ]
-    },
-    {
-      icon: 'hpe-actions',
-      dropdown: [
-        {
-          header: true,
-          title: 'John Doe',
-          divider: true
-        },
-        {
-          icon: 'hpe-user-settings',
-          title: 'Settings'
-        },
-        {
-          icon: 'hpe-logout',
-          title: 'Log Out',
-          select: () => this.doLogout()
-        },
-        {
-          title: 'Show Tips'
-        }
-      ]
-    }
-  ];
+  iconMenus: PageHeaderIconMenu[] = [];
 
   constructor(private route: ActivatedRoute,
               private router: Router) {
@@ -100,6 +59,23 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['landing/about']);
   }
 
+  goClubs() {
+    this.router.navigate(['landing/clubs']);
+  }
+
+  goPrices() {
+    this.router.navigate(['landing/prices']);
+  }
+
+  goSignIn() {
+    this.router.navigate(['login']);
+  }
+
+  goSignUp() {
+    this.router.navigate(['signUp']);
+  }
+
+
   goContact() {
     this.router.navigate(['landing/contact']);
   }
@@ -107,13 +83,6 @@ export class HeaderComponent implements OnInit {
   goLegal() {
     this.router.navigate(['landing/legal']);
   }
-
-  goPrices() {
-    this.router.navigate(['landing/prices']);
-  }
-
-
-
 
   goHome() {
     this.router.navigate(['main/home']);

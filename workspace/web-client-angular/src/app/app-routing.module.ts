@@ -18,7 +18,7 @@ const appRoutes: Routes = [
     component: RegisterComponent
   },
   {path: '', redirectTo: '/main/home', pathMatch: 'full'},
-  {path: '**', redirectTo: '/main/home'}
+  //{path: '**', redirectTo: '/main/home'}
 ];
 
 @NgModule({

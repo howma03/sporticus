@@ -8,6 +8,10 @@ import {LandingRoutingModule} from "./landing-routing.module";
 import { AboutComponent } from './about/about.component';
 import { LegalComponent } from './legal/legal.component';
 import { ContactComponent } from './contact/contact.component';
+import { ClubsComponent } from './clubs/clubs.component';
+import { HelpComponent } from './help/help.component';
+import { OverviewComponent } from './overview/overview.component';
+import { LegalDisclosurePolicyComponent } from './legal-disclosure-policy/legal-disclosure-policy.component';
 
 @NgModule({
   imports: [
@@ -18,6 +22,6 @@ import { ContactComponent } from './contact/contact.component';
     SparkModule,
     LandingRoutingModule
   ],
-  declarations: [LandingComponent, HeaderComponent, FooterComponent, AboutComponent, LegalComponent, ContactComponent ]
+  declarations: [LandingComponent, HeaderComponent, FooterComponent, AboutComponent, LegalComponent, ContactComponent, ClubsComponent, HelpComponent, OverviewComponent, LegalDisclosurePolicyComponent ]
 })
 export class LandingModule { }
