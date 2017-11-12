@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrackCompetitionsComponent } from './track-competitions/track-competitions.component';
-import {RestService} from './track-competitions/rest.service';
+import {UserService} from './track-competitions/user.service';
 
 @NgModule({
   imports: [
@@ -12,7 +12,7 @@ import {RestService} from './track-competitions/rest.service';
   ],
   declarations: [TrackCompetitionsComponent],
   providers: [
-    RestService,
+    UserService,
   ]
 })
 export class TrackCompetitionsModule { }

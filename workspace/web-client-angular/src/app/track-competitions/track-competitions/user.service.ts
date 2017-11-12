@@ -11,7 +11,7 @@ import {User} from './user';
 // }
 
 @Injectable()
-export class RestService {
+export class UserService {
 
   REMOTE_URL = "https://jsonplaceholder.typicode.com";
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {RestService} from './rest.service';
+import {UserService} from './user.service';
 import {User} from './user';
 
 @Component({
@@ -10,7 +10,7 @@ import {User} from './user';
 export class TrackCompetitionsComponent implements OnInit {
 
   constructor(
-   private restService: RestService
+   private userService: UserService
   ) { }
 
   user: User;
@@ -19,7 +19,7 @@ export class TrackCompetitionsComponent implements OnInit {
   }
 
   getItem(id) {
-    this.restService.getItem(id).subscribe(user => this.user = user);
+    this.userService.getItem(id).subscribe(user => this.user = user);
   }
 
 }
