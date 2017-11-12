@@ -18,7 +18,10 @@ export class HomeComponent {
     minWidth: 187
   };
 
-  constructor(private logService : LogService, private cd: ChangeDetectorRef) {
+  constructor(
+    private logService : LogService,
+    private cd: ChangeDetectorRef)
+  {
     this.logService.logMessage("Home Started"); // Just an example of a simple service
   }
 
