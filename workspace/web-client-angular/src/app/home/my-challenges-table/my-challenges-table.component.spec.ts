@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {MatTable, MatHeaderCell, MatCell, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef} from '@angular/material/table';
 
 import {MyChallengesTableComponent, } from './my-challenges-table.component';
 
@@ -8,7 +9,8 @@ describe('AvailableChallengesTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MyChallengesTableComponent ]
+      declarations: [ MyChallengesTableComponent,
+        MatTable, MatHeaderCell, MatCell, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef]
     })
       .compileComponents();
   }));
