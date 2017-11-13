@@ -108,7 +108,7 @@ export class MainComponent implements OnInit {
   }
 
   doLogout() {
-    this.router.navigate(['login']);
+    this.router.navigate(['landing/login']);
   }
 
 
