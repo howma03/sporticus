@@ -12,9 +12,12 @@ import { ClubsComponent } from './clubs/clubs.component';
 import { HelpComponent } from './help/help.component';
 import { OverviewComponent } from './overview/overview.component';
 import { LegalDisclosurePolicyComponent } from './legal-disclosure-policy/legal-disclosure-policy.component';
+import { InitialComponent } from './initial/initial.component';
+import {NgxCarouselModule} from "ngx-carousel";
 
 @NgModule({
   imports: [
+    NgxCarouselModule,
     CommonModule,
     EboxModule,
     ColorServiceModule,
@@ -23,6 +26,6 @@ import { LegalDisclosurePolicyComponent } from './legal-disclosure-policy/legal-
     SparkModule,
     LandingRoutingModule
   ],
-  declarations: [LandingComponent, HeaderComponent, FooterComponent, AboutComponent, LegalComponent, ContactComponent, ClubsComponent, HelpComponent, OverviewComponent, LegalDisclosurePolicyComponent ]
+  declarations: [LandingComponent, HeaderComponent, FooterComponent, AboutComponent, LegalComponent, ContactComponent, ClubsComponent, HelpComponent, OverviewComponent, LegalDisclosurePolicyComponent, InitialComponent ]
 })
 export class LandingModule { }

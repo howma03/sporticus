@@ -9,12 +9,15 @@ import {MainModule} from "./main/main.module";
 import {LandingModule} from "./landing/landing.module";
 import {RegistrationModule} from "./registration/registration.module";
 import {AuthInterceptor} from "./login/auth.interceptor";
+import {NgxCarouselModule} from "ngx-carousel";
+import 'hammerjs';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
+    NgxCarouselModule,
     BrowserModule,
     RegistrationModule,
     HttpClientModule,
