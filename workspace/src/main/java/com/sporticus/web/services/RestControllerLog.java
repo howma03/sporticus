@@ -18,5 +18,4 @@ public class RestControllerLog extends ControllerAbstract {
         // TODO: record the message
         return message;
     }
-
 }
