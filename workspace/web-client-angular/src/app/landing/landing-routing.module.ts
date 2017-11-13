@@ -9,6 +9,7 @@ import {LoginOverlayComponent} from "../login/login-overlay/login-overlay.compon
 import {LegalDisclosurePolicyComponent} from "./legal-disclosure-policy/legal-disclosure-policy.component";
 import {HelpComponent} from "./help/help.component";
 import {RegisterComponent} from "../registration/register/register.component";
+import {InitialComponent} from "./initial/initial.component";
 
 const landingRoutes: Routes = [
   {
@@ -24,7 +25,7 @@ const landingRoutes: Routes = [
       {path: 'legal', component: LegalComponent},
       {path: 'legal/disclosure_policy', component: LegalDisclosurePolicyComponent},
       {path: 'contact', component: ContactComponent},
-      {path: '', component: AboutComponent},
+      {path: '', component: InitialComponent},
       {path: '**', redirectTo: '/landing/about'}
     ]
   }
