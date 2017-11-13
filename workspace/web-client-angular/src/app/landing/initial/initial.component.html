@@ -1,14 +1,15 @@
 <ngx-carousel [inputs]="carouselOne"
   (carouselLoad)="myfunc($event)">
-  <ngx-item NgxCarouselItem>
-    ....
+  <ngx-item NgxCarouselItem class="bannerStyle">
+    <h1>Welcome to slide 1</h1>
   </ngx-item>
-  <ngx-item NgxCarouselItem>
-    ....
+  <ngx-item NgxCarouselItem class="bannerStyle">
+    <h1>Welcome to slide 2</h1>
   </ngx-item>
-  <ngx-item NgxCarouselItem>
-    ....
+  <ngx-item NgxCarouselItem class="bannerStyle">
+    <h1>Welcome to slide 3</h1>
   </ngx-item>
+
   <button NgxCarouselPrev class='leftRs'>&lt;</button>
   <button NgxCarouselNext class='rightRs'>&gt;</button>
 </ngx-carousel>

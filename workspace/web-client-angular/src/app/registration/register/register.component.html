@@ -1,20 +1,32 @@
 Registration
 
-
 Create a new user
 
 
 <ux-wizard [orientation]="orientation">
 
   <ux-wizard-step header="1. Add Contact Information">
-    <p>Content of step 1.</p>
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Surname">
+    </mat-form-field>
+
+    <br/>
+
+    <mat-form-field>
+      <textarea matInput placeholder="Address"></textarea>
+    </mat-form-field>
+
   </ux-wizard-step>
 
-  <ux-wizard-step header="2. Join a club">
+  <ux-wizard-step header="2. Express interest in a sport">
     <p>Content of step 2.</p>
   </ux-wizard-step>
 
-  <ux-wizard-step header="3. Add ">
+  <ux-wizard-step header="3. Request membership in a club ">
     <p>Content of step 3.</p>
   </ux-wizard-step>
 

@@ -1,0 +1,13 @@
+h1{
+  min-height: 200px;
+  background-color: #ccc;
+  text-align: center;
+  line-height: 200px;
+}
+.leftRs {
+  visibility: hidden;
+}
+
+.rightRs {
+  visibility: hidden;
+}
