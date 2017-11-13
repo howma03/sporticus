@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { LandingComponent } from './landing/landing.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
-import { ColorServiceModule, DashboardModule, PageHeaderModule, SparkModule} from "@ux-aspects/ux-aspects";
+import {ColorServiceModule, DashboardModule, EboxModule, PageHeaderModule, SparkModule} from "@ux-aspects/ux-aspects";
 import {LandingRoutingModule} from "./landing-routing.module";
 import { AboutComponent } from './about/about.component';
 import { LegalComponent } from './legal/legal.component';
@@ -16,6 +16,7 @@ import { LegalDisclosurePolicyComponent } from './legal-disclosure-policy/legal-
 @NgModule({
   imports: [
     CommonModule,
+    EboxModule,
     ColorServiceModule,
     DashboardModule,
     PageHeaderModule,

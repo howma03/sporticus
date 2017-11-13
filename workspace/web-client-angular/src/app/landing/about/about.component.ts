@@ -9,6 +9,10 @@ export class AboutComponent implements OnInit {
 
   constructor() { }
 
+  vm:{
+
+  }
+
   ngOnInit() {
   }
 

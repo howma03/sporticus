@@ -1,19 +1,41 @@
 <div *ngIf="loading">Logging in...</div>
 <div *ngIf="!loading">
 
-  <input #userName value="Administrator" placeholder="User Name"/><br/>
-  <input #password type="password" value="Administrator" placeholder="Password"/><br/>
-  <div *ngIf="tryAgain">User Name or Password was invalid. Please try again.</div>
+  <ux-ebox>
+    <ux-ebox-header>
+      <h3>Login</h3>
+    </ux-ebox-header>
 
-  <button type="button" class="btn" type="button btn-primary" style="width: 200px"
-          (click)='doLogin(userName.value, password.value)'>
-      Login
-  </button>
+    <ux-ebox-content>
 
-  <button type="button" class="btn" type="button btn-primary" style="width: 200px"
-          (click)='gotoRegister()'>
-    Register
-  </button>
+      <p>Please provide your login credentials</p>
+
+      <input #userName value="Administrator" placeholder="User Name"/><br/>
+      <input #password type="password" value="Administrator" placeholder="Password"/><br/>
+      <div *ngIf="tryAgain">User Name or Password was invalid. Please try again.</div>
+
+      <button type="button" class="btn" type="button btn-primary" style="width: 200px"
+              (click)='doLogin(userName.value, password.value)'>
+        Login
+      </button>
+
+      <button type="button" class="btn" type="button btn-primary" style="width: 200px"
+              (click)='gotoRegister()'>
+        Register
+      </button>
+
+    </ux-ebox-content>
+  </ux-ebox>
+
+
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
 
 
 </div>

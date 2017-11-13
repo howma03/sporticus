@@ -10,10 +10,6 @@ const appRoutes: Routes = [
     component: LandingComponent
   },
   {
-    path: 'login',
-    component: LoginOverlayComponent
-  },
-  {
     path: 'register',
     component: RegisterComponent
   },
