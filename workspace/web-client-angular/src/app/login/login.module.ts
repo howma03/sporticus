@@ -3,10 +3,12 @@ import {CommonModule} from '@angular/common';
 import {LoginOverlayComponent} from './login-overlay/login-overlay.component';
 import {AuthService} from "./auth.service";
 import {AuthGuard} from "./auth.guard";
+import {EboxModule} from "@ux-aspects/ux-aspects";
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    EboxModule
   ],
   exports: [
     LoginOverlayComponent
