@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Created by mark on 11/06/2017.
  */
-public class IUtility {
+public class Utility {
 
     static String pattern = "yyyy/MM/dd HH:mm:ss";
     static SimpleDateFormat SDF = null;

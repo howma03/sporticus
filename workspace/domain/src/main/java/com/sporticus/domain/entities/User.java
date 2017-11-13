@@ -1,7 +1,7 @@
 package com.sporticus.domain.entities;
 
 import com.sporticus.domain.interfaces.IUser;
-import com.sporticus.util.IUtility;
+import com.sporticus.util.Utility;
 
 import javax.persistence.*;
 import java.lang.reflect.InvocationTargetException;
@@ -78,7 +78,7 @@ User implements IUser {
 
     @Override
     public String getCreatedString () {
-        return IUtility.format (created);
+        return Utility.format (created);
     }
 
     @Override
