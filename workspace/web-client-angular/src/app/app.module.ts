@@ -1,12 +1,14 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
+
 import {AppComponent} from './app.component';
 import {LoginModule} from "./login/login.module";
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from "./app-routing.module";
 import {MainModule} from "./main/main.module";
 import {LandingModule} from "./landing/landing.module";
 import {RegistrationModule} from "./registration/registration.module";
+import {AuthInterceptor} from "./login/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -21,7 +23,11 @@ import {RegistrationModule} from "./registration/registration.module";
     AppRoutingModule,
     LandingModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true,
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

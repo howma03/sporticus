@@ -1,49 +1,37 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs/Observable";
-import {of} from "rxjs/observable/of";
 
 @Injectable()
 export class AuthService {
+  private storageKey: "currentUser";
 
-  public token: string;
 
-  constructor(private http: HttpClient) {
+  private token: string = null;
+
+  constructor() {
+    let storage = localStorage.getItem(this.storageKey);
+    if (storage === null) {
+      this.token = null;
+    } else {
+      this.token = JSON.parse(storage).token;
+    }
   }
 
-  private loginUrl = "";
+  isLoggedIn(): boolean {
+    return this.token !== null;
+  }
 
-  getSession(userName: string, password: string): Observable<boolean> {
-    let token = "TOKEN";
+  getAuthToken(): string {
+    return this.token;
+  }
+
+  startSession(user: string, token: string) {
+    localStorage.setItem(this.storageKey, JSON.stringify({user, token}));
     this.token = token;
-    localStorage.setItem('currentUser', JSON.stringify({userName, token}));
-    return of(true)
-    /*
-    return this.http.post<AuthResponse>(this.loginUrl, {
-      userName,
-      password
-    }).map((response: AuthResponse) => {
-      let token = response.token;
-
-      if (token) {
-        this.token = token;
-        localStorage.setItem('currentUser', JSON.stringify({userName, token}));
-        return true;
-      }
-      return false;
-    });
-   */
   }
 
   endSession() {
-    //Should we end the session on the server?
-    //this.http.delete(this.loginUrl);
+    localStorage.removeItem(this.storageKey);
     this.token = null;
-    localStorage.removeItem('currentUser');
   }
-
 }
 
-interface AuthResponse {
-  token: string;
-}
