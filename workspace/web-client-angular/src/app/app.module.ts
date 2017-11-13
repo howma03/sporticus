@@ -11,6 +11,7 @@ import {RegistrationModule} from "./registration/registration.module";
 import {AuthInterceptor} from "./login/auth.interceptor";
 import {NgxCarouselModule} from "ngx-carousel";
 import 'hammerjs';
+import {ManageModule} from "./manage/manage.module";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import 'hammerjs';
     LoginModule,
     MainModule,
     AppRoutingModule,
-    LandingModule
+    LandingModule,
+    ManageModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

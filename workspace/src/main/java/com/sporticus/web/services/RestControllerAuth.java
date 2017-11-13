@@ -47,6 +47,8 @@ public class RestControllerAuth extends ControllerAbstract {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
+        // TODO: actually perform the authentication so that we get a token
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

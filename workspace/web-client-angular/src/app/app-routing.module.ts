@@ -13,6 +13,10 @@ const appRoutes: Routes = [
     path: 'register',
     redirectTo: 'landing/register'
   },
+  {
+    path: 'manage',
+    redirectTo: 'manage/main'
+  },
   {path: '', redirectTo: '/main/home', pathMatch: 'full'},
   //{path: '**', redirectTo: '/main/home'}
 ];
