@@ -24,7 +24,7 @@ const landingRoutes: Routes = [
       {path: 'legal', component: LegalComponent},
       {path: 'legal/disclosure_policy', component: LegalDisclosurePolicyComponent},
       {path: 'contact', component: ContactComponent},
-      {path: '', redirectTo: '/landing/about', pathMatch: 'full'},
+      {path: '', component: AboutComponent},
       {path: '**', redirectTo: '/landing/about'}
     ]
   }
@@ -32,9 +32,9 @@ const landingRoutes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(
-      landingRoutes,
-      {enableTracing: true} // <-- debugging purposes only
+
+    RouterModule.forChild(
+      landingRoutes
     )
   ],
   exports: [

@@ -6,16 +6,12 @@ import {RegisterComponent} from "./registration/register/register.component";
 
 const appRoutes: Routes = [
   {
-    path: 'landing',
-    component: LandingComponent
-  },
-  {
     path: 'login',
-    component: LandingComponent
+    redirectTo: 'landing/login'
   },
   {
     path: 'register',
-    component: LandingComponent
+    redirectTo: 'landing/register'
   },
   {path: '', redirectTo: '/main/home', pathMatch: 'full'},
   //{path: '**', redirectTo: '/main/home'}
