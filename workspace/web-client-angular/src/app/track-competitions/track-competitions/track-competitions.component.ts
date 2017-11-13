@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {UserService} from './user.service';
+import {User} from './user';
 
 @Component({
   selector: 'app-track-competitions',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TrackCompetitionsComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+   private userService: UserService
+  ) { }
+
+  user: User;
 
   ngOnInit() {
+  }
+
+  getItem(id) {
+    this.userService.getItem(id).subscribe(user => this.user = user);
   }
 
 }

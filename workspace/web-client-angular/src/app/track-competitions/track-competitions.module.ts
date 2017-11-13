@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrackCompetitionsComponent } from './track-competitions/track-competitions.component';
+import {UserService} from './track-competitions/user.service';
 
 @NgModule({
   imports: [
@@ -9,6 +10,9 @@ import { TrackCompetitionsComponent } from './track-competitions/track-competiti
   exports: [
     TrackCompetitionsComponent
   ],
-  declarations: [TrackCompetitionsComponent]
+  declarations: [TrackCompetitionsComponent],
+  providers: [
+    UserService,
+  ]
 })
 export class TrackCompetitionsModule { }

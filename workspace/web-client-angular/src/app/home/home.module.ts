@@ -9,6 +9,8 @@ import {MyChallengesTableComponent} from './my-challenges-table/my-challenges-ta
 import {CheckboxModule, DashboardModule} from '@ux-aspects/ux-aspects';
 import {MyTeamsTableComponent} from './my-teams-table/my-teams-table.component';
 import {LogService} from './home/log.service';
+import { RestExampleComponent } from './rest-example/rest-example.component';
+import {RestService} from './rest-example/rest.service';
 
 @NgModule({
   imports: [
@@ -27,10 +29,12 @@ import {LogService} from './home/log.service';
     PreviousMatchesTableComponent,
     AvailableChallengesTableComponent,
     MyChallengesTableComponent,
-    MyTeamsTableComponent
+    MyTeamsTableComponent,
+    RestExampleComponent
   ],
   providers: [
-    LogService
+    LogService,
+    RestService
   ]
 })
 export class HomeModule { }

@@ -1,33 +1,17 @@
-<!-- The body of the main users view
-consider changing this to a dashboard
-  -->
-<!--mat-grid-list cols="2">
-
-  <mat-grid-tile>
-    <app-future-matches-table></app-future-matches-table>
-  </mat-grid-tile>
-
-  <mat-grid-tile>
-    <app-previous-matches-table></app-previous-matches-table>
-  </mat-grid-tile>
-
-  <mat-grid-tile>
-    <app-available-challenges-table></app-available-challenges-table>
-  </mat-grid-tile>
-
-  <mat-grid-tile>
-    <app-my-challenges-table></app-my-challenges-table>
-  </mat-grid-tile>
-
-</mat-grid-list-->
-
-
+<!-- The body of the main users view -->
 <ux-dashboard class="customizable-dashboard" [options]="options">
 
   <ux-dashboard-widget id="future-matches-widget" colSpan="2" rowSpan="2" resizable=true>
     <div class="widget-content" ux-dashboard-widget-drag-handle>
       <h3 class="widget-title">Next Planned Events</h3>
       <app-future-matches-table></app-future-matches-table>
+    </div>
+  </ux-dashboard-widget>
+
+  <ux-dashboard-widget id="rest-example-widget" colSpan="2" rowSpan="2" resizable=true>
+    <div class="widget-content" ux-dashboard-widget-drag-handle>
+      <h3 class="widget-title">REST Example</h3>
+      <app-rest-example></app-rest-example>
     </div>
   </ux-dashboard-widget>
 
