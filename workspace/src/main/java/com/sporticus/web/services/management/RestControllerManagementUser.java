@@ -61,7 +61,7 @@ public class RestControllerManagementUser extends ControllerAbstract {
      * @param user
      * @return DtoUser
      */
-    @RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoUser> create(@RequestBody final DtoUser user) {
         LOGGER.debug(() -> "Creating User " + user.getEmail());
         if (!this.getLoggedInUser().isAdmin()) {
@@ -77,7 +77,7 @@ public class RestControllerManagementUser extends ControllerAbstract {
      *
      * @return ResponseEntity<DtoUsers>
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoList<DtoUser>> readAll() {
         if (!this.getLoggedInUser().isAdmin()) {
             LOGGER.error(() -> "Users can only be read by system administrators");

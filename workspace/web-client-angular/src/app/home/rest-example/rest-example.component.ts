@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import {RestService} from './rest.service';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {UsersService} from "../../services/users.service";
 
 @Component({
   selector: 'app-rest-example',
@@ -9,13 +9,14 @@ import {RestService} from './rest.service';
 })
 export class RestExampleComponent implements OnInit {
 
-  constructor(private restService: RestService) { }
+  constructor(private usersService: UsersService) {
+  }
 
   ngOnInit() {
   }
 
   getItem(id) {
-    this.restService.getItem(id);
+    this.usersService.retrieveOne(id);
   }
 
 }

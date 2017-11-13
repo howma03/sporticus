@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {User} from '../../model/user';
-import {UserService} from './user.service';
+import {Component, OnInit} from '@angular/core';
+import {User, UsersService} from "../../services/users.service";
 
 @Component({
   selector: 'app-track-competitions',
@@ -9,8 +8,7 @@ import {UserService} from './user.service';
 })
 export class TrackCompetitionsComponent implements OnInit {
 
-  constructor(
-   private userService: UserService
+  constructor(private usersService: UsersService
   ) { }
 
   user: User;
@@ -19,7 +17,7 @@ export class TrackCompetitionsComponent implements OnInit {
   }
 
   getItem(id) {
-    this.userService.getItem(id).subscribe(user => this.user = user);
+    this.usersService.retrieveOne(id).subscribe(user => this.user = user);
   }
 
 }

@@ -1,20 +1,18 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TrackCompetitionsComponent } from './track-competitions/track-competitions.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {TrackCompetitionsComponent} from './track-competitions/track-competitions.component';
 import {ModelModule} from '../model/model.module';
-import {UserService} from './track-competitions/user.service';
+import {ServicesModule} from "../services/services.module";
 
 @NgModule({
   imports: [
+    ServicesModule,
     CommonModule,
     ModelModule
   ],
   exports: [
     TrackCompetitionsComponent
   ],
-  declarations: [TrackCompetitionsComponent],
-  providers: [
-    UserService,
-  ]
+  declarations: [TrackCompetitionsComponent]
 })
 export class TrackCompetitionsModule { }

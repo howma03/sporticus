@@ -3,7 +3,7 @@ import {AuthService} from "./auth.service";
 
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
-import {of} from "rxjs/observable/of";
+import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class LoginService {
@@ -11,15 +11,16 @@ export class LoginService {
   constructor(private authService: AuthService, private http: HttpClient) {
   }
 
-  public loginUrl = "";
+  public loginUrl = "/papi/user/authenticate";
 
   login(userName: string, password: string): Observable<boolean> {
-    let token = "TOKEN";
-    this.authService.startSession(userName, token);
+    let tempToken = "Token";
+    this.authService.startSession(userName, tempToken);
+    return Observable.of(true);
 
-    return of(true)
     /*
-    return this.http.post<AuthResponse>(this.loginUrl, {
+
+    return this.http.post<AuthResponse>(this.loginUrl + `/${userName}/${password}`, {
       userName,
       password
     }).map((response: AuthResponse) => {
@@ -30,8 +31,16 @@ export class LoginService {
         return true;
       }
       return false;
+    }).catch(err => {
+      if (err instanceof HttpErrorResponse) {
+        if (err.status === 401) {
+         return  Observable.of(false);
+        }
+      }
+      return Observable.throw(err);
+
     });
-   */
+    */
   }
 
   logout() {
