@@ -76,6 +76,9 @@ dependencies {
 
     compile 'javax.servlet:jstl:1.2'
     compile 'org.apache.tomcat.embed:tomcat-embed-jasper'
+//	compile 'org.springframework.session:spring-session:1.0.0.RELEASE'
+//	compile 'org.springframework.data:spring-data-redis:2.0.1.RELEASE'
+//	compile 'redis.clients:jedis:2.9.0'
 
 	// compile 'mysql:mysql-connector-java:6.0.5'
 	compile 'mysql:mysql-connector-java:5.1.39'

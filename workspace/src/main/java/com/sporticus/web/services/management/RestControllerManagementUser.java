@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/management/user")
@@ -82,6 +86,12 @@ public class RestControllerManagementUser extends ControllerAbstract {
         if (!this.getLoggedInUser().isAdmin()) {
             LOGGER.error(() -> "Users can only be read by system administrators");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        if(false) {
+            ServletRequestAttributes attr = (ServletRequestAttributes)
+                    RequestContextHolder.currentRequestAttributes();
+            HttpSession session = attr.getRequest().getSession(true); // true == allow create
         }
 
         /**

@@ -13,7 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/papi/user")
@@ -33,7 +36,7 @@ public class RestControllerAuth extends ControllerAbstract {
 
     @RequestMapping(value = "/authenticate/{username}/{password}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> authenticateGet(@PathVariable("username") String userName,
+    public ResponseEntity authenticateGet(@PathVariable("username") String userName,
                                                @PathVariable("password") String password) {
 
         LOGGER.debug(() -> "GET:/papi/user/authenticate");
@@ -54,7 +57,7 @@ public class RestControllerAuth extends ControllerAbstract {
 
     @RequestMapping(value = "/authenticate/{username}/{password}", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> authenticate(@PathVariable("username") String userName,
+    public ResponseEntity authenticate(@PathVariable("username") String userName,
                                                @PathVariable("password") String password) {
 
         LOGGER.debug(() -> "POST:/papi/user/authenticate");
@@ -68,8 +71,12 @@ public class RestControllerAuth extends ControllerAbstract {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        String JSON = "";
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-        return new ResponseEntity<>(JSON, HttpStatus.OK);
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(HttpSession session) {
+        session.invalidate();
     }
 }

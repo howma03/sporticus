@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {MyChallengesTableComponent, } from './my-challenges-table.component';
+import {MyChallengesTableComponent, } from './my-teams-table.component';
 
 describe('AvailableChallengesTableComponent', () => {
   let component: MyChallengesTableComponent;
