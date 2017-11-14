@@ -1,0 +1,26 @@
+<p>
+  user-table works!
+</p>
+<div class="example-container mat-elevation-z8">
+  <mat-table #table [dataSource]="dataSource">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+      <!-- note that "'of' expected" error reported by intellij is due to https://youtrack.jetbrains.com/issue/WEB-26939 -->
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+      <!-- note that "'of' expected" error reported by intellij is due to https://youtrack.jetbrains.com/issue/WEB-26939 -->
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+  </mat-table>
+</div>
