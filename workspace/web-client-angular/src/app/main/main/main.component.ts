@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Breadcrumb, PageHeaderIconMenu, PageHeaderNavigationItem} from "@ux-aspects/ux-aspects";
+import {AuthService} from "../../login/auth.service";
 
 @Component({
   selector: 'app-main',
@@ -10,6 +11,7 @@ import {Breadcrumb, PageHeaderIconMenu, PageHeaderNavigationItem} from "@ux-aspe
 export class MainComponent implements OnInit {
 
   ngOnInit() {
+
   }
 
   title = 'Sporticus';
@@ -94,7 +96,7 @@ export class MainComponent implements OnInit {
       dropdown: [
         {
           header: true,
-          title: 'John Doe',
+          title: this.getUserName(),
           divider: true
         },
         {
@@ -113,8 +115,13 @@ export class MainComponent implements OnInit {
     }
   ];
 
+  getUserName() : string {
+    return this.authService.currentUser.email;
+  }
+
   constructor(private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private authService : AuthService) {
   }
 
   goHome() {

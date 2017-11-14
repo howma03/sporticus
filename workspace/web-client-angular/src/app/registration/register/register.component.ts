@@ -13,7 +13,6 @@ export class RegisterComponent implements OnInit {
   }
 
   doRegister(userName: string, email: string, password: string) {
-
-    this.usersService.createOne(user).subscribe(user => alert("User created successfully for " + user.username));
+    // this.usersService.createOne(user).subscribe(user => alert("User created successfully for " + user.username));
   }
 }
