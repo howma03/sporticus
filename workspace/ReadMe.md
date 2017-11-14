@@ -1,3 +1,17 @@
+# Getting code
+
+git clone https://github.com/howma03/sporticus.git
+
+# Configuring Intellij
+
+Create new project is intellij
+
+file->projectStructure
+
+modules->ImportModule
+
+Import sporticus\workspace\build.gradle
+
 # Install MySQL
 
 https://dev.mysql.com/downloads/mysql/
@@ -12,7 +26,7 @@ GRANT ALL PRIVILEGES ON sporticus.* TO 'admin1'@'localhost';
 
 # Create DB
 
-On first run set the create database property in the application.properties file
+On first run set the create database property in the default-application.properties file
 
 spring.jpa.hibernate.ddl-auto=create
 
