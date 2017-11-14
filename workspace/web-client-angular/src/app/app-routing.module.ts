@@ -15,7 +15,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'manage',
-    redirectTo: 'manage/main'
+    redirectTo: 'main/manage'
   },
   {path: '', redirectTo: '/main/home', pathMatch: 'full'},
   //{path: '**', redirectTo: '/main/home'}

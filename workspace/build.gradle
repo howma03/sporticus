@@ -125,38 +125,50 @@ task copyVersionFile(type: Copy, dependsOn: versionInfo) {
 war.dependsOn copyVersionFile
 
 subprojects {
-	buildscript {
+	if (it.name != 'web-client-angular') {
+		buildscript {
+			repositories {
+				jcenter()
+			}
+			dependencies {
+				// classpath 'io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE'
+				classpath "org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE"
+				classpath 'org.springframework:springloaded:1.2.6.RELEASE'
+				classpath "com.eriwen:gradle-js-plugin:1.12.1"
+			}
+		}
+
+		apply plugin: 'io.spring.dependency-management'
+		apply plugin: 'findbugs'
+		apply plugin: 'java'
+		apply plugin: 'idea'
+
+		dependencyManagement {
+			imports {
+				mavenBom 'io.spring.platform:platform-bom:Brussels-RC1'
+			}
+		}
+
 		repositories {
-			jcenter()
+			mavenCentral()
+			maven { url 'https://repo.spring.io/libs-milestone' }
 		}
-		dependencies {
-			// classpath 'io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE'
-			classpath "org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE"
-			classpath 'org.springframework:springloaded:1.2.6.RELEASE'
-			classpath "com.eriwen:gradle-js-plugin:1.12.1"
-		}
-	}
 
-	apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'findbugs'
-	apply plugin: 'java'
-	apply plugin: 'idea'
-
-	dependencyManagement {
-		imports {
-			mavenBom 'io.spring.platform:platform-bom:Brussels-RC1'
+		findbugs {
+			ignoreFailures = true
 		}
 	}
-
-	repositories {
-		mavenCentral()
-		maven { url 'https://repo.spring.io/libs-milestone' }
-	}
-
-    findbugs {
-        ignoreFailures = true
-    }
 }
+
+jar {
+	from ('web-client-angular/dist/') {
+		//Public is a default supported Spring Boot resources directory.
+		into 'public'
+	}
+}
+
+//frontend:build will be run before the processResources
+processResources.dependsOn('web-client-angular:build')
 
 findbugs {
     ignoreFailures = true

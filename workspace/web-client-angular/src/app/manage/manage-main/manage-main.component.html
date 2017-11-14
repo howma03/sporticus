@@ -1,7 +1,11 @@
-<ux-page-header header="My Page" [crumbs]="crumbs" [items]="items"
-                [condensed]="condensed" [iconMenus]="iconMenus"></ux-page-header>
-<p>
-  manage-main works!
-</p>
 
-<user-table></user-table>
+<mat-tab-group>
+  <mat-tab label="Users">
+    <user-table></user-table>
+  </mat-tab>
+  <mat-tab label="Organisations">
+    <organisation-table></organisation-table>
+  </mat-tab>
+</mat-tab-group>
+
+

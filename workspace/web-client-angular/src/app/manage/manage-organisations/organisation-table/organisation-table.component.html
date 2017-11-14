@@ -11,9 +11,15 @@
       <!-- note that "'of' expected" error reported by intellij is due to https://youtrack.jetbrains.com/issue/WEB-26939 -->
     </ng-container>
 
-    <ng-container matColumnDef="email">
-      <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+    <ng-container matColumnDef="address">
+      <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.address}} </mat-cell>
+      <!-- note that "'of' expected" error reported by intellij is due to https://youtrack.jetbrains.com/issue/WEB-26939 -->
+    </ng-container>
+
+    <ng-container matColumnDef="domain">
+      <mat-header-cell *matHeaderCellDef>Domain</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.domain}} </mat-cell>
       <!-- note that "'of' expected" error reported by intellij is due to https://youtrack.jetbrains.com/issue/WEB-26939 -->
     </ng-container>
 

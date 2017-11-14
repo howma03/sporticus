@@ -48,11 +48,11 @@ public class RestControllerManagementUser extends ControllerAbstract {
     /**
      * Function to copy properties to the DTO - we do not send the password
      *
-     * @param u
-     * @return
+     * @param user
+     * @return dtoUser
      */
-    private DtoUser getDtoUser(final IUser u) {
-        final DtoUser dtoUser = new DtoUser(u);
+    private DtoUser getDtoUser(final IUser user) {
+        final DtoUser dtoUser = new DtoUser(user);
         // Now determine the number of groups the user is a member of
         dtoUser.setPassword(null);
         return dtoUser;

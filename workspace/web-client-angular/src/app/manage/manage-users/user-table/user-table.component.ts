@@ -14,11 +14,12 @@ export class UserTableComponent implements OnInit {
   constructor(private usersService: UsersService ) {
   }
 
+  ngOnInit() {
+  }
+
   displayedColumns = ['name', 'email'];
   dataSource = new MyUsersDataSource(this.usersService);
 
-  ngOnInit() {
-  }
 }
 
 export class MyUsersDataSource extends DataSource<any> {

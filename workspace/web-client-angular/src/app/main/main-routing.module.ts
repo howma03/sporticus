@@ -7,6 +7,7 @@ import {ManageCompetitionsComponent} from "../manage-competitions/manage-competi
 import {TrackCompetitionsComponent} from "../track-competitions/track-competitions/track-competitions.component";
 import {MainComponent} from "./main/main.component";
 import {AuthGuard} from "../login/auth.guard";
+import {ManageMainComponent} from "../manage/manage-main/manage-main.component";
 
 const mainRoutes: Routes = [
   {
@@ -15,6 +16,7 @@ const mainRoutes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {path: 'home', component: HomeComponent},
+      {path: 'manage', component: ManageMainComponent},
       {path: 'manage-sports', component: ManageSportsComponent},
       {path: 'manage-teams', component: ManageTeamsComponent},
       {path: 'manage-competitions', component: ManageCompetitionsComponent},

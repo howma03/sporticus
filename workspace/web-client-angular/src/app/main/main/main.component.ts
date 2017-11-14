@@ -48,6 +48,20 @@ export class MainComponent implements OnInit {
           select: () => this.router.navigate(['main/manage-competitions'])
         }
       ]
+    },
+    {
+      icon: 'hpe-support',
+      title: 'Administration',
+      children: [
+        {
+          title: 'Users',
+          select: () => this.router.navigate(['main/manage'])
+        },
+        {
+          title: 'Organisations',
+          select: () => this.router.navigate(['main/manage'])
+        }
+      ]
     }
   ];
 
