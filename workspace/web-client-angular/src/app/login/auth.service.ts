@@ -1,37 +1,78 @@
 import {Injectable} from '@angular/core';
+import {Observable} from "rxjs/Observable";
+import "rxjs/add/operator/catch";
+import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
+import {User} from "../services/users.service";
 
 @Injectable()
 export class AuthService {
-  private storageKey: "currentUser";
+  constructor(private http: HttpClient) {
+  }
 
+  loggedIn: boolean = null;
+  currentUser: User = null;
 
-  private token: string = null;
-
-  constructor() {
-    let storage = localStorage.getItem(this.storageKey);
-    if (storage === null) {
-      this.token = null;
+  isLoggedIn(): Observable<boolean> {
+    if (this.loggedIn == null) {
+      return this.check().catch(err => {
+        //Assume the worst on an error?
+        return Observable.of(false);
+      })
     } else {
-      this.token = JSON.parse(storage).token;
+      return Observable.of(this.loggedIn);
     }
   }
 
-  isLoggedIn(): boolean {
-    return this.token !== null;
+  private loginUrl = "/api/user/profile";
+
+  login(email: string, password: string): Observable<boolean> {
+    // let tempToken = "Token";
+    // this.authService.startSession(userName, tempToken);
+    // return Observable.of(true);
+    const token = `${email}:${password}`;
+
+    let headers = new HttpHeaders()
+      .set('Authorization', "Basic " + btoa(token));
+    return this.doRequest(headers);
+
   }
 
-  getAuthToken(): string {
-    return this.token;
+  check(): Observable<boolean> {
+    return this.doRequest();
   }
 
-  startSession(user: string, token: string) {
-    localStorage.setItem(this.storageKey, JSON.stringify({user, token}));
-    this.token = token;
+  private doRequest(headers: HttpHeaders = new HttpHeaders()): Observable<boolean> {
+    return this.http.get<User>(this.loginUrl, {
+      headers,
+    }).map(user => {
+      this.loggedIn = true;
+      this.currentUser = user;
+      return true;
+    }).catch(err => {
+      if (err instanceof HttpErrorResponse) {
+        if (err.status === 401) {
+          this.loggedIn = false;
+          this.currentUser = null;
+          return Observable.of(false);
+        }
+      }
+      return Observable.throw(err);
+    });
   }
 
-  endSession() {
-    localStorage.removeItem(this.storageKey);
-    this.token = null;
+  private logoutUrl = '/logout';
+
+  logout() {
+    if (this.loggedIn === false) {
+      return Observable.of(true);
+    }
+    this.http.post(this.logoutUrl, '', {
+      responseType: "text"
+    }).subscribe(() => {
+      this.loggedIn = false;
+      this.currentUser = null;
+    })
+
   }
 }
 

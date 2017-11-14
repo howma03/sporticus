@@ -4,7 +4,6 @@ import {LoginOverlayComponent} from './login-overlay/login-overlay.component';
 import {AuthService} from "./auth.service";
 import {AuthGuard} from "./auth.guard";
 import {EboxModule} from "@ux-aspects/ux-aspects";
-import {LoginService} from "./login.service";
 
 @NgModule({
   imports: [
@@ -15,7 +14,7 @@ import {LoginService} from "./login.service";
     LoginOverlayComponent
   ],
   declarations: [LoginOverlayComponent],
-  providers: [AuthService, AuthGuard, LoginService]
+  providers: [AuthService, AuthGuard]
 })
 
 export class LoginModule {

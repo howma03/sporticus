@@ -11,17 +11,17 @@
 
         <p>Please provide your login credentials</p>
 
-        <input #userName value="Administrator" placeholder="User Name"/><br/>
-        <input #password type="password" value="Administrator" placeholder="Password"/><br/>
+        <input #email type="email" placeholder="Email"/><br/>
+        <input #password type="password" placeholder="Password"/><br/>
         <br/>
-        <div *ngIf="tryAgain">User Name or Password was invalid. Please try again.</div>
+        <div *ngIf="tryAgain">Email or Password was invalid. Please try again.</div>
 
-        <button type="button" class="btn" type="button btn-primary" style="width: 200px"
-                (click)='doLogin(userName.value, password.value)'>
+        <button class="btn" type="button btn-primary" style="width: 200px"
+                (click)='doLogin(email.value, password.value)'>
           Login
         </button>
 
-        <button type="button" class="btn" type="button btn-primary" style="width: 200px"
+        <button class="btn" type="button btn-primary" style="width: 200px"
                 (click)='gotoRegister()'>
           Register
         </button>

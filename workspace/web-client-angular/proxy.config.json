@@ -8,5 +8,10 @@
     "target": "http://localhost:8081",
     "secure": false,
     "logLevel": "debug"
+  },
+  "/logout": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "logLevel": "debug"
   }
 }

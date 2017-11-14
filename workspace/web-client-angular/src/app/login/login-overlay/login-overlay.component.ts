@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {LoginService} from "../login.service";
+import {AuthService} from "../auth.service";
 
 @Component({
   selector: 'app-login-overlay',
@@ -11,26 +11,26 @@ import {LoginService} from "../login.service";
 export class LoginOverlayComponent implements OnInit {
 
   constructor(private router: Router,
-              private loginService: LoginService) {
+              private authService: AuthService) {
   }
 
   ngOnInit() {
-    this.loginService.logout();
+    this.authService.logout();
   }
 
   loading: boolean = false;
   tryAgain: boolean = false;
 
-  doLogin(userName: string, password: string) {
+  doLogin(email: string, password: string) {
     this.loading = true;
-    this.loginService.login(userName, password)
+    this.authService.login(email, password)
       .subscribe(success => {
         this.loading = false;
         this.tryAgain = !success;
         if (success) {
           this.router.navigate(['/main']);
         }
-      }, fail => {
+      }, err => {
         this.loading = false;
         this.tryAgain = true;
       });

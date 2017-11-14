@@ -53,7 +53,8 @@ public class ConfigurationSecurity extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                 .invalidSessionUrl("/invalidSession.html");
 
-        http.authorizeRequests()
+        http.httpBasic().and()
+                .authorizeRequests()
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/resources/**").permitAll()
                 .antMatchers("/papi/**").permitAll()
