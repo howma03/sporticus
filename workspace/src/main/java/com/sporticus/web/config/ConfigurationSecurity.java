@@ -57,7 +57,6 @@ public class ConfigurationSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/resources/**").permitAll()
                 .antMatchers("/papi/**").permitAll()
-                .antMatchers("/api/**").permitAll()
 
                 .antMatchers("/landing*").permitAll()
                 .antMatchers("/landing/**").permitAll()
