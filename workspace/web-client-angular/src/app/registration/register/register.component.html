@@ -1,39 +1,69 @@
-Registration
 
-Create a new user
+<main class='md-padding' layout="row" flex>
+  <ux-ebox>
+    <ux-ebox-header>
+      <h3>Registration</h3>
+    </ux-ebox-header>
+
+    <ux-ebox-content>
+      Create a new user
+
+        <mat-form-field>
+          <input matInput #userName placeholder="Username">
+        </mat-form-field>
+        <br/>
+        <mat-form-field>
+          <input matInput #email placeholder="Email">
+        </mat-form-field>
+        <br/>
+        <mat-form-field>
+          <input matInput #password placeholder="Password">
+        </mat-form-field>
+        <br/>
+        <button mat-raised-button
+            (click)='doRegister(userName.value, email.value, password.value)'>
+            Register
+        </button>
+    </ux-ebox-content>
+  </ux-ebox>
 
 
-<ux-wizard [orientation]="orientation">
+  <!--
+  <ux-wizard [orientation]="orientation">
 
-  <ux-wizard-step header="1. Add Contact Information">
-    <mat-form-field>
-      <input matInput placeholder="First name">
-    </mat-form-field>
+    <ux-wizard-step header="1. Add Contact Information">
+      <mat-form-field>
+        <input matInput placeholder="First name">
+      </mat-form-field>
 
-    <mat-form-field>
-      <input matInput placeholder="Surname">
-    </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Surname">
+      </mat-form-field>
 
-    <br/>
+      <br/>
 
-    <mat-form-field>
-      <textarea matInput placeholder="Address"></textarea>
-    </mat-form-field>
+      <mat-form-field>
+        <textarea matInput placeholder="Address"></textarea>
+      </mat-form-field>
 
-  </ux-wizard-step>
+    </ux-wizard-step>
 
-  <ux-wizard-step header="2. Express interest in a sport">
-    <p>Content of step 2.</p>
-  </ux-wizard-step>
+    <ux-wizard-step header="2. Express interest in a sport">
+      <p>Content of step 2.</p>
+    </ux-wizard-step>
 
-  <ux-wizard-step header="3. Request membership in a club ">
-    <p>Content of step 3.</p>
-  </ux-wizard-step>
+    <ux-wizard-step header="3. Request membership in a club ">
+      <p>Content of step 3.</p>
+    </ux-wizard-step>
 
-  <ux-wizard-step header="4. Add password">
-    <p>Content of step 4.</p>
+    <ux-wizard-step header="4. Add password">
+      <p>Content of step 4.</p>
 
-    By creating an account you agree to our Terms & Privacy.
-  </ux-wizard-step>
+      By creating an account you agree to our Terms & Privacy.
+    </ux-wizard-step>
 
-</ux-wizard>
+  </ux-wizard>
+  -->
+</main>
+
+

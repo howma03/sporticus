@@ -12,4 +12,8 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
+  doRegister(userName: string, email: string, password: string) {
+
+    this.usersService.createOne(user).subscribe(user => alert("User created successfully for " + user.username));
+  }
 }

@@ -4,6 +4,15 @@ h1{
   text-align: center;
   line-height: 200px;
 }
+
+carousel{
+  min-height: 200px;
+  align-content: center;
+  align-items: center;
+  background-color: #ccc;
+  text-align: center;
+  line-height: 200px;
+}
 .leftRs {
   visibility: hidden;
 }

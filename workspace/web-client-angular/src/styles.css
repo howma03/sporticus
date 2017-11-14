@@ -6,6 +6,7 @@ see similar workaround in index.html
 @import url('../node_modules/bootstrap/dist/css/bootstrap.css');
  */
 @import url('~@ux-aspects/ux-aspects/styles/ux-aspects.min.css');
+@import "styletest.scss";
 /*
 @import url('~@micro-focus/quantum-ux-aspects');
 body {
