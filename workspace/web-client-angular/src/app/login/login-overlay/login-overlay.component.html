@@ -11,10 +11,12 @@
 
         <p>Please provide your login credentials</p>
 
-        <input #email type="email" placeholder="Email"/><br/>
-        <input #password type="password" placeholder="Password"/><br/>
+        <input #email type="email" placeholder="Email" (keyup.enter)="password.focus()"/><br/>
+        <input #password type="password" placeholder="Password"
+               (keyup.enter)="doLogin(email.value, password.value)"/><br/>
+
+        <p *ngIf="tryAgain">Email or Password was invalid. Please try again.</p>
         <br/>
-        <div *ngIf="tryAgain">Email or Password was invalid. Please try again.</div>
 
         <button class="btn" type="button btn-primary" style="width: 200px"
                 (click)='doLogin(email.value, password.value)'>
