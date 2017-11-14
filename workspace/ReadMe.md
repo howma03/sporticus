@@ -1,4 +1,10 @@
+# Install MySQL
+
+https://dev.mysql.com/downloads/mysql/
+
 # Database
+
+CREATE DAATABASE sporticus;
 
 CREATE USER 'admin1'@'localhost' IDENTIFIED BY 'S0uthern';
 
