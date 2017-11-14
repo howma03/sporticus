@@ -27,7 +27,7 @@ public class RestControllerUserProfile extends ControllerAbstract {
 
     //-------------------Read Profile--------------------------------------------------------
 
-    @RequestMapping(value = "/", method = RequestMethod.GET,
+    @RequestMapping(value = "", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public DtoUserProfile read() {
         LOGGER.debug(() -> "Reading User Profile");
@@ -38,7 +38,7 @@ public class RestControllerUserProfile extends ControllerAbstract {
 
     //------------------- Update Profile --------------------------------------------------------
 
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    @RequestMapping(value = "", method = RequestMethod.PUT)
     public ResponseEntity<DtoUserProfile> update(@RequestBody final DtoUserProfile form) {
         LOGGER.debug(() -> "Updating User Profile");
         final IUser found = this.getLoggedInUser();
