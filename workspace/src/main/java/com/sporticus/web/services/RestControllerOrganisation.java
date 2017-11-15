@@ -61,7 +61,7 @@ public class RestControllerOrganisation extends ControllerAbstract {
      * @param organisation
      * @return ResponseEntity<DtoOrganisation>
      */
-    @RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoOrganisation> create(@RequestBody final DtoOrganisation organisation) {
         LOGGER.debug(() -> "Creating Organisation " + organisation.getName());
 
@@ -78,7 +78,7 @@ public class RestControllerOrganisation extends ControllerAbstract {
      *
      * @return ResponseEntity<DtoOrganisations>
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoList<DtoOrganisation>> readAll() {
 
         // organisation owners to are allowed to read their owned organisations
@@ -116,11 +116,6 @@ public class RestControllerOrganisation extends ControllerAbstract {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        if(!this.getLoggedInUser().isAdmin()) {
-            LOGGER.error(() -> "Organisations can only be read by system administrators");
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
         LOGGER.debug(() -> "Reading Organisation with id " + id);
         final IOrganisation found = serviceOrganisation.readOrganisation(id);
         if(found == null) {
@@ -142,11 +137,6 @@ public class RestControllerOrganisation extends ControllerAbstract {
     public ResponseEntity<DtoOrganisation> update(@PathVariable("id") final long id, @RequestBody final DtoOrganisation organisation) {
         if(!this.getLoggedInUser().isAdmin()) {
             LOGGER.error(() -> "Organisations can only be updated by system managers");
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
-        if(!this.getLoggedInUser().isAdmin()) {
-            LOGGER.error(() -> "Organisations can only be read by system administrators");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
@@ -172,11 +162,6 @@ public class RestControllerOrganisation extends ControllerAbstract {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<DtoOrganisation> deleteOne(@PathVariable("id") final long id) {
-        if(!this.getLoggedInUser().isAdmin()) {
-            LOGGER.error(() -> "Organisations can only be deleted by system administrators");
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
         if(!this.getLoggedInUser().isAdmin()) {
             LOGGER.error(() -> "Organisations can only be deleted by system administrators");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

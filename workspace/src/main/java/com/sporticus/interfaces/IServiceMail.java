@@ -1,5 +1,6 @@
 package com.sporticus.interfaces;
 
+import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IUser;
 
 import java.util.Map;
@@ -29,7 +30,7 @@ public interface IServiceMail {
      *
      * @param user
      */
-    void sendVerificationEmailForInvitation(final IUser user, final IUser inviter);
+    void sendVerificationEmailForInvitation(final IUser user, final IUser inviter, final IGroup group);
 
     /**
      * This is an email services that will generate a standard cloud email containing the password for the user.
