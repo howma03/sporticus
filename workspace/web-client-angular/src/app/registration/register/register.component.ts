@@ -18,12 +18,21 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-  doRegister(userName: string, name: string, email: string, password: string) {
+  registrationDetails = {
+    firstName: '',
+    surname: '',
+    userName: '',
+    email: '',
+    password: ''
+  };
+
+
+  doRegister() {
     let testUser: RegisterUser = {
-      userName,
-      name,
-      email,
-      password
+      userName: this.registrationDetails.userName,
+      name: this.registrationDetails.name,
+      email: this.registrationDetails.email,
+      password: this.registrationDetails.password
     };
 
     this.registrationService.createOne(testUser)
@@ -35,9 +44,7 @@ export class RegisterComponent implements OnInit {
       }, err => {
         this.errorHandlingService.handleError(err);
 
-        debugger;
         //this.loading = false;
-        //this.tryAgain = true;
       });;
   }
 }

@@ -17,7 +17,8 @@ export class RegistrationService {
 
 export interface RegisterUser {
   id?: number;
-  name?: string;
+  firstName?: string;
+  surname?: string;
   userName: string;
   email: string;
   password?: string;

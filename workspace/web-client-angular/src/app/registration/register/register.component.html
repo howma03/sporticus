@@ -6,28 +6,41 @@
     </ux-ebox-header>
 
     <ux-ebox-content>
-      Create a new user<br/><br/>
+      <form (ngSubmit)="doRegister()" #registerForm="ngForm">
+        Create a new user<br/><br/>
+
         <mat-form-field>
-          <input matInput #userName placeholder="Username">
+          <input matInput #userName placeholder="Username" name="userName"
+               [(ngModel)]="registrationDetails.userName"/>
         </mat-form-field>
-        <br/>
+          <br/>
+          <mat-form-field>
+            <input matInput #name placeholder="First Name" name="firstName"
+                   [(ngModel)]="registrationDetails.firstName"/>
+          </mat-form-field>
         <mat-form-field>
-          <input matInput #name placeholder="Name">
+        <input matInput #name placeholder="Surname" name="surname"
+               [(ngModel)]="registrationDetails.surname"/>
         </mat-form-field>
-        <br/>
+          <br/>
         <mat-form-field>
-          <input matInput #email placeholder="Email">
+          <input matInput #email type="email" placeholder="Email" name="email"
+                 required
+                 [(ngModel)]="registrationDetails.email"/>
         </mat-form-field>
-        <br/>
-        <mat-form-field>
-          <input matInput #password placeholder="Password">
-        </mat-form-field>
-        <br/>
-        <button mat-raised-button
-            (click)='doRegister(userName.value, name.value, email.value, password.value)'>
-            Register
-        </button>
+          <br/>
+          <mat-form-field>
+            <input matInput #password type="password" placeholder="Password" name="password"
+                   required
+                   [(ngModel)]="registrationDetails.password"/>
+          </mat-form-field>
+          <br/>
+          <button mat-raised-button>
+              Register
+          </button>
+      </form>
     </ux-ebox-content>
+
   </ux-ebox>
 
 
