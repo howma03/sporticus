@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {UsersService} from "./users.service";
 import {OrganisationService} from "./organisation.service";
+import {RegistrationService} from "./registration.service";
 
 @NgModule({
   imports: [
@@ -11,6 +12,7 @@ import {OrganisationService} from "./organisation.service";
   ],
   providers: [
     UsersService,
+    RegistrationService,
     OrganisationService
   ],
   declarations: [
