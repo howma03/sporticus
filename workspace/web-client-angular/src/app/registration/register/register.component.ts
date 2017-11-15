@@ -3,6 +3,7 @@ import {RegisterUser, RegistrationService} from "../../services/registration.ser
 import {ErrorHandlingService} from "../../services/error-handling.service";
 import {Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: 'app-register',
@@ -13,7 +14,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private registrationService: RegistrationService,
     private errorHandlingService: ErrorHandlingService,
-    private router: Router
+    private router: Router,
+    public snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -21,7 +23,7 @@ export class RegisterComponent implements OnInit {
 
   loading: boolean = false;
   tryAgain: boolean = false;
-  tryAgainReason: string = true;
+  tryAgainReason: string = "";
 
   registrationDetails = {
     firstName: '',
@@ -46,7 +48,7 @@ export class RegisterComponent implements OnInit {
       .subscribe(success => {
         this.loading = false;
         if (success) {
-          alert("User " + testUser.firstName + " " + testUser.surname +  " successfully created.")
+          this.snack("User " + testUser.firstName + " " + testUser.surname +  " successfully created.")
           this.router.navigate(['/landing/login']);
         }
       }, err => {
@@ -61,7 +63,11 @@ export class RegisterComponent implements OnInit {
         if(this.tryAgain = true) {
           this.errorHandlingService.handleError(err);
         }
-
       });;
+  }
+
+
+  snack(message) {
+    this.snackBar.open('Message archived');
   }
 }
