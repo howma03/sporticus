@@ -4,11 +4,11 @@ import {AuthService} from "../auth.service";
 
 @Component({
   selector: 'app-login-overlay',
-  templateUrl: './login-overlay.component.html',
-  styleUrls: ['./login-overlay.component.css']
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 
-export class LoginOverlayComponent implements OnInit {
+export class LoginComponent implements OnInit {
 
   constructor(private router: Router,
               private authService: AuthService) {

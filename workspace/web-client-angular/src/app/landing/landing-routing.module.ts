@@ -5,7 +5,7 @@ import {AboutComponent} from "./about/about.component";
 import {LegalComponent} from "./legal/legal.component";
 import {ContactComponent} from "./contact/contact.component";
 import {ClubsComponent} from "./clubs/clubs.component";
-import {LoginOverlayComponent} from "../login/login-overlay/login-overlay.component";
+import {LoginComponent} from "../login/login/login.component";
 import {LegalDisclosurePolicyComponent} from "./legal-disclosure-policy/legal-disclosure-policy.component";
 import {HelpComponent} from "./help/help.component";
 import {RegisterComponent} from "../registration/register/register.component";
@@ -16,7 +16,7 @@ const landingRoutes: Routes = [
     path: 'landing',
     component: LandingComponent,
     children: [
-      {path: 'login', component: LoginOverlayComponent},
+      {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent},
       {path: 'about', component: AboutComponent},
       {path: 'help', component: HelpComponent},

@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {LoginOverlayComponent} from './login-overlay/login-overlay.component';
+import {LoginComponent} from './login/login.component';
 import {AuthService} from "./auth.service";
 import {AuthGuard} from "./auth.guard";
 import {EboxModule} from "@ux-aspects/ux-aspects";
@@ -13,9 +13,9 @@ import {MatFormFieldModule} from "@angular/material";
     EboxModule
   ],
   exports: [
-    LoginOverlayComponent
+    LoginComponent
   ],
-  declarations: [LoginOverlayComponent],
+  declarations: [LoginComponent],
   providers: [AuthService, AuthGuard]
 })
 
