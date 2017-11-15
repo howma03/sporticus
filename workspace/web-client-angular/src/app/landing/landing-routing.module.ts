@@ -10,6 +10,7 @@ import {LegalDisclosurePolicyComponent} from "./legal-disclosure-policy/legal-di
 import {HelpComponent} from "./help/help.component";
 import {RegisterComponent} from "../registration/register/register.component";
 import {InitialComponent} from "./initial/initial.component";
+import {PricesComponent} from "./prices/prices.component";
 
 const landingRoutes: Routes = [
   {
@@ -22,6 +23,7 @@ const landingRoutes: Routes = [
       {path: 'help', component: HelpComponent},
       {path: 'help/**', component: HelpComponent},
       {path: 'clubs', component: ClubsComponent},
+      {path: 'prices', component: PricesComponent},
       {path: 'legal', component: LegalComponent},
       {path: 'legal/disclosure_policy', component: LegalDisclosurePolicyComponent},
       {path: 'contact', component: ContactComponent},
