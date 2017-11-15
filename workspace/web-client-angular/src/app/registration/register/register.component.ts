@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {RegisterUser, RegistrationService} from "../../services/registration.service";
 import {ErrorHandlingService} from "../../services/error-handling.service";
 import {Router} from "@angular/router";
+import {HttpErrorResponse} from "@angular/common/http";
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: 'app-register',
@@ -12,32 +14,62 @@ export class RegisterComponent implements OnInit {
   constructor(
     private registrationService: RegistrationService,
     private errorHandlingService: ErrorHandlingService,
-    private router: Router
+    private router: Router,
+    public snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
   }
 
-  doRegister(userName: string, name: string, email: string, password: string) {
-    let testUser: RegisterUser = {
-      userName,
-      name,
-      email,
-      password
-    };
+  loading: boolean = false;
+  tryAgain: boolean = false;
+  tryAgainReason: string = "";
 
+  registrationDetails = {
+    firstName: '',
+    surname: '',
+    userName: '',
+    email: '',
+    password: ''
+  };
+
+
+  doRegister() {
+    let testUser: RegisterUser = {
+      userName: this.registrationDetails.userName,
+      firstName: this.registrationDetails.firstName,
+      surname: this.registrationDetails.surname,
+      email: this.registrationDetails.email,
+      password: this.registrationDetails.password
+    };
+    this.loading = true;
+    this.tryAgain = false;
     this.registrationService.createOne(testUser)
       .subscribe(success => {
+        this.loading = false;
         if (success) {
-          alert("User " + testUser.name +  " successfully created.")
+          this.snack("User " + testUser.firstName + " " + testUser.surname +  " successfully created.")
           this.router.navigate(['/landing/login']);
         }
       }, err => {
-        this.errorHandlingService.handleError(err);
-
-        debugger;
-        //this.loading = false;
-        //this.tryAgain = true;
+        this.loading = false;
+        if(err instanceof HttpErrorResponse) {
+          if(err.status === 400) {
+            this.tryAgainReason = "A user is already registered with the email - " + testUser.email
+            this.tryAgain = true;
+          }
+        }
+        //We've handled the error so don't need to pass to the error handling service.
+        if(this.tryAgain = true) {
+          this.errorHandlingService.handleError(err);
+        }
       });;
+  }
+
+
+  snack(message) {
+    this.snackBar.open('Message archived', '', {
+      duration: 3000
+    });
   }
 }

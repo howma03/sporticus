@@ -21,9 +21,14 @@ export class LoginComponent implements OnInit {
   loading: boolean = false;
   tryAgain: boolean = false;
 
-  doLogin(email: string, password: string) {
+  userDetails = {
+    email: '',
+    password: ''
+  };
+
+  doLogin() {
     this.loading = true;
-    this.authService.login(email, password)
+    this.authService.login(this.userDetails.email, this.userDetails.password)
       .subscribe(success => {
         this.loading = false;
         this.tryAgain = !success;
@@ -38,6 +43,10 @@ export class LoginComponent implements OnInit {
   }
 
   gotoRegister() {
-    this.router.navigate(['register'])
+    this.router.navigate(['register']);
+  }
+
+  gotoResetPassword() {
+    this.router.navigate(['resetpassword', this.userDetails.email]);
   }
 }
