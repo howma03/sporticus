@@ -53,8 +53,7 @@ public class RestControllerRegistration extends ControllerAbstract {
      */
     private DtoUser getDtoUser(final IUser user) {
         final DtoUser dtoUser = new DtoUser(user);
-        // Now determine the number of groups the user is a member of
-        dtoUser.setPassword(null);
+        dtoUser.setPassword("");
         return dtoUser;
     }
 
@@ -72,6 +71,7 @@ public class RestControllerRegistration extends ControllerAbstract {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         user.setPassword(ENCODER.encode(user.getPassword()));
-        return new ResponseEntity<>(getDtoUser(serviceUser.addUser(user)), HttpStatus.OK);
+        DtoUser result = getDtoUser(serviceUser.addUser(user));
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

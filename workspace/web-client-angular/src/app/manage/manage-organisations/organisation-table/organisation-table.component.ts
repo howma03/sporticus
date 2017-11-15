@@ -20,7 +20,7 @@ export class OrganisationTableComponent implements OnInit {
   }
 
   ngOnInit() {
-   this.organisationService.retrieveAll()
+    this.subscription = this.organisationService.retrieveAll()
       .map(list=>list.data)
       .subscribe((orgs: Organisation[])=>{
         this.orgs = orgs;
@@ -38,7 +38,7 @@ export class OrganisationTableComponent implements OnInit {
   }
   public delete(itemId) {
     console.info("delete - id="+itemId);
-    this.organisationService.deleteOne(itemId);
+    this.organisationService.deleteOne(itemId).subscribe();
   }
 
   public openModal() : void {

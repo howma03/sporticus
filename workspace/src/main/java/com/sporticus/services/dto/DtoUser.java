@@ -13,14 +13,14 @@ public class DtoUser implements IUser {
     private final Date created = new Date();
     private String createdString = "";
     private Long id;
-    private String email;
-    private String password;
+    private String email = "";
+    private String password = "";
     private Boolean verified = false;
     private Boolean enabled = true;
     private Boolean isAdmin = false;
-    private String firstName;
-    private String lastName;
-    private String verificationCode;
+    private String firstName = "";
+    private String lastName = "";
+    private String verificationCode = "";
 
     public DtoUser() {
     }
