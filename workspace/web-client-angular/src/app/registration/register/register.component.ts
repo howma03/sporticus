@@ -68,6 +68,8 @@ export class RegisterComponent implements OnInit {
 
 
   snack(message) {
-    this.snackBar.open('Message archived');
+    this.snackBar.open('Message archived', '', {
+      duration: 3000
+    });
   }
 }
