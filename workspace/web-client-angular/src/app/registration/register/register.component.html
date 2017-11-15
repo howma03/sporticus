@@ -12,15 +12,19 @@
         </mat-form-field>
         <br/>
         <mat-form-field>
+          <input matInput #name placeholder="Name">
+        </mat-form-field>
+        <br/>
+        <mat-form-field>
           <input matInput #email placeholder="Email">
         </mat-form-field>
         <br/>
         <mat-form-field>
-          <input matInput #password type="password" placeholder="Password">
+          <input matInput #password placeholder="Password">
         </mat-form-field>
         <br/>
         <button mat-raised-button
-            (click)='doRegister(userName.value, email.value, password.value)'>
+            (click)='doRegister(userName.value, name.value, email.value, password.value)'>
             Register
         </button>
     </ux-ebox-content>
