@@ -10,6 +10,7 @@ import {LegalDisclosurePolicyComponent} from "./legal-disclosure-policy/legal-di
 import {HelpComponent} from "./help/help.component";
 import {RegisterComponent} from "../registration/register/register.component";
 import {InitialComponent} from "./initial/initial.component";
+import {ResetPasswordComponent} from "../login/reset-password/reset-password.component";
 import {PricesComponent} from "./prices/prices.component";
 
 const landingRoutes: Routes = [
@@ -18,6 +19,7 @@ const landingRoutes: Routes = [
     component: LandingComponent,
     children: [
       {path: 'login', component: LoginComponent},
+      {path: 'resetpassword/:email', component: ResetPasswordComponent},
       {path: 'register', component: RegisterComponent},
       {path: 'about', component: AboutComponent},
       {path: 'help', component: HelpComponent},

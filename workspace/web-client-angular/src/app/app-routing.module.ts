@@ -11,6 +11,10 @@ const appRoutes: Routes = [
     redirectTo: 'landing/register'
   },
   {
+    path: 'resetpassword/:email',
+    redirectTo: 'landing/resetpassword/:email'
+  },
+  {
     path: 'manage',
     redirectTo: 'main/manage'
   },

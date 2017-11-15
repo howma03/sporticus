@@ -5,18 +5,23 @@ import {AuthService} from "./auth.service";
 import {AuthGuard} from "./auth.guard";
 import {EboxModule} from "@ux-aspects/ux-aspects";
 import {MatFormFieldModule} from "@angular/material";
+import {ResetPasswordComponent} from './reset-password/reset-password.component';
+import {NewPasswordComponent} from './new-password/new-password.component';
+import {FormsModule} from "@angular/forms";
+import {ResetPasswordService} from "./reset-password.service";
 
 @NgModule({
   imports: [
     CommonModule,
     MatFormFieldModule,
-    EboxModule
+    EboxModule,
+    FormsModule
   ],
   exports: [
-    LoginComponent
+    LoginComponent, ResetPasswordComponent
   ],
-  declarations: [LoginComponent],
-  providers: [AuthService, AuthGuard]
+  declarations: [LoginComponent, ResetPasswordComponent, NewPasswordComponent],
+  providers: [AuthService, AuthGuard, ResetPasswordService]
 })
 
 export class LoginModule {

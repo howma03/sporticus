@@ -8,25 +8,32 @@
       </ux-ebox-header>
 
       <ux-ebox-content>
+        <form (ngSubmit)="doLogin()" #loginForm="ngForm">
+          <p>Please provide your login credentials</p>
 
-        <p>Please provide your login credentials</p>
+          <input #email type="email" placeholder="Email" name="email"
+                 required
+                 [(ngModel)]="userDetails.email"
+                 (keyup.enter)="password.focus()"/><br/>
+          <input #password type="password" placeholder="Password" name="password"
+                 required
+                 [(ngModel)]="userDetails.password"
+                 (keyup.enter)="doLogin()"/><br/>
 
-        <input #email type="email" placeholder="Email" (keyup.enter)="password.focus()"/><br/>
-        <input #password type="password" placeholder="Password"
-               (keyup.enter)="doLogin(email.value, password.value)"/><br/>
+          <p *ngIf="tryAgain">Email or Password was invalid. Please try again.</p>
+          <br/>
+          <a (click)='gotoResetPassword(email.value)'>Forgotten your Password?</a><br/>
 
-        <p *ngIf="tryAgain">Email or Password was invalid. Please try again.</p>
-        <br/>
+          <button type="submit" [disabled]="!loginForm.form.valid" class="btn" style="width: 200px">
+            Login
+          </button>
 
-        <button class="btn" type="button btn-primary" style="width: 200px"
-                (click)='doLogin(email.value, password.value)'>
-          Login
-        </button>
+          <button class="btn" type="button" style="width: 200px"
+                  (click)='gotoRegister()'>
+            Register
+          </button>
+        </form>
 
-        <button class="btn" type="button btn-primary" style="width: 200px"
-                (click)='gotoRegister()'>
-          Register
-        </button>
 
       </ux-ebox-content>
     </ux-ebox>
