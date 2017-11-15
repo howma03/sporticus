@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {RegisterUser, RegistrationService} from "../../services/registration.service";
 
 @Component({
   selector: 'app-register',
@@ -6,13 +7,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  orientation: string = 'vertical';
-  constructor() { }
+  constructor(private registrationService: RegistrationService) { }
 
   ngOnInit() {
   }
 
   doRegister(userName: string, email: string, password: string) {
-    // this.usersService.createOne(user).subscribe(user => alert("User created successfully for " + user.username));
+    let testUser: RegisterUser = {
+      userName,
+      email,
+      password
+    };
+
+    this.registrationService.createOne(testUser).subscribe();
   }
 }
