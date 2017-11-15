@@ -19,6 +19,10 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
+  loading: boolean = false;
+  tryAgain: boolean = false;
+  tryAgainReason: string = true;
+
   registrationDetails = {
     firstName: '',
     surname: '',
@@ -36,23 +40,28 @@ export class RegisterComponent implements OnInit {
       email: this.registrationDetails.email,
       password: this.registrationDetails.password
     };
-
+    this.loading = true;
+    this.tryAgain = false;
     this.registrationService.createOne(testUser)
       .subscribe(success => {
+        this.loading = false;
         if (success) {
           alert("User " + testUser.firstName + " " + testUser.surname +  " successfully created.")
           this.router.navigate(['/landing/login']);
         }
       }, err => {
+        this.loading = false;
         if(err instanceof HttpErrorResponse) {
           if(err.status === 400) {
-            alert("A user is already registered with the email=" + testUser.firstName + " " + testUser.surname)
+            this.tryAgainReason = "A user is already registered with the email - " + testUser.email
+            this.tryAgain = true;
           }
         }
+        //We've handled the error so don't need to pass to the error handling service.
+        if(this.tryAgain = true) {
+          this.errorHandlingService.handleError(err);
+        }
 
-        this.errorHandlingService.handleError(err);
-
-        //this.loading = false;
       });;
   }
 }
