@@ -30,7 +30,6 @@ export class LadderComponent implements OnInit {
 
   challenge(ladderUser : LadderUser) {
     ladderUser.isChallenged = true;
-    alert("You are challenging user " + ladderUser.id);
   }
 }
 
