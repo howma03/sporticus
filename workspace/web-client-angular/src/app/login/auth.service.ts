@@ -12,6 +12,12 @@ export class AuthService {
   loggedIn: boolean = null;
   currentUser: User = null;
 
+  private loginUrl = "/api/user/profile";
+
+  getCurrentUser(): User {
+    return this.currentUser;
+  }
+
   isLoggedIn(): Observable<boolean> {
     if (this.loggedIn == null) {
       return this.check().catch(err => {
@@ -22,8 +28,6 @@ export class AuthService {
       return Observable.of(this.loggedIn);
     }
   }
-
-  private loginUrl = "/api/user/profile";
 
   login(email: string, password: string): Observable<boolean> {
     // let tempToken = "Token";
