@@ -63,9 +63,12 @@ export class RegisterComponent implements OnInit {
         if(this.tryAgain = true) {
           this.errorHandlingService.handleError(err);
         }
-      });;
+      });
   }
 
+  cancelRegister() {
+    this.router.navigate(['/landing/login']);
+  }
 
   snack(message) {
     this.snackBar.open('Message archived', '', {

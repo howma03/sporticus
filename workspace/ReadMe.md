@@ -4,7 +4,7 @@ git clone https://github.com/howma03/sporticus.git
 
 # Configuring Intellij
 
-Create new project is intellij
+Create new empty project is intellij
 
 file->projectStructure
 
@@ -18,7 +18,7 @@ https://dev.mysql.com/downloads/mysql/
 
 # Database
 
-CREATE DAATABASE sporticus;
+CREATE DATABASE sporticus;
 
 CREATE USER 'admin1'@'localhost' IDENTIFIED BY 'S0uthern';
 
