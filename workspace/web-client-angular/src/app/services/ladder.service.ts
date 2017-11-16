@@ -27,6 +27,7 @@ export interface Ladder {
 
 export interface LadderUser extends User {
   position: number;
+  isChallenged: boolean;
   canChallenge: boolean;
   userId: number;
 }

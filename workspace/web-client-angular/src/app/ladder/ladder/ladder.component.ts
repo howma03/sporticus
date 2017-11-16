@@ -23,13 +23,14 @@ export class LadderComponent implements OnInit {
   }
 
   dataSource = null;
-  displayedColumns = ['name', 'position', 'actions'];
+  displayedColumns = ['name', 'position', 'challenged', 'actions'];
 
   ngOnInit() {
   }
 
-  challenge(id : number) {
-    alert("You are challenging user " + id);
+  challenge(ladderUser : LadderUser) {
+    ladderUser.isChallenged = true;
+    alert("You are challenging user " + ladderUser.id);
   }
 }
 
