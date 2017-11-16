@@ -1,0 +1,29 @@
+<div class="example-container mat-elevation-z8">
+  <mat-table #table [dataSource]="dataSource">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="position">
+      <mat-header-cell *matHeaderCellDef> Your Position</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.position}}</mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.name}}</mat-cell>
+    </ng-container>
+
+    <!-- Started Column -->
+    <ng-container matColumnDef="started">
+      <mat-header-cell *matHeaderCellDef>Started On</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.created | date }}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"
+             (click)="handleRowClick(row)"></mat-row>
+  </mat-table>
+</div>

@@ -12,6 +12,7 @@ import {AuthInterceptor} from "./login/auth.interceptor";
 import {NgxCarouselModule} from "ngx-carousel";
 import 'hammerjs';
 import {ManageModule} from "./manage/manage.module";
+import {LadderModule} from "./ladder/ladder.module";
 
 @NgModule({
   declarations: [
@@ -24,9 +25,11 @@ import {ManageModule} from "./manage/manage.module";
     HttpClientModule,
     LoginModule,
     MainModule,
-    AppRoutingModule,
     LandingModule,
-    ManageModule
+    ManageModule,
+    LadderModule,
+    // Keep routing module last!
+    AppRoutingModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

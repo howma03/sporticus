@@ -6,7 +6,7 @@ import {List} from "./list";
 @Injectable()
 export class BaseCrudService<Type> {
 
-  constructor(private http: HttpClient) {
+  constructor(public http: HttpClient) {
   }
 
   protected url = '';

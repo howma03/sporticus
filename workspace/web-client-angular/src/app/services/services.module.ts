@@ -4,6 +4,7 @@ import {UsersService} from "./users.service";
 import {OrganisationService} from "./organisation.service";
 import {RegistrationService} from "./registration.service";
 import {ErrorHandlingService} from "./error-handling.service";
+import {LadderService} from "./ladder.service";
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import {ErrorHandlingService} from "./error-handling.service";
     ErrorHandlingService,
     UsersService,
     RegistrationService,
-    OrganisationService
+    OrganisationService,
+    LadderService
   ],
   declarations: [
   ]
