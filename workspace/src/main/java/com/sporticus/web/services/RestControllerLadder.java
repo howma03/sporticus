@@ -6,6 +6,7 @@ import com.sporticus.domain.entities.Organisation;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.domain.interfaces.IGroupMember.Permission;
+import com.sporticus.domain.interfaces.IGroupMember.Status;
 import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryGroup;
@@ -103,6 +104,7 @@ public class RestControllerLadder extends ControllerAbstract {
                     gm.setGroupId(group.getId());
                     gm.setUserId(user.getId());
                     gm.setPermissions(Permission.WRITE);
+                    gm.setStatus(Status.Accepted);
 
                     repositoryGroupMember.save(gm);
                 }
