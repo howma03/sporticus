@@ -45,32 +45,29 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 	}
 
 	private List<IGroup> findLadderGroups(Long userId) {
-		final List<IGroup> list = new ArrayList();
-		this.serviceGroup.readGroups(gm -> (userId == null || gm.getUserId().equals(userId)) &&
-				gm.getStatus().equals(IGroupMember.Status.Accepted) &&
-				gm.isEnabled())
-				.stream()
-				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()));
-		return list;
-	}
-
-	private boolean isActiveLadderMember(Long ladderId, Long userId) {
-		final List<IGroup> list = this.serviceGroup.readGroups(gm -> (ladderId.equals(gm.getGroupId()) || gm.getUserId().equals(userId)) &&
+		return this.serviceGroup.readGroups(gm -> (userId == null || gm.getUserId().equals(userId)) &&
 				gm.getStatus().equals(IGroupMember.Status.Accepted) &&
 				gm.isEnabled())
 				.stream()
 				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
 				.collect(Collectors.toList());
-		return list.size()>0;
+	}
+
+	private boolean isActiveLadderMember(Long ladderId, Long userId) {
+		return this.serviceGroup.readGroups(gm -> (ladderId.equals(gm.getGroupId()) || gm.getUserId().equals(userId)) &&
+				gm.getStatus().equals(IGroupMember.Status.Accepted) &&
+				gm.isEnabled())
+				.stream()
+				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
+				.collect(Collectors.toList()).size()>0;
 	}
 
 	@Override
 	public List<IGroup> getLadders() throws ServiceLadderExceptionNotFound {
-		final List<IGroup> list = this.serviceGroup.readAllGroups()
+		return this.serviceGroup.readAllGroups()
 				.stream()
 				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
 				.collect(Collectors.toList());
-		return list;
 	}
 
 	@Override

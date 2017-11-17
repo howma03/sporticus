@@ -58,17 +58,6 @@ public class RestControllerLadder extends ControllerAbstract {
         }
     }
 
-    private DtoList<DtoGroup> findLadderGroup1s(Long userId){
-        final DtoList<DtoGroup> list = new DtoList();
-        this.serviceGroup.readGroups(gm -> (userId==null || gm.getUserId().equals(userId)) &&
-                gm.getStatus().equals(IGroupMember.Status.Accepted) &&
-                gm.isEnabled())
-                .stream()
-                .filter(g-> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
-                .forEach(g -> list.add(convertToDtoGroup(g)));
-        return list;
-    }
-
     /**
      * Converts a IGroup to DtoGroup
      * @param g
