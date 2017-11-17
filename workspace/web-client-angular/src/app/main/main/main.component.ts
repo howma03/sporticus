@@ -57,11 +57,11 @@ export class MainComponent implements OnInit {
       children: [
         {
           title: 'Users',
-          select: () => this.router.navigate(['main/manage'])
+          select: () => this.router.navigate(['main/manage-users'])
         },
         {
           title: 'Organisations',
-          select: () => this.router.navigate(['main/manage'])
+          select: () => this.router.navigate(['main/manage-organisations'])
         }
       ]
     }

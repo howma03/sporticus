@@ -1,37 +1,30 @@
-<div class="example-container mat-elevation-z8">
-  <mat-table #table [dataSource]="dataSource" >
+<br/>
 
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
+<div class="user__list" *ngIf="!ladderUsers.length">
+  <p>The ladder is currently empty</p>
+</div>
 
-    <!-- Position Column -->
-    <ng-container matColumnDef="position">
-      <mat-header-cell *matHeaderCellDef> Position</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.position + 1}}</mat-cell>
-    </ng-container>
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.userName}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="challenged">
-      <mat-header-cell *matHeaderCellDef> Challenged</mat-header-cell>
-      <mat-cell *matCellDef="let element">
-        <i *ngIf="element.isChallenged" class="hpe-icon hpe-checkmark" tooltip="The player has been challenged"></i>
-      </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="actions">
-      <mat-header-cell *matHeaderCellDef> Actions</mat-header-cell>
-      <mat-cell *matCellDef="let element">
-        <i *ngIf="element.canChallenge" class="hpe-icon hpe-target hover-action-icon" (click)="challenge(element)" tooltip="Challenge" uxHoverAction></i>
-      </mat-cell>
-    </ng-container>
-
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-
-  </mat-table>
+<div class="user__list" *ngIf="ladderUsers.length">
+  <table class="table table-hover">
+    <thead>
+    <tr class="table-header-dark">
+      <th>Position</th>
+      <th>Name</th>
+      <th>Challenged</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="hover-action-container" *ngFor="let rung of ladderUsers" uxHoverActionContainer>
+      <td class="text-black">{{ rung.position }}</td>
+      <td class="text-black">{{ rung.userName }}</td>
+      <td>
+          <i *ngIf="rung.isChallenged" class="hpe-icon hpe-checkmark" tooltip="Challenged"></i>
+      </td>
+      <td>
+        <i *ngIf="rung.canChallenge"  class="hpe-icon hpe-target hover-action-icon" (click)="challenge(rung)" tooltip="Challenge" uxHoverAction></i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>

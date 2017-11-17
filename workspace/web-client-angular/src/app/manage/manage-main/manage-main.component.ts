@@ -9,10 +9,19 @@ import {Breadcrumb, PageHeaderIconMenu, PageHeaderNavigationItem} from "@ux-aspe
 })
 export class ManageMainComponent implements OnInit {
 
-  ngOnInit() {
+  constructor(private route: ActivatedRoute,
+              private router: Router) {
+  }
+
+  ngOnInit(){
+    this.route.data.subscribe(data => {
+      this.initData(data['selectedIndex']);
+    });
   }
 
   title = 'Sporticus';
+
+  selectedIndex = 0;
 
   condensed: boolean = true;
 
@@ -99,16 +108,16 @@ export class ManageMainComponent implements OnInit {
     }
   ];
 
-  constructor(private route: ActivatedRoute,
-              private router: Router) {
-  }
-
   goHome() {
     this.router.navigate(['main/home']);
   }
 
   doLogout() {
     this.router.navigate(['landing/login']);
+  }
+
+  initData(selectedIndex){
+    this.selectedIndex = selectedIndex;
   }
 
 }

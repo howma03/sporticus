@@ -5,15 +5,18 @@ import {MyLaddersComponent} from './my-ladders/my-ladders.component';
 import {ServicesModule} from "../services/services.module";
 import {MatDialogModule, MatFormFieldModule, MatGridListModule, MatTableModule} from "@angular/material";
 import {LadderDialogComponent} from './ladder-dialog/ladder-dialog.component';
+import {HoverActionModule, SparkModule} from "@ux-aspects/ux-aspects";
 
 @NgModule({
   imports: [
     CommonModule,
+    HoverActionModule,
     ServicesModule,
     MatDialogModule,
     MatTableModule,
     MatGridListModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    SparkModule
   ],
   exports: [MyLaddersComponent],
   entryComponents: [
