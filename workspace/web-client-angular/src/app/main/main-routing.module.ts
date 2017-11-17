@@ -16,7 +16,21 @@ const mainRoutes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {path: 'home', component: HomeComponent},
-      {path: 'manage', component: ManageMainComponent},
+      {path: 'manage', redirectTo: 'manage-users'},
+      {
+        path: 'manage-users',
+        component: ManageMainComponent,
+        data: {
+          selectedIndex: 0
+        }
+      },
+      {
+        path: 'manage-organisations',
+        component: ManageMainComponent,
+        data: {
+          selectedIndex: 1
+        }
+      },
       {path: 'manage-sports', component: ManageSportsComponent},
       {path: 'manage-teams', component: ManageTeamsComponent},
       {path: 'manage-competitions', component: ManageCompetitionsComponent},

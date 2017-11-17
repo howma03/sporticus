@@ -5,6 +5,8 @@ import com.sporticus.domain.entities.GroupMember;
 import com.sporticus.domain.entities.User;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
+import com.sporticus.domain.interfaces.IGroupMember.Permission;
+import com.sporticus.domain.interfaces.IGroupMember.Status;
 import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryGroup;
@@ -104,7 +106,7 @@ public class ServiceGroupImplRepository implements IServiceGroup {
             LOGGER.warn(() -> "Cannot read groups for null organisation");
             return new ArrayList<>();
         }
-        return this.repositoryGroup.findByOwnerOrganisationId(organisation.getId());
+        return new Converter<Group, IGroup>().convert(this.repositoryGroup.findByOwnerOrganisationId(organisation.getId()));
     }
 
     @Override
@@ -215,36 +217,72 @@ public class ServiceGroupImplRepository implements IServiceGroup {
     }
 
     /***
-     * Function to handle the invitation for a user to join a group
-     * @param dtoGroupMember
+     * Function to handle the invitation for a (known) user to join a group
+     * @param groupMember
      * @return IGroupMember
      */
     @Override
-    synchronized public IGroupMember createGroupMember(final DtoGroupMember dtoGroupMember, final IUser inviter) throws ServiceGroupException {
-        IGroupMember groupMember;
+    public IGroupMember createGroupMember(final GroupMember groupMember, IUser inviter) throws ServiceGroupException {
 
         // Validate the group - does it exist?
 
-        final IGroup group = this.repositoryGroup.findOne(dtoGroupMember.getGroupId());
+        final IGroup group = this.repositoryGroup.findOne(groupMember.getGroupId());
         if(group == null) {
-            LOGGER.warn(() -> "Cannot create membership - group not known - " + dtoGroupMember);
+            LOGGER.warn(() -> "Cannot create membership - group not known - " + groupMember);
             throw new ServiceGroupException("Group cannot be found");
         }
 
         // TODO: Implement a limit on the number of members in the group - this will be paid for accounts vs free ones
 
-        IUser user = repositoryUser.findByEmail(dtoGroupMember.getEmail());
+        IUser user = repositoryUser.findOne(groupMember.getUserId());
+        if(user == null) {
+            LOGGER.warn(() -> "User is not known - id="+groupMember.getUserId());
+            throw new ServiceGroupException("User is not known - id="+groupMember.getUserId());
+
+        }
+
+        // Check to see if the user already has a membership for the group - only 1 per user is allowed
+        final List<GroupMember> groupMembers = this.repositoryGroupMember.findByGroupIdAndUserId(group.getId(), user.getId());
+        if(groupMembers.size() > 0) {
+            LOGGER.warn(() -> "User is already member of group - can only be member once");
+            throw new ServiceGroupException("user already a member of the group");
+        }
+
+        mailService.sendVerificationEmailForInvitation(user, inviter, group);
+
+        IGroupMember newGroupMember = new GroupMember();
+        IGroupMember.COPY(groupMember, newGroupMember);
+        newGroupMember.setUserId(user.getId());
+
+        return this.repositoryGroupMember.save((GroupMember) newGroupMember);
+    }
+
+    @Override
+    public IGroupMember createGroupMember(IGroup group,
+                                          IUser newUser,
+                                          Permission permissions,
+                                          IUser inviter) throws ServiceGroupException {
+
+        // Validate the group - does it exist?
+
+        if(group == null) {
+            LOGGER.warn(() -> "Cannot create membership - group cannot be null");
+            throw new ServiceGroupException("Group cannot be null");
+        }
+        if(newUser == null) {
+            LOGGER.warn(() -> "Cannot create membership - user cannot be null");
+            throw new ServiceGroupException("User cannot be null");
+        }
+
+        // TODO: Implement a limit on the number of members in the group - this will be paid for accounts vs free ones
+
+        IUser user = repositoryUser.findByEmail(newUser.getEmail());
         if(user == null) {
 
-            LOGGER.info(() -> "Creating a User account for the new user - email=" + dtoGroupMember.getEmail());
+            LOGGER.info(() -> "Creating a User account for the new user - email=" + newUser.getEmail());
 
-            final String password = passwordGenerator.generate();
-
-            user = new User();
-            user.setEmail(dtoGroupMember.getEmail());
-            user.setFirstName(dtoGroupMember.getFirstName());
-            user.setLastName(dtoGroupMember.getLastName());
-            user.setPassword(password);
+            user.setPassword(passwordGenerator.generate());
+            user.setVerified(false);
 
             // Register the user - send an email for membership invitation
 
@@ -262,13 +300,15 @@ public class ServiceGroupImplRepository implements IServiceGroup {
             mailService.sendVerificationEmailForInvitation(user, inviter, group);
         }
 
-        groupMember = new GroupMember();
-        IGroupMember.COPY(dtoGroupMember, groupMember);
-        groupMember.setUserId(user.getId());
+        IGroupMember newGroupMember = new GroupMember();
 
-        groupMember = this.repositoryGroupMember.save((GroupMember) groupMember);
+        newGroupMember.setGroupId(group.getId());
+        newGroupMember.setUserId(user.getId());
+        newGroupMember.setEnabled(true);
+        newGroupMember.setStatus(Status.Invited);
+        newGroupMember.setPermissions(permissions);
 
-        return groupMember;
+        return  this.repositoryGroupMember.save((GroupMember) newGroupMember);
     }
 
     /**
@@ -431,7 +471,7 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return IGroupMember
      */
     @Override
-    public IGroupMember updateGroupMember(final DtoGroupMember groupMember) {
+    public IGroupMember updateGroupMember(final GroupMember groupMember) {
         LOGGER.info(() -> "Updating a Group Member - " + groupMember);
         final IGroupMember found = this.repositoryGroupMember.findOne(groupMember.getId());
         if(found == null) {

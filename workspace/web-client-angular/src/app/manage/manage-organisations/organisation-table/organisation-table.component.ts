@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Organisation, OrganisationService} from "../../../services/organisation.service";
 import {Subscription} from "rxjs/Subscription";
 import 'rxjs/add/observable/of';
 import {OrganisationComponent} from "../organisation/organisation.component";
 import {MatDialog} from "@angular/material";
+import {DeletePromptComponent} from "../../delete-prompt/delete-prompt.component";
 
 @Component({
   selector: 'organisation-table',
   templateUrl: './organisation-table.component.html',
   styleUrls: ['./organisation-table.component.css']
 })
-export class OrganisationTableComponent implements OnInit {
+export class OrganisationTableComponent implements OnInit, OnDestroy {
 
   public orgs: Organisation[] = [];
   private subscription: Subscription;
@@ -36,6 +37,23 @@ export class OrganisationTableComponent implements OnInit {
     console.info("view - id="+itemId);
     this.openModal();
   }
+
+  openDeleteDialog(item) {
+    let dialogRef = this.dialog.open(DeletePromptComponent, {
+      data: {
+        id: item.id,
+        type: 'organisation',
+        organisationName: item.name
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === true) {
+        this.delete(item.id);
+      }
+    });
+  }
+
   public delete(itemId) {
     console.info("delete - id="+itemId);
     this.organisationService.deleteOne(itemId).subscribe();

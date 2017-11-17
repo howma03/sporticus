@@ -156,8 +156,9 @@ public abstract class ServiceMailAbstract implements IServiceMail {
             sendEmail(user, inSubject, TEMPLATE_LOCATION_FOR_EMAIL_VERIFICATION_INVITED, values);
 
         } catch(final RuntimeException e) {
-            LOGGER.error(() -> "sendVerificationEmailForInvitation failed - user=" + user);
-            throw new RuntimeException("sendVerificationEmailForInvitation failed - user=" + user, e);
+            String message = "sendVerificationEmailForInvitation failed - user=" + user;
+            LOGGER.warn(()->message);
+            throw new RuntimeException(message, e);
         }
     }
 
