@@ -6,6 +6,7 @@ import {RegistrationService} from "./registration.service";
 import {ErrorHandlingService} from "./error-handling.service";
 import {LadderService} from "./ladder.service";
 import {ProfileService} from "./profile.service";
+import {ChallengeService} from "./challenge.service";
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import {ProfileService} from "./profile.service";
   exports: [
   ],
   providers: [
+    ChallengeService,
     ErrorHandlingService,
     UsersService,
     RegistrationService,
