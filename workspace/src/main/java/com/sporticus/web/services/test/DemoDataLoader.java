@@ -1,4 +1,4 @@
-package com.sporticus.web.services;
+package com.sporticus.web.services.test;
 
 import com.sporticus.domain.entities.Group;
 import com.sporticus.domain.entities.GroupMember;
@@ -13,7 +13,6 @@ import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceLadder;
 import com.sporticus.interfaces.IServiceOrganisation;
 import com.sporticus.interfaces.IServiceUser;
-import com.sporticus.services.ServiceLadderImplRepository;
 import com.sporticus.types.GroupType;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;

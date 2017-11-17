@@ -12,6 +12,7 @@ import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
 import com.sporticus.types.GroupType;
 import com.sporticus.web.controllers.ControllerAbstract;
+import com.sporticus.web.services.test.DemoDataLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

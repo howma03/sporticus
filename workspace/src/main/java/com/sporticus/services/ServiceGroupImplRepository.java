@@ -248,7 +248,11 @@ public class ServiceGroupImplRepository implements IServiceGroup {
             throw new ServiceGroupException("user already a member of the group");
         }
 
-        mailService.sendVerificationEmailForInvitation(user, inviter, group);
+        try{
+            mailService.sendVerificationEmailForInvitation(user, inviter, group);
+        }catch(Exception ex){
+            LOGGER.error(()->"Failed to send email",ex);
+        }
 
         IGroupMember newGroupMember = new GroupMember();
         IGroupMember.COPY(groupMember, newGroupMember);
