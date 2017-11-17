@@ -1,7 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Ladder, LadderService, LadderUser} from "../../services/ladder.service";
-//import {DataSource} from "@angular/cdk/collections";
-//import {Observable} from "rxjs/Observable";
 import {AuthService} from "../../login/auth.service";
 import {Subscription} from "rxjs/Subscription";
 
