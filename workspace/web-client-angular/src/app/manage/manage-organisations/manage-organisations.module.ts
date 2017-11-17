@@ -6,10 +6,12 @@ import {MatDialogModule, MatGridListModule, MatTableModule} from "@angular/mater
 import {ServicesModule} from "../../services/services.module";
 import {HoverActionModule, SparkModule} from "@ux-aspects/ux-aspects";
 import { OrganisationComponent } from './organisation/organisation.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     MatTableModule,
     MatGridListModule,
     ServicesModule,
