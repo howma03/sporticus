@@ -18,6 +18,8 @@ import {DeletePromptComponent} from './delete-prompt/delete-prompt.component';
     ManageOrganisationsModule,
     MatTabsModule
   ],
+  exports: [
+  ],
   entryComponents: [
     DeletePromptComponent
   ],

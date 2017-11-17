@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Breadcrumb, PageHeaderIconMenu, PageHeaderNavigationItem} from "@ux-aspects/ux-aspects";
 import {AuthService} from "../../login/auth.service";
+import {ProfileDialogComponent} from "../../profile/profile-dialog/profile-dialog.component";
+import {MatDialog} from "@angular/material";
 
 @Component({
   selector: 'app-main',
@@ -10,8 +12,14 @@ import {AuthService} from "../../login/auth.service";
 })
 export class MainComponent implements OnInit {
 
-  ngOnInit() {
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private authService: AuthService,
+              private dialog: MatDialog) {
+  }
 
+
+  ngOnInit() {
   }
 
   title = 'Sporticus';
@@ -101,7 +109,8 @@ export class MainComponent implements OnInit {
         },
         {
           icon: 'hpe-user-settings',
-          title: 'Settings'
+          title: 'Edit Profile',
+          select: () => this.openProfile()
         },
         {
           icon: 'hpe-logout',
@@ -119,11 +128,6 @@ export class MainComponent implements OnInit {
     return this.authService.currentUser.email;
   }
 
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              private authService : AuthService) {
-  }
-
   goHome() {
     this.router.navigate(['main/home']);
   }
@@ -132,5 +136,18 @@ export class MainComponent implements OnInit {
     this.router.navigate(['landing/login']);
   }
 
+  openProfile() {
+    let dialogRef = this.dialog.open(ProfileDialogComponent, {
+      disableClose: true,
+      data: {
+        user: this.authService.currentUser
+      }
+    });
 
+    dialogRef.afterClosed().subscribe(user => {
+      if (user) {
+        this.authService.currentUser = user
+      }
+    });
+  }
 }

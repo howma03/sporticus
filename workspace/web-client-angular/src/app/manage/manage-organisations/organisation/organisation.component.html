@@ -26,21 +26,30 @@
     <div class="row">
       <div class="col-sm-9">
 
-        <form role="form">
+        <form #organisationForm="ngForm" (ngSubmit)="addOrganisation()">
 
           <div class="form-group">
             <label class="form-label case-label">Name *</label>
-            <input type="text" placeholder="Enter name" class="form-control" />
+            <input
+              type="text" placeholder="Enter name" class="form-control" name="name"
+              [(ngModel)]="organisationDetails.name"/>
           </div>
 
           <div class="form-group">
             <label class="form-label case-label">Address</label>
-            <input type="text" placeholder="Enter Address" class="form-control" />
+            <input type="text" placeholder="Enter Address" class="form-control" name="address"
+                   [(ngModel)]="organisationDetails.address"/>
           </div>
 
           <div class="form-group">
             <label class="form-label case-label">Domain</label>
-            <textarea placeholder="Enter Domain" class="form-control"></textarea>
+            <input type="text" placeholder="Enter Address" class="form-control" name="domain"
+                   [(ngModel)]="organisationDetails.domain"/>
+          </div>
+
+          <div class="marquee-footer">
+            <button type="button" class="btn button-primary m-r-xs" type="submit">Create</button>
+            <button type="button" class="btn button-secondary" (click)="cancel()">Cancel</button>
           </div>
 
         </form>
@@ -49,10 +58,7 @@
     </div>
   </div>
 
-  <div class="marquee-footer">
-    <button type="button" class="btn button-primary m-r-xs" (click)="ok()">Create</button>
-    <button type="button" class="btn button-secondary" (click)="cancel()">Cancel</button>
-  </div>
+
 
 </div>
 </div>
