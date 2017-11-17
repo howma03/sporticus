@@ -15,7 +15,7 @@ export class LadderService extends BaseCrudService<Ladder> {
   }
 
   getLadderUsers(id: number): Observable<List<LadderUser>> {
-    return this.http.get<List<LadderUser>>(this.url + '/${id}/members');
+    return this.http.get<List<LadderUser>>(this.url + `/${id}/members`);
   }
 }
 
