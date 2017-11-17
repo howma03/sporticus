@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Organisation, OrganisationService} from "../../../services/organisation.service";
 import {Subscription} from "rxjs/Subscription";
 import 'rxjs/add/observable/of';
@@ -10,7 +10,7 @@ import {MatDialog} from "@angular/material";
   templateUrl: './organisation-table.component.html',
   styleUrls: ['./organisation-table.component.css']
 })
-export class OrganisationTableComponent implements OnInit {
+export class OrganisationTableComponent implements OnInit, OnDestroy {
 
   public orgs: Organisation[] = [];
   private subscription: Subscription;
