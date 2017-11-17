@@ -1,0 +1,115 @@
+<html>
+<style type="text/css">
+    p#salutation {
+        color: black;
+        font-family: "Verdana", "sans-serif";
+        font-size: 10pt;
+        line-height: 12pt;
+        margin: 5pt 0pt 10pt 0pt;
+    }
+
+    p {
+        color: black;
+        font-family: "Verdana", "sans-serif";
+        font-size: 10pt;
+        line-height: 12pt;
+        margin: 5pt 0pt 5pt 0pt;
+    }
+
+    .para {
+        color: black;
+        font-family: "Verdana", "sans-serif";
+        margin: 10pt 0pt 10pt 0pt;
+    }
+
+    .email {
+        text-decoration: none !important;
+        color: black;
+    }
+
+    .signature {
+        color: black;
+        font-family: "Verdana", "sans-serif";
+        font-size: 10pt;
+        font-style: bold;
+        line-height: 12pt;
+        margin: 0pt 0pt 40pt 0pt;
+    }
+
+    .footer {
+        margin-bottom: 7.5pt;
+        text-align: left;
+        line-height: 13.5pt;
+        font-size: 8.5pt;
+        font-family: "Verdana", "sans-serif";
+    }
+</style>
+
+
+<body>
+<div>
+    <p id="salutation">
+        Dear <b>${user.getFormattedFirstName()},</b>
+    </p>
+</div>
+
+<div>
+
+    #if(!$inviter)
+        <p class="para">
+            You have been invited to join a group.
+        </p>
+    #else
+        #if(!$group)
+            <p class="para">
+                <b>${inviter.getName()}</b> has invited you to join a group.
+            </p>
+        #else
+            <p class="para">
+                <b>${inviter.getName()}</b> has invited you to join a group <b>'${group.getName()}'</b>.
+            </p>
+            #if("$group.getDescription())" != "")
+                <p class="para">
+                    The group is described as <b>'${group.getDescription()}'</b>
+                </p>
+            #end
+        #end
+    #end
+
+
+    <p class="para">
+        We have successfully registered your email address <span style="text-decoration: none;"> <b>${user.email}</b>.
+			</span>
+    </p>
+
+    <p class="para">
+        Now, if you wish to accept this invitation, then please go to <b><a
+            href="${webAddress}/registration/verification?email=${user.email}&id=${user.getVerificationCode()}">Accept
+        Invitation</a>.</b>
+    </p>
+
+    <p class="para">Once you've done this you'll be able to login and use our service.</p>
+
+    <p class="para">
+        If you wish to decline this invitation, then please go to <b><a
+            href="${webAddress}/registration/verification?email=${user.email}&id=${user.getVerificationCode()}&decline=true">Decline
+        Invitation</a>.</b>
+    </p>
+
+    <p class="para">
+        If you have any issues please email our <b><a
+            href="mailto:${supportEmail}">Support Team</a></b>.
+    </p>
+</div>
+
+<div>
+    <p class="para">
+        <b>Best Regards,</b>
+    </p>
+    <p class="signature">Your ${company} ${product} Team.</p>
+
+</div>
+
+</body>
+
+</html>

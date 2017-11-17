@@ -44,6 +44,12 @@ public class GroupMember implements IGroupMember {
     @Temporal(TemporalType.TIMESTAMP)
     private Date expelledDate;
 
+    @Column(nullable = true)
+    private String metaDataType;
+
+    @Column(nullable = true)
+    private String metaData;
+
     @Override
     public Long getId() {
         return id;

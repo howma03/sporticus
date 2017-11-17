@@ -1,5 +1,4 @@
 <br/>
-
 <div>
   <button type="button" class="btn button-primary" (click)="openModal()">
     <span class="hpe-icon hpe-deployment" aria-hidden="true"></span>&nbsp;Add Organisation
@@ -8,7 +7,7 @@
 
 <br/>
 
-<div class="user__list" *ngIf="!orgs.length">
+<div class="user__list" *ngIf="!orgs || !orgs.length">
   <p>No Organisations</p>
 </div>
 

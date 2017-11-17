@@ -1,10 +1,12 @@
 package com.sporticus.interfaces;
 
+import com.sporticus.domain.entities.Group;
+import com.sporticus.domain.entities.GroupMember;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
+import com.sporticus.domain.interfaces.IGroupMember.Permission;
 import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IUser;
-import com.sporticus.services.dto.DtoGroupMember;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +59,11 @@ public interface IServiceGroup {
      * Group Membership functions
      */
 
-    IGroupMember createGroupMember(DtoGroupMember dtoGroupMember, IUser inviter) throws ServiceGroupException;
+    IGroupMember createGroupMember(GroupMember groupMember, IUser inviter) throws ServiceGroupException;
+
+    IGroupMember createGroupMember(IGroup Group, IUser newUser,
+                                   Permission permissions,
+                                   IUser inviter) throws ServiceGroupException;
 
     List<IGroup> getMembershipGroupsForUser(Long userId);
 
@@ -73,7 +79,7 @@ public interface IServiceGroup {
 
     boolean isAllowedAccess(IUser user, IGroup group);
 
-    IGroupMember updateGroupMember(DtoGroupMember groupMember);
+    IGroupMember updateGroupMember(GroupMember groupMember);
 
     IGroupMember resendInvitation(IUser actor, Long id);
 

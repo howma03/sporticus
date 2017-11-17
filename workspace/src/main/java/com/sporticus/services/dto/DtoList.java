@@ -19,7 +19,7 @@ public class DtoList<T> {
         this.data.addAll(data);
     }
 
-    public Collection<T> getData() {
+	public Collection<T> getData() {
         return data;
     }
 
