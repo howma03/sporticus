@@ -2,6 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Ladder, LadderService, LadderUser} from "../../services/ladder.service";
 import {AuthService} from "../../login/auth.service";
 import {Subscription} from "rxjs/Subscription";
+import {ChallengeService} from "../../services/challenge.service";
 
 @Component({
   selector: 'app-ladder',
@@ -13,7 +14,10 @@ export class LadderComponent implements OnInit, OnDestroy {
   challengeAbove : number = 2;
   challengeBelow : number = 1;
 
-  constructor(private ladderService: LadderService, private authService: AuthService) {
+  constructor(
+    private ladderService: LadderService,
+    private authService: AuthService,
+    private challengeService: ChallengeService) {
   }
 
   public ladderUsers: LadderUser[] = [];
@@ -49,7 +53,16 @@ export class LadderComponent implements OnInit, OnDestroy {
   }
 
   challenge(ladderUser : LadderUser) {
-    ladderUser.isChallenged = true;
+    let ladderId = this.ladder.id;
+    this.challengeService.createChallenge(
+      this.ladder,
+      this.authService.getCurrentUser(),
+      ladderUser).subscribe(
+        item => {
+          debugger;
+          ladderUser.isChallenged = true;
+        }
+    );
   }
 
   ngOnDestroy() {
