@@ -13,7 +13,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by mark on 28/05/2017.
@@ -147,6 +149,17 @@ public class GroupMember implements IGroupMember {
     @Override
     public IGroupMember setExpelledDate(final Date expelledDate) {
         this.expelledDate = expelledDate;
+        return this;
+    }
+
+    @Override
+    public List<Object> getMetaData() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public IGroupMember setMetaData(List<Object> data) {
+        // do nothing
         return this;
     }
 

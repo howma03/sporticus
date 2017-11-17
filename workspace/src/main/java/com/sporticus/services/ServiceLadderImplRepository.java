@@ -1,6 +1,7 @@
 package com.sporticus.services;
 
 import com.sporticus.domain.entities.Event;
+import com.sporticus.domain.entities.User;
 import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
@@ -129,4 +130,23 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 		return repositoryEvent.save(event);
 	}
+
+	@Override
+	public List<IGroupMember> getLadderMembers(long ladderId) {
+
+		List<IGroupMember> members = serviceGroup.getGroupMembershipsForGroup(ladderId);
+
+		// for each member we will also include any active events for the logged-in user
+		members.stream().forEach(m->{
+			// check to see if there is a ladder challenge between the logged-in user and the group member
+			List<Event> events  = repositoryEvent.findByOwnerId(m.getUserId());
+
+
+
+		});
+
+		return members;
+	}
+
+
 }

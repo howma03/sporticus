@@ -3,6 +3,7 @@ package com.sporticus.domain.interfaces;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
+import java.util.List;
 
 public interface IGroupMember {
 
@@ -66,6 +67,10 @@ public interface IGroupMember {
     Date getExpelledDate();
 
     IGroupMember setExpelledDate(Date expelledDate);
+
+    List<Object> getMetaData();
+
+    IGroupMember setMetaData(List<Object> data);
 
     enum Status {
 

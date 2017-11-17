@@ -13,6 +13,7 @@ import com.sporticus.domain.repositories.IRepositoryGroup;
 import com.sporticus.domain.repositories.IRepositoryGroupMember;
 import com.sporticus.domain.repositories.IRepositoryUser;
 import com.sporticus.interfaces.IServiceGroup;
+import com.sporticus.interfaces.IServiceLadder;
 import com.sporticus.interfaces.IServiceOrganisation;
 import com.sporticus.services.dto.DtoGroup;
 import com.sporticus.services.dto.DtoGroupMemberOrdered;
@@ -46,13 +47,17 @@ public class RestControllerLadderMember extends ControllerAbstract {
 
     private final IServiceGroup serviceGroup;
 
+    private final IServiceLadder serviceLadder;
+
     @Autowired
     public RestControllerLadderMember(final IRepositoryUser repositoryUser,
                                       final IRepositoryGroup repositoryGroup,
-                                      final IServiceGroup serviceGroup) {
+                                      final IServiceGroup serviceGroup,
+                                      final IServiceLadder serviceLadder) {
         this.repositoryUser = repositoryUser;
         this.repositoryGroup = repositoryGroup;
         this.serviceGroup = serviceGroup;
+        this.serviceLadder = serviceLadder;
     }
 
     /**
@@ -89,7 +94,7 @@ public class RestControllerLadderMember extends ControllerAbstract {
     }
 
     /**
-     * Function returns a group's members given an identifier
+     * Function returns a group's members given an ladder identifier
      *
      * @param id
      * @return ResponseEntity<DtoGroup>
@@ -105,7 +110,10 @@ public class RestControllerLadderMember extends ControllerAbstract {
             LOGGER.warn(() -> "Group not found - id=" + id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(convertToDtoGroupMembers(serviceGroup.getGroupMembershipsForGroup(id)), HttpStatus.OK);
+
+        List<IGroupMember> members = serviceLadder.getLadderMembers(id);
+
+        return new ResponseEntity<>(convertToDtoGroupMembers(members), HttpStatus.OK);
     }
 
     // TODO: We need Create, Update and Delete operations for Ladder Members - these will only be allowed for the owner of the ladder

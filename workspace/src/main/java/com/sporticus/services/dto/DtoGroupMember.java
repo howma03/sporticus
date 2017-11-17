@@ -4,7 +4,9 @@ package com.sporticus.services.dto;
 import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.util.Utility;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by mark on 31/05/2017.
@@ -25,6 +27,8 @@ public class DtoGroupMember implements IGroupMember {
     private Date invitedDate;
     private Date acceptedOrRejectedDate;
     private Date expelledDate;
+
+    private List<Object> metaData = new ArrayList<>();
 
     /**
      * Calculated properties
@@ -176,6 +180,18 @@ public class DtoGroupMember implements IGroupMember {
     @Override
     public IGroupMember setExpelledDate (final Date date) {
         this.expelledDate = date;
+        return this;
+    }
+
+    @Override
+    public List<Object> getMetaData() {
+        return this.metaData;
+    }
+
+    @Override
+    public IGroupMember setMetaData(List<Object> data) {
+        this.metaData.clear();
+        this.metaData.addAll(data);
         return this;
     }
 
