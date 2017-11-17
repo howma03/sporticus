@@ -45,7 +45,7 @@ export class LadderComponent implements OnInit, OnDestroy {
         .subscribe((ladderUsers: LadderUser[])=>{
           this.ladderUsers = ladderUsers;
         });
-      this.myLadder = ladder;// TODO: Why does is this.ladder set?
+      this.myLadder = ladder;// TODO: Why does is this.ladder not set?
     }
   }
 
