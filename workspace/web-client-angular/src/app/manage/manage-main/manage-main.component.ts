@@ -21,7 +21,7 @@ export class ManageMainComponent implements OnInit {
 
   title = 'Sporticus';
 
-  selectedIndex: integer = 0;
+  selectedIndex = 0;
 
   condensed: boolean = true;
 
