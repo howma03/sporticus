@@ -81,7 +81,7 @@ public class RestControllerLadderChallenge extends ControllerAbstract {
      * @param challengedId
      * @return ResponseEntity<DtoEvent>
      */
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{ladderId}/{challengerId}/{challengedId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@PathVariable("ladderId") final Long ladderId,
                                            @PathVariable("challengerId") final Long challengerId,
                                            @PathVariable("challengedId") final Long challengedId) {
