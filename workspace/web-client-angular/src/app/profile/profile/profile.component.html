@@ -1,0 +1,28 @@
+<h2>Your Profile</h2>
+<form (ngSubmit)="onSave()" [formGroup]="profileForm">
+  <mat-form-field>
+    <input matInput placeholder="First Name" name="firstName" formControlName="firstName"/>
+    <mat-error *ngIf="firstName.hasError('required')">Please enter a value</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Surname" name="lastName" formControlName="lastName"/>
+    <mat-error *ngIf="lastName.hasError('required')">Please enter a value</mat-error>
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput type="password" placeholder="Password" name="password" formControlName="password"/>
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput type="password" placeholder="Confirm Password" name="confirmPassword"
+           formControlName="confirmPassword"/>
+    <mat-error *ngIf="confirmPassword.hasError('mismatch')">Passwords do not match</mat-error>
+  </mat-form-field>
+  <br/>
+  <button type="submit" [disabled]="profileForm.pristine || !profileForm.valid" mat-raised-button>
+    Save
+  </button>
+  <button type="button" mat-raised-button (click)="onCancel()">
+    Cancel
+  </button>
+</form>

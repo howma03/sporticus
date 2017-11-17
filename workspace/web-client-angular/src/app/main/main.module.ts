@@ -10,7 +10,8 @@ import {MainRoutingModule} from "./main-routing.module";
 import {ColorServiceModule, DashboardModule, PageHeaderModule, SparkModule} from "@ux-aspects/ux-aspects";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatGridListModule, MatTabsModule} from "@angular/material";
+import {MatDialogModule, MatGridListModule, MatTabsModule} from "@angular/material";
+import {ProfileModule} from "../profile/profile.module";
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import {MatGridListModule, MatTabsModule} from "@angular/material";
     DashboardModule,
     ColorServiceModule,
     SparkModule,
+    MatDialogModule,
     MatTabsModule,
     MatGridListModule,
     PageHeaderModule,
@@ -29,6 +31,9 @@ import {MatGridListModule, MatTabsModule} from "@angular/material";
     ManageTeamsModule,
     TrackCompetitionsModule,
     ManageCompetitionsModule,
+    ProfileModule,
+
+    //Keep Routing Module at the bottom
     MainRoutingModule
   ],
   declarations: [MainComponent]

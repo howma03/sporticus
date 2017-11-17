@@ -14,8 +14,11 @@ export class UsersService extends BaseCrudService<User> {
 }
 
 export interface User {
-  id: number;
-  name: string;
-  userName: string;
+  id?: number;
+  name?: string;
+  firstName: string;
+  lastName: string;
+  userName?: string;
   email: string;
+  password?: string;
 }
