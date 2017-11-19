@@ -3,6 +3,8 @@ import {Ladder, LadderService, LadderUser} from "../../services/ladder.service";
 import {AuthService} from "../../login/auth.service";
 import {Subscription} from "rxjs/Subscription";
 import {ChallengeService} from "../../services/challenge.service";
+import {ChallengeDialogComponent} from "../../challenge/challenge-dialog/challenge-dialog.component";
+import {MatDialog} from "@angular/material";
 
 @Component({
   selector: 'app-ladder',
@@ -17,7 +19,8 @@ export class LadderComponent implements OnInit, OnDestroy {
   constructor(
     private ladderService: LadderService,
     private authService: AuthService,
-    private challengeService: ChallengeService) {
+    private challengeService: ChallengeService,
+    private dialog: MatDialog) {
   }
 
   public ladderUsers: LadderUser[] = [];
@@ -61,10 +64,24 @@ export class LadderComponent implements OnInit, OnDestroy {
       this.authService.getCurrentUser(),
       ladderUser).subscribe(
         item => {
-          debugger;
           ladderUser.isChallenged = true;
         }
     );
+  }
+
+  editChallenge(ladderUser : LadderUser) {
+    let dialogRef = this.dialog.open(ChallengeDialogComponent, {
+      disableClose: true,
+      data: {
+        rung: ladderUser
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(user => {
+      // if (user) {
+      //   this.authService.currentUser = user
+      // }
+    });
   }
 
   ngOnDestroy() {
