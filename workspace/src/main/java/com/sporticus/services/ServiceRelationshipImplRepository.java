@@ -49,12 +49,12 @@ public class ServiceRelationshipImplRepository implements IServiceRelationship{
 
 	@Override
 	public List<IRelationship> findWithSourceTypeAndSourceIdAndDestinationType(String sourceType, Long sourceId, String destinationType) {
-		return repositoryRelationship.findWithSourceTypeAndSourceIdAndDestinationType(sourceType, sourceId, destinationType);
+		return repositoryRelationship.findBySourceTypeAndSourceIdAndDestinationType(sourceType, sourceId, destinationType);
 	}
 
 	@Override
 	public List<IRelationship> findWithSourceTypeAndDestinationTypeAndDestinationId(String sourceType, String destinationType, Long destinationId) {
-		return repositoryRelationship.findWithSourceTypeAndDestinationTypeAndDestinationId(sourceType, destinationType, destinationId);
+		return repositoryRelationship.findBySourceTypeAndDestinationTypeAndDestinationId(sourceType, destinationType, destinationId);
 	}
 
 	@Override
