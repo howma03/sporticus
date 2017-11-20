@@ -20,6 +20,7 @@ public class DtoEvent implements IEvent {
     private Long ownerId;
     private String metaDataType = "";
     private String metaData = "";
+    private STATUS status = STATUS.PROPOSED;
 
     public DtoEvent() {
 
@@ -90,6 +91,17 @@ public class DtoEvent implements IEvent {
     @Override
     public String getDateTimeString() {
         return dateTimeString;
+    }
+
+    @Override
+    public STATUS getStatus() {
+        return status;
+    }
+
+    @Override
+    public IEvent setStatus(STATUS status) {
+        this.status = status;
+        return this;
     }
 
     @Override

@@ -31,6 +31,9 @@ public class Event implements IEvent {
     @NotNull
     private Date dateTime = new Date();
 
+    @Column(nullable = true)
+    private STATUS status = STATUS.PROPOSED;
+
     @Column(nullable = false)
     private String name;
 
@@ -126,6 +129,17 @@ public class Event implements IEvent {
     @Override
     public String getDateTimeString() {
         return Utility.format(dateTime);
+    }
+
+    @Override
+    public STATUS getStatus() {
+        return status;
+    }
+
+    @Override
+    public IEvent setStatus(STATUS status) {
+        this.status = status;
+        return this;
     }
 
     @Override

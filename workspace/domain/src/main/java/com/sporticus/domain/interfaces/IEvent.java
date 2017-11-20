@@ -6,6 +6,13 @@ import java.util.Date;
 
 public interface IEvent {
 
+    enum STATUS {
+        PROPOSED,
+        ACCEPTED,
+        REJECTED,
+        CLOSED
+    }
+
     static IEvent COPY(final IEvent from, final IEvent to) {
         if(from == null)  return null;
         if(to == null)  return null;
@@ -29,6 +36,10 @@ public interface IEvent {
     IEvent setDateTime(Date dateTime);
 
     String getDateTimeString();
+
+    STATUS getStatus();
+
+    IEvent setStatus(STATUS status);
 
     String getType();
 

@@ -438,7 +438,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 		} catch (Exception ex) {
 
-			LOGGER.warn(()->"Rollback: remove the event and the relationships", ex);
+			LOGGER.warn(() -> "Rollback: remove the event and the relationships", ex);
 
 			if (r2 != null) {
 				serviceRelationship.delete(r2.getId());
@@ -465,13 +465,13 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 	public IEvent updateLadderChallenge(IUser actor, DtoEventLadder event) {
 
 		IEvent found = serviceEvent.findOne(event.getId());
-		if(found==null){
-			throw new ServiceLadderExceptionNotFound("Ladder Challenge not found - id="+event.getId());
+		if (found == null) {
+			throw new ServiceLadderExceptionNotFound("Ladder Challenge not found - id=" + event.getId());
 		}
 
 		// TODO: ensure only the challenger/challenged can make the change
 
-		if(event.getDateTime()!=null){
+		if (event.getDateTime() != null) {
 			found.setDateTime(event.getDateTime());
 		}
 
@@ -480,6 +480,8 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 		found.setMetaDataType("text");
 		found.setMetaData(String.format("score:%d:%d",
 				event.getScoreChallenger(), event.getScoreChallenged()));
+
+		// TODO: Update ladder order based on result
 
 		return new DtoEventLadder(serviceEvent.save(found));
 	}
