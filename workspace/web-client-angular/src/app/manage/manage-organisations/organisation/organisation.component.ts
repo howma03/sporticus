@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {Organisation, OrganisationService} from "../../../services/organisation.service";
 import {ErrorHandlingService} from "../../../services/error-handling.service";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 
 @Component({
   selector: 'app-organisation',
@@ -11,8 +12,9 @@ export class OrganisationComponent implements OnInit {
 
   constructor(
     private organisationService: OrganisationService,
-    private errorHandlingService: ErrorHandlingService
-  ) { }
+    private errorHandlingService: ErrorHandlingService,
+    public dialogRef: MatDialogRef<OrganisationComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
   }
@@ -20,27 +22,30 @@ export class OrganisationComponent implements OnInit {
   organisationDetails = {
     name: '',
     address: '',
-    domain: ''
+    domain: '',
+    urlFragment: ''
   };
 
   addOrganisation() {
     let newOrganisation : Organisation = {
       name: this.organisationDetails.name,
       address: this.organisationDetails.address,
-      domain: this.organisationDetails.domain
+      domain: this.organisationDetails.domain,
+      urlFragment: this.organisationDetails.urlFragment
     };
 
     this.organisationService.createOne(newOrganisation)
       .subscribe(success => {
         if (success) {
          alert("Organisation" + newOrganisation.name +  " successfully created.");
+         this.closeWindow();
         }
       }, err => {
           this.errorHandlingService.handleError(err);
       });
   }
 
-  cancel() {
-    alert("Todo");
+  closeWindow() {
+    this.dialogRef.close();
   }
 }

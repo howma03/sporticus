@@ -63,8 +63,11 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
             LOGGER.error(() -> "Failed to find organisation - " + organisation);
             return null;
         }
-        // Ensure created time remains unchanged
-        organisation.setCreated(found.getCreated());
+        if(organisation.getOwnerId()==null){
+            Long foundOwnerId = found.getOwnerId();
+            LOGGER.warn(() -> "Preventing removing the organisation owner id as this isn't valid, so keeping the owner id as -" + foundOwnerId);
+            organisation.setOwnerId(foundOwnerId);
+        }
         IOrganisation.COPY(organisation, found);
         return repositoryOrganisation.save((Organisation) found);
     }
