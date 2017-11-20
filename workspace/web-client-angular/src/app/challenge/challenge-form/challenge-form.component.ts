@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {LadderUser} from "../../services/ladder.service";
 import {Challenge, ChallengeService} from '../../services/challenge.service';
@@ -21,11 +21,11 @@ export class ChallengeFormComponent implements OnInit {
   challengeForm: FormGroup;
 
   get eventDate() {
-    return this.challengeForm.get('eventDate')
+    return this.challengeForm.get('date').get('eventDate')
   }
 
   get eventTime() {
-    return this.challengeForm.get('eventTime')
+    return this.challengeForm.get('date').get('eventTime')
   }
 
   get scoreChallenger() {
@@ -38,11 +38,17 @@ export class ChallengeFormComponent implements OnInit {
 
   ngOnInit() {
     this.challengeForm = this.fb.group({
-      eventDate: [null, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
-      eventTime: [null, [Validators.required]], // to enter date and time as a single field,
-      scoreChallenger: [null],
-      scoreChallenged: [null]
-    }, {validator: this.scoreMatcher});
+      date: this.fb.group({
+        eventDate: [null, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
+        eventTime: [null, [Validators.required]], // to enter date and time as a single field,
+      }),
+      scores: this.fb.group({
+        scoreChallenger: {value: null,  disabled: true},
+        scoreChallenged: {value: null,  disabled: true}
+      }, {validator: this.scoreMatcher}),
+    });
+
+    this.challengeForm.get('date').valueChanges.subscribe(value => this.enableScores(value));
   }
 
   onSave() {
@@ -87,5 +93,19 @@ export class ChallengeFormComponent implements OnInit {
       return {'bothscores': true}
     }
     return null;
+  }
+
+  /**
+   * Enable the scores only of the date is valid and is a past date
+   * @param values
+   */
+  enableScores(values) {
+    if (this.challengeForm.get('date').valid && new Date(this.eventDate.value) < new Date()) {
+      this.challengeForm.get('scores').get('scoreChallenger').enable();
+      this.challengeForm.get('scores').get('scoreChallenged').enable();
+    } else {
+      this.challengeForm.get('scores').get('scoreChallenger').disable();
+      this.challengeForm.get('scores').get('scoreChallenged').disable();
+    }
   }
 }
