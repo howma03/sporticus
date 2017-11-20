@@ -6,9 +6,11 @@ import {ServicesModule} from "../services/services.module";
 import {MatDialogModule, MatFormFieldModule, MatGridListModule, MatTableModule} from "@angular/material";
 import {LadderDialogComponent} from './ladder-dialog/ladder-dialog.component';
 import {HoverActionModule, SparkModule} from "@ux-aspects/ux-aspects";
+import {ChallengeModule} from "../challenge/challenge.module";
 
 @NgModule({
   imports: [
+    ChallengeModule,
     CommonModule,
     HoverActionModule,
     ServicesModule,

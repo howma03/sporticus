@@ -1,0 +1,21 @@
+<h2>Your Challenge</h2>
+<form (ngSubmit)="onSave()" [formGroup]="challengeForm">
+  <mat-form-field>
+    <input matInput placeholder="Date of event" name="eventDate" formControlName="eventDate" type="datetime-local"/>
+    <mat-error *ngIf="eventDate.hasError('required')">A date is required</mat-error>
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput placeholder="Challenged Score" name="challengedScore" formControlName="challengedScore" type="number"/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Challenger Score" name="challengerScore" formControlName="challengerScore" type="number"/>
+  </mat-form-field>
+  <br/>
+  <button type="submit" [disabled]="challengeForm.pristine || !challengeForm.valid" mat-raised-button>
+    Save
+  </button>
+  <button type="button" mat-raised-button (click)="onCancel()">
+    Cancel
+  </button>
+</form>
