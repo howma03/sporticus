@@ -5,6 +5,7 @@ import com.amazonaws.util.DateUtils;
 import com.sporticus.domain.entities.Event;
 import com.sporticus.domain.entities.Relationship;
 import com.sporticus.domain.interfaces.IEvent;
+import com.sporticus.domain.interfaces.IEvent.STATUS;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.domain.interfaces.IRelationship;
@@ -475,11 +476,14 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			found.setDateTime(event.getDateTime());
 		}
 
-		// TODO: decide how to indicate the ladder game has been completed
+		// Game is marked as completed if there is a score
 
-		found.setMetaDataType("text");
-		found.setMetaData(String.format("score:%d:%d",
-				event.getScoreChallenger(), event.getScoreChallenged()));
+		if(event.getScoreChallenger()+event.getScoreChallenged()>0) {
+			found.setMetaDataType("text");
+			found.setMetaData(String.format("score:%d:%d",
+					event.getScoreChallenger(), event.getScoreChallenged()));
+			found.setStatus(STATUS.CLOSED);
+		}
 
 		// TODO: Update ladder order based on result
 

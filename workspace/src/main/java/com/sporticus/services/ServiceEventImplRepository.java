@@ -2,6 +2,7 @@ package com.sporticus.services;
 
 import com.sporticus.domain.entities.Event;
 import com.sporticus.domain.interfaces.IEvent;
+import com.sporticus.domain.interfaces.IEvent.STATUS;
 import com.sporticus.domain.interfaces.IRelationship;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryEvent;
@@ -68,7 +69,7 @@ public class ServiceEventImplRepository  implements IServiceEvent {
 
 		Date now = new Date();
 		return events.stream()
-			.filter(e->e.getDateTime().after(now)).collect(Collectors.toList());
+			.filter(e->e.getDateTime().after(now) && e.getStatus()!= STATUS.CLOSED).collect(Collectors.toList());
 	}
 
 	@Override
