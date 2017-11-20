@@ -26,6 +26,6 @@ export interface Challenge {
   dateTime: Date;
   challengerId: number;
   challengedId: number;
-  challengerScore: number;
-  challengedScore: number;
+  scoreChallenger: number;
+  scoreChallenged: number;
 }

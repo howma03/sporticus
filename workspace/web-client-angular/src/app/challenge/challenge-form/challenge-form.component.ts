@@ -31,11 +31,11 @@ export class ChallengeFormComponent implements OnInit, OnChanges {
   }
 
   get lastName() {
-    return this.challengeForm.get('challengerScore')
+    return this.challengeForm.get('scoreChallenger')
   }
 
   get password() {
-    return this.challengeForm.get('challengedScore')
+    return this.challengeForm.get('scoreChallenged')
   }
 
   ngOnInit() {
@@ -44,22 +44,22 @@ export class ChallengeFormComponent implements OnInit, OnChanges {
   ngOnChanges() {
     this.challengeForm.reset({
       eventDate: null,
-      challengerScore: null,
-      challengedScore: null
+      scoreChallenger: null,
+      scoreChallenged: null
     });
   }
 
   createForm() {
     let eventDate = new FormControl(null, Validators.required); // TODO: We're waiting upon the Material datetime picker
     let eventTime = new FormControl(null, Validators.required); // to enter date and time as a single field
-    let challengerScore = new FormControl(null);
-    let challengedScore = new FormControl(null);
+    let scoreChallenger = new FormControl(null);
+    let scoreChallenged = new FormControl(null);
 
     this.challengeForm = this.fb.group({
       eventDate,
       eventTime,
-      challengerScore,
-      challengedScore
+      scoreChallenger,
+      scoreChallenged
     });
   }
 
@@ -73,8 +73,8 @@ export class ChallengeFormComponent implements OnInit, OnChanges {
       status: 'ACCEPTED',
       challengerId: this.rung.challenger.challengerId,
       challengedId: this.rung.challenger.challengedId,
-      challengerScore: formModel.challengerScore,
-      challengedScore:formModel.challengedScore
+      scoreChallenger: formModel.scoreChallenger,
+      scoreChallenged: formModel.scoreChallenged
     };
 
     this.challengeService.putChallenge(toSave)
