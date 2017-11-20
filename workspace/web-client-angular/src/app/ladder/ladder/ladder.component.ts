@@ -37,10 +37,15 @@ export class LadderComponent implements OnInit, OnDestroy {
           let loggedInUser = this.authService.getCurrentUser();
           let loggedInUserPosition = list.data.find(item => item.userId === loggedInUser.id).position;
           list.data.map(user => {
-            if (user.position < loggedInUserPosition && user.position >= loggedInUserPosition - this.challengeAbove
+            if (user.challenger && user.challenger.challengedId === loggedInUser.id) {
+              user.isChallenger = true;
+            } else if (user.challenged && user.challenged.challengerId === loggedInUser.id) {
+              user.isChallenged = true;
+            } else if (user.position < loggedInUserPosition && user.position >= loggedInUserPosition - this.challengeAbove
               || user.position > loggedInUserPosition && user.position <= loggedInUserPosition + this.challengeBelow) {
               user.canChallenge = true;
             }
+
             return user;
           });
           return list.data;

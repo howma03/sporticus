@@ -19,7 +19,8 @@
       <td class="text-black">{{ rung.position }}</td>
       <td class="text-black">{{ rung.userName }}</td>
       <td>
-          <i *ngIf="rung.isChallenged" class="hpe-icon hpe-checkmark" (click)="editChallenge(rung)" tooltip="Challenged"></i>
+        <i *ngIf="rung.isChallenged" class="hpe-icon hpe-checkmark hover-action-icon" (click)="editChallenge(rung)" tooltip="Challenged"></i>
+        <i *ngIf="rung.isChallenger" class="hpe-icon hpe-impact hover-action-icon" (click)="editChallenge(rung)" tooltip="Challenger"></i>
       </td>
       <td>
         <i *ngIf="rung.canChallenge"  class="hpe-icon hpe-target hover-action-icon" (click)="challenge(rung)" tooltip="Challenge" uxHoverAction></i>
