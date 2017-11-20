@@ -20,6 +20,7 @@ public class DtoOrganisation implements IOrganisation {
     private String ownerEmail;
     private String address;
     private String domain;
+    private String urlFragment;
     private Long countGroup = 4l;
     private Long countUser = 5l;
 
@@ -34,6 +35,17 @@ public class DtoOrganisation implements IOrganisation {
     @Override
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public String getUrlFragment() {
+        return urlFragment;
+    }
+
+    @Override
+    public DtoOrganisation setUrlFragment(String urlFragment) {
+        this.urlFragment = urlFragment;
+        return this;
     }
 
     public DtoOrganisation setId(final Long id) {

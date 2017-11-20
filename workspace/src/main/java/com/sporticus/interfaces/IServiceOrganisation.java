@@ -11,7 +11,9 @@ public interface IServiceOrganisation {
 
     IOrganisation createOrganisation(IOrganisation organisation);
 
-    IOrganisation readOrganisation(Long id);
+	IOrganisation findByUrlFragment(String urlFragment);
+
+	IOrganisation readOrganisation(Long id);
 
     List<IOrganisation> getOrganisationsOwnedByUser(Long id);
 

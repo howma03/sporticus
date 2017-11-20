@@ -45,6 +45,7 @@ public class RestControllerManagementOrganisation extends ControllerAbstract {
 
     /**
      * Function to create an Organisation
+     *
      * Only a system administrator cna create an Organisation
      *
      * @param organisation
@@ -54,6 +55,20 @@ public class RestControllerManagementOrganisation extends ControllerAbstract {
     public ResponseEntity<DtoOrganisation> create(@RequestBody final DtoOrganisation organisation) {
         LOGGER.debug(() -> "Creating Organisation " + organisation.getName());
         return new ResponseEntity<>(convertToDtoOrganisation(serviceOrganisation.createOrganisation(organisation)), HttpStatus.OK);
+    }
+
+    /**
+     * Function to find an organisation given a url fragment
+     *
+     * @return ResponseEntity<DtoOrganisations>
+     */
+    @RequestMapping(value = "findByUrlFragment/{urlFragment}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DtoOrganisation> findByUrlFragment(@PathVariable("urlFragment") final String urlFragment) {
+        IOrganisation organisation = this.serviceOrganisation.findByUrlFragment(urlFragment);
+        if(organisation == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(convertToDtoOrganisation(organisation), HttpStatus.OK);
     }
 
     /**

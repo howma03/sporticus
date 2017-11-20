@@ -27,7 +27,9 @@ public interface IOrganisation {
         return null;
     }
 
-    Date getCreated();
+	String getUrlFragment();
+
+	Date getCreated();
 
     IOrganisation setCreated(Date created);
 
@@ -56,4 +58,6 @@ public interface IOrganisation {
     String getDomain();
 
     IOrganisation setDomain(String domain);
+
+    IOrganisation setUrlFragment(String urlFragment);
 }

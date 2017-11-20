@@ -31,15 +31,21 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
 
     @Override
     public IOrganisation createOrganisation(final IOrganisation organisation) {
-        LOGGER.info(() -> "Creating an Organization - " + organisation);
+        LOGGER.info(() -> "Creating an Organisation - " + organisation);
         final Organisation newOrganisation = new Organisation();
         IOrganisation.COPY(organisation, newOrganisation);
         return repositoryOrganisation.save(newOrganisation);
     }
 
     @Override
+    public IOrganisation findByUrlFragment(String urlFragment){
+        LOGGER.info(() -> "Finding Organisation by fragment - " + urlFragment);
+        return repositoryOrganisation.findByUrlFragment(urlFragment);
+    }
+
+    @Override
     public IOrganisation readOrganisation(final Long id) {
-        LOGGER.info(() -> "Reading an Organization - " + id);
+        LOGGER.info(() -> "Reading an Organisation - " + id);
         return repositoryOrganisation.findOne(id);
     }
 
@@ -57,7 +63,7 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
 
     @Override
     public IOrganisation updateOrganisation(final IOrganisation organisation) {
-        LOGGER.info(() -> "Updating an Organization - " + organisation);
+        LOGGER.info(() -> "Updating an Organisation - " + organisation);
         final IOrganisation found = this.repositoryOrganisation.findOne(organisation.getId());
         if(found == null) {
             LOGGER.error(() -> "Failed to find organisation - " + organisation);
@@ -71,7 +77,7 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
 
     @Override
     public IOrganisation deleteOrganisation(final Long id) {
-        LOGGER.info(() -> "Deleting an Organization - " + id);
+        LOGGER.info(() -> "Deleting an Organisation - " + id);
         final IOrganisation found = this.repositoryOrganisation.findOne(id);
         if(found == null) {
             LOGGER.error(() -> "Failed to find organisation - id=" + id);

@@ -38,6 +38,9 @@ public class Organisation implements IOrganisation {
     @Column(nullable = true)
     private String domain = "";
 
+    @Column(nullable = false)
+    private String urlFragment = "";
+
     public Organisation() {
 
     }
@@ -49,6 +52,11 @@ public class Organisation implements IOrganisation {
     @Override
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public String getUrlFragment() {
+        return urlFragment;
     }
 
     public void setId(final Long id) {
@@ -133,7 +141,14 @@ public class Organisation implements IOrganisation {
     }
 
     @Override
+    public IOrganisation setUrlFragment(String urlFragment) {
+        this.urlFragment = urlFragment;
+        return this;
+    }
+
+    @Override
     public String toString() {
-        return String.format("Id [%d] Organisation [%s] Owner Id [%d]", id, name, ownerId);
+        return String.format("Id [%d] Organisation [%s] Owner Id [%d]",
+                id, name, ownerId);
     }
 }
