@@ -17,4 +17,8 @@ public interface IRepositoryRelationship extends PagingAndSortingRepository<Rela
     List<IRelationship> findBySourceTypeAndSourceIdAndType(String sourceType, Long sourceId, String type);
 
     List<IRelationship> findByDestinationTypeAndDestinationIdAndType(String destinationType, Long destinationId, String type);
+
+	List<IRelationship> findWithSourceTypeAndDestinationTypeAndDestinationId(String sourceType, String destinationType, Long destinationId);
+
+	List<IRelationship> findWithSourceTypeAndSourceIdAndDestinationType(String sourceType, Long sourceId, String destinationType);
 }

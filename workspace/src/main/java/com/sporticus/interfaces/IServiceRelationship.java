@@ -57,6 +57,9 @@ public interface IServiceRelationship {
 	 */
 	List<IRelationship> findWithDestinationTypeAndDestinationIdAndType(String destinationType, Long destinationId, String type);
 
+	List<IRelationship> findWithSourceTypeAndSourceIdAndDestinationType(String sourceType, Long sourceId, String destinationType);
+	List<IRelationship> findWithSourceTypeAndDestinationTypeAndDestinationId(String sourceType, String destinationType, Long destinationId);
+
 	/**
 	 * Function to delete a relationship
 	 * @param r2
