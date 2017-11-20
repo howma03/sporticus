@@ -68,7 +68,7 @@ public class DemoDataLoader {
 
 				// check for ladder groups
 
-				if(serviceLadder.getLadders().size()>0){
+				if(serviceLadder.readLaddersGroups().size()>0){
 					return;
 				}
 

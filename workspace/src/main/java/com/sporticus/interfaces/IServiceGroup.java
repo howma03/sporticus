@@ -17,7 +17,7 @@ import java.util.function.Predicate;
  */
 public interface IServiceGroup {
 
-    public static class ServiceGroupException extends RuntimeException {
+    class ServiceGroupException extends RuntimeException {
         public ServiceGroupException() {
 
         }

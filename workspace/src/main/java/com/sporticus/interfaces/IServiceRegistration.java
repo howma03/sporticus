@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface IServiceRegistration {
 
-    public class ExceptionRegistrationFailure extends RuntimeException {
+    class ExceptionRegistrationFailure extends RuntimeException {
         private static final long serialVersionUID = -6724234804657129123L;
 
         public ExceptionRegistrationFailure(final String message) {

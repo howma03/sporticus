@@ -12,11 +12,19 @@ public interface IServiceLadder {
 		public ServiceLadderExceptionNotAllowed(String message) {
 			super(message);
 		}
+
+		public ServiceLadderExceptionNotAllowed(final String message, final Exception ex) {
+			super(message, ex);
+		}
 	}
 
 	final class ServiceLadderExceptionNotFound extends RuntimeException {
 		public ServiceLadderExceptionNotFound(String message) {
 			super(message);
+		}
+
+		public ServiceLadderExceptionNotFound(final String message, final Exception ex) {
+			super(message, ex);
 		}
 	}
 
@@ -25,7 +33,7 @@ public interface IServiceLadder {
 	 * @return
 	 * @throws ServiceLadderExceptionNotFound
 	 */
-	List<IGroup> getLadders() throws ServiceLadderExceptionNotFound;
+	List<IGroup> readLaddersGroups() throws ServiceLadderExceptionNotFound;
 
 	/**
 	 * Retrieves a group - must be of type ladder
@@ -33,7 +41,7 @@ public interface IServiceLadder {
 	 * @param groupId
 	 * @return IGroup
 	 */
-	IGroup getLadderGroup(Long groupId) throws ServiceLadderExceptionNotFound;
+	IGroup readLadderGroup(Long groupId) throws ServiceLadderExceptionNotFound;
 
 	/**
 	 * Function returns a list of the ladders that the user is a member of
@@ -45,7 +53,15 @@ public interface IServiceLadder {
 	List<IGroup> getLaddersForUser(Long userId) throws ServiceLadderExceptionNotFound;
 
 	/**
-	 * Function records a challenge for a ldder between two ladder members (one the challenger, one the challenged)
+	 * Function returns the ladder for with decorators for the given user
+	 * @param ladderId
+	 * @param userId
+	 * @return List<IGroupMember>
+	 */
+	List<IGroupMember> readLadderMembers(long ladderId, long userId);
+
+	/**
+	 * Function records a challenge for a ladder between two ladder members (one the challenger, one the challenged)
 	 *
 	 * @param ladderId
 	 * @param challengerId
@@ -54,15 +70,15 @@ public interface IServiceLadder {
 	 * @throws ServiceLadderExceptionNotAllowed
 	 * @throws ServiceLadderExceptionNotFound
 	 */
-	IEvent addChallenge(Long ladderId, Long challengerId, Long challengedId) throws ServiceLadderExceptionNotAllowed,
+	IEvent createLadderChallenge(Long ladderId, Long challengerId, Long challengedId) throws ServiceLadderExceptionNotAllowed,
 			ServiceLadderExceptionNotFound;
 
 	/**
 	 * Returns a list of all members of the ladder
 	 * @param ladderId
 	 * @return List<IGroupMember>
-	 * </>
+	 *
 	 */
-	List<IGroupMember> getLadderMembers(long ladderId);
+	List<IGroupMember> readLadderMembers(long ladderId);
 
 }

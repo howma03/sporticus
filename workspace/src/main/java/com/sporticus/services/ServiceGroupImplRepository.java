@@ -20,7 +20,6 @@ import com.sporticus.interfaces.IServicePasswordGenerator;
 import com.sporticus.interfaces.IServiceRegistration;
 import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.services.converters.Converter;
-import com.sporticus.services.dto.DtoGroupMember;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
 import org.apache.commons.collections.IteratorUtils;
@@ -335,7 +334,7 @@ public class ServiceGroupImplRepository implements IServiceGroup {
             if(group == null) {
                 throw new ServiceGroupException("Cannot resend membership invitation - group not known - GroupId=" + groupMember.getGroupId());
             }
-            IUser user = serviceUser.findUser(groupMember.getUserId());
+            IUser user = serviceUser.findOne(groupMember.getUserId());
             if(user == null) {
                 throw new ServiceGroupException("Cannot resend membership invitation - user not known - userId=" + groupMember.getUserId());
             }
@@ -467,7 +466,7 @@ public class ServiceGroupImplRepository implements IServiceGroup {
         // If the user is an admin for the group then allow the operation
         final List<IUser> allowed = this.readGroupAdmins(group.getId());
         final IOrganisation organisation = this.repositoryOrganisation.findOne(group.getOwnerOrganisationId());
-        allowed.add(this.serviceUser.findUser(organisation.getOwnerId()));
+        allowed.add(this.serviceUser.findOne(organisation.getOwnerId()));
         return allowed.contains(user);
     }
 

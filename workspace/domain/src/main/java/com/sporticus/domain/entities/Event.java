@@ -58,6 +58,10 @@ public class Event implements IEvent {
         return id;
     }
 
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
     @Override
     public String getType() {
         return type;
@@ -69,9 +73,6 @@ public class Event implements IEvent {
         return this;
     }
 
-    public void setId(final Long id) {
-        this.id = id;
-    }
 
     @Override
     public String getName() {
@@ -97,7 +98,7 @@ public class Event implements IEvent {
 
     @Override
     public Date getCreated() {
-        return new Date(created.getTime());
+        return created;
     }
 
     @Override

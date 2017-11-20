@@ -119,7 +119,7 @@ public class RestControllerManagementUser extends ControllerAbstract {
         }
 
         LOGGER.debug(() -> "Reading User with id " + id);
-        final IUser found = serviceUser.findUser(id);
+        final IUser found = serviceUser.findOne(id);
         if (found == null) {
             LOGGER.warn(() -> "User not found - id=" + id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -142,7 +142,7 @@ public class RestControllerManagementUser extends ControllerAbstract {
             LOGGER.error(() -> "Users can only be updated by system administrators");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        IUser found = serviceUser.findUser(id);
+        IUser found = serviceUser.findOne(id);
         if (found == null) {
             LOGGER.warn(() -> "User with id " + id + " not found");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -169,7 +169,7 @@ public class RestControllerManagementUser extends ControllerAbstract {
             LOGGER.error(() -> "Users can only be deleted by system administrators");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        final IUser found = serviceUser.findUser(id);
+        final IUser found = serviceUser.findOne(id);
         if (found == null) {
             LOGGER.warn(() -> "User with id " + id + " not found");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

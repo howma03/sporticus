@@ -52,6 +52,8 @@ public class GroupMember implements IGroupMember {
     @Column(nullable = true)
     private String metaData;
 
+    public GroupMember(){}
+
     @Override
     public Long getId() {
         return id;

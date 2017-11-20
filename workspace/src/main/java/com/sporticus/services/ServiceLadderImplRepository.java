@@ -1,25 +1,34 @@
 package com.sporticus.services;
 
+import com.amazonaws.transform.MapEntry;
 import com.sporticus.domain.entities.Event;
-import com.sporticus.domain.entities.User;
+import com.sporticus.domain.entities.Relationship;
 import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
+import com.sporticus.domain.interfaces.IRelationship;
 import com.sporticus.domain.interfaces.IUser;
-import com.sporticus.domain.repositories.IRepositoryEvent;
+import com.sporticus.interfaces.IServiceEvent;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceLadder;
+import com.sporticus.interfaces.IServiceRelationship;
 import com.sporticus.interfaces.IServiceUser;
+import com.sporticus.services.dto.DtoEvent;
+import com.sporticus.services.dto.DtoGroupMember;
+import com.sporticus.services.dto.DtoGroupMemberOrdered;
+import com.sporticus.services.dto.DtoUser;
 import com.sporticus.types.EventType;
+import com.sporticus.types.GroupType;
+import com.sporticus.types.RelationshipType;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
-import com.sporticus.types.GroupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,38 +41,29 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 	private final IServiceUser serviceUser;
 
-	private final IRepositoryEvent repositoryEvent;
+	private final IServiceEvent serviceEvent;
+
+	private final IServiceRelationship serviceRelationship;
 
 	@Autowired
 	public ServiceLadderImplRepository(final IServiceGroup serviceGroup,
 	                                   final IServiceUser serviceUser,
-	                                   final IRepositoryEvent repositoryEvent) {
+	                                   final IServiceEvent serviceEvent,
+	                                   final IServiceRelationship serviceRelationship) {
 		this.serviceGroup = serviceGroup;
 		this.serviceUser = serviceUser;
-		this.repositoryEvent = repositoryEvent;
-
+		this.serviceEvent = serviceEvent;
+		this.serviceRelationship = serviceRelationship;
 	}
 
-	private List<IGroup> findLadderGroups(Long userId) {
-		return this.serviceGroup.readGroups(gm -> (userId == null || gm.getUserId().equals(userId)) &&
-				gm.getStatus().equals(IGroupMember.Status.Accepted) &&
-				gm.isEnabled())
-				.stream()
-				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
-				.collect(Collectors.toList());
-	}
+	// Ladder functions (CRUD)
 
-	private boolean isActiveLadderMember(Long ladderId, Long userId) {
-		return this.serviceGroup.readGroups(gm -> (ladderId.equals(gm.getGroupId()) || gm.getUserId().equals(userId)) &&
-				gm.getStatus().equals(IGroupMember.Status.Accepted) &&
-				gm.isEnabled())
-				.stream()
-				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
-				.collect(Collectors.toList()).size()>0;
+	public IGroup createLadder(){
+		return null;
 	}
 
 	@Override
-	public List<IGroup> getLadders() throws ServiceLadderExceptionNotFound {
+	public List<IGroup> readLaddersGroups() throws ServiceLadderExceptionNotFound {
 		return this.serviceGroup.readAllGroups()
 				.stream()
 				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
@@ -71,7 +71,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 	}
 
 	@Override
-	public IGroup getLadderGroup(Long groupId) throws ServiceLadderExceptionNotFound {
+	public IGroup readLadderGroup(Long groupId) throws ServiceLadderExceptionNotFound {
 		Optional<IGroup> found = this.serviceGroup.readGroup(groupId);
 		if (!found.isPresent()) {
 			throw new ServiceLadderExceptionNotFound("Group not found - id=" + groupId);
@@ -83,67 +83,405 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 		return group;
 	}
 
+	public void updateLadder(){}
+
+	public void deleteLadder() {}
+
+	// Ladder Member functions
+
+	private boolean isLadderMemberActive(Long ladderId, Long userId) {
+		return this.serviceGroup.readGroups(gm -> (ladderId.equals(gm.getGroupId()) || gm.getUserId().equals(userId)) &&
+				gm.getStatus().equals(IGroupMember.Status.Accepted) &&
+				gm.isEnabled())
+				.stream()
+				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
+				.collect(Collectors.toList()).size()>0;
+	}
+
 	@Override
 	public List<IGroup> getLaddersForUser(Long userId) {
-		return findLadderGroups(userId);
+		return this.serviceGroup.readGroups(gm -> (userId == null || gm.getUserId().equals(userId)) &&
+				gm.getStatus().equals(IGroupMember.Status.Accepted) &&
+				gm.isEnabled())
+				.stream()
+				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
+				.collect(Collectors.toList());
+	}
+
+	// Ladder member functions (CRUD)
+
+	private class DtoEventLadder extends DtoEvent {
+
+		private Long challengerId;
+		private Long challengedId;
+
+		public DtoEventLadder(){
+		}
+
+		public DtoEventLadder(IEvent event){
+			super(event);
+		}
+
+		public Long getChallengerId() {
+			return challengerId;
+		}
+
+		public void setChallengerId(Long challengerId) {
+			this.challengerId = challengerId;
+		}
+
+		public Long getChallengedId() {
+			return challengedId;
+		}
+
+		public void setChallengedId(Long challengedId) {
+			this.challengedId = challengedId;
+		}
+
+		@Override
+		public String toString(){
+			return String.format("DtoEventLadder - Date {%s] Challenger [%s] Challenged [%s",
+					this.getDateTimeString(), challengerId, challengedId);
+		}
+	}
+
+	private class Events {
+
+		private List<DtoEventLadder> list = new ArrayList<>();
+
+		public Events(){}
+
+		public Events(List<DtoEventLadder> list){
+			this.list.addAll(list);
+		}
+
+		public void add(DtoEventLadder e){
+			list.add(e);
+		}
+
+		public Events findWhereChallengerIs(long playerId){
+			return new Events(list.stream().filter( e->e.getChallengerId().equals(playerId)).collect(Collectors.toList()));
+		}
+
+		public Events findWhereChallengedIs(long playerId){
+			return new Events(list.stream().filter(e->e.getChallengedId().equals(playerId)).collect(Collectors.toList()));
+		}
+
+		public int size(){
+			return list.size();
+		}
+
+		public DtoEventLadder get(int index){
+			return list.get(index);
+		}
+	}
+
+	public void createLadderMember(){
+		// TODO: Add functionality
 	}
 
 	@Override
-	public IEvent addChallenge(Long ladderId, Long challengerId, Long challengedId) throws ServiceLadderExceptionNotAllowed,
-			ServiceLadderExceptionNotFound {
-
-		// validate this inputs
-
-		IGroup ladder = getLadderGroup(ladderId);
-
-		if(!isActiveLadderMember(ladderId, challengedId)){
-			String message = "Challenged player is not an active member of the ladder - ladderId="+ladderId;
-			LOGGER.warn(()->message);
-			throw new ServiceLadderExceptionNotFound(message);
-		}
-
-		IUser challenger = serviceUser.findUser(challengerId);
-		if (challenger == null) {
-			String message = "Cannot find challenger - id=" + challengerId;
-			LOGGER.warn(()->message);
-			throw new ServiceLadderExceptionNotFound(message);
-		}
-		IUser challenged = serviceUser.findUser(challengedId);
-		if (challenged == null) {
-			String message = "Cannot find challenged user - id=" + challengedId;
-			LOGGER.warn(()->message);
-			throw new ServiceLadderExceptionNotFound(message);
-		}
-
-		Event event = new Event();
-		event.setDateTime(new Date());
-		event.setDescription(String.format("Ladder challenge - challenger (%d) challenged {%d)",
-				challengerId, challengedId));
-		event.setName("Ladder challenge");
-		event.setOwnerId(challengerId);
-		event.setType(EventType.CHALLENGE.toString());
-
-		// TODO: create the relationship - users & event
-
-		return repositoryEvent.save(event);
+	public List<IGroupMember> readLadderMembers(long ladderId) {
+		// TODO: Extend the data returned to include challenge details
+		// we will include all events for each member (i.e. those where the member ie challenger and/or challenged)
+		return serviceGroup.getGroupMembershipsForGroup(ladderId);
 	}
 
-	@Override
-	public List<IGroupMember> getLadderMembers(long ladderId) {
+	/**
+	 * Function gets all DtoEventLadder for a given ladder
+	 * @param ladderId
+	 * @return
+	 */
+	private Events getEvents(long ladderId){
 
-		List<IGroupMember> members = serviceGroup.getGroupMembershipsForGroup(ladderId);
+		Events events = new Events();
 
-		// for each member we will also include any active events for the logged-in user
-		members.stream().forEach(m->{
-			// check to see if there is a ladder challenge between the logged-in user and the group member
-			List<Event> events  = repositoryEvent.findByOwnerId(m.getUserId());
+		List<IRelationship> relationshipLadderToEvent = serviceRelationship.findWithSourceTypeAndSourceIdAndType(
+				GroupType.LADDER.toString(),
+				ladderId,
+				RelationshipType.CHALLENGE.toString());
 
+		relationshipLadderToEvent.stream().forEach(er-> {
+			Long eventId = er.getDestinationId();
 
+			IEvent event = serviceEvent.findOne(eventId);
+			if (event == null) {
+				LOGGER.warn(() -> "Failed to locate event - id=" + er.getDestinationId());
+				return;
+			}
 
+			events.add(getEvent(event));
 		});
 
-		return members;
+		return events;
 	}
 
+	/**
+	 * Function gets a DtoEventLadder for a given IEvent
+	 * @param event
+	 * @return
+	 */
+	private DtoEventLadder getEvent(IEvent event){
 
+		DtoEventLadder eventLadder = new DtoEventLadder(event);
+
+		// find the challenger and challenged
+		List<IRelationship> challengerList = serviceRelationship.findWithDestinationTypeAndDestinationIdAndType(
+				"Event",
+				event.getId(),
+				RelationshipType.CHALLENGE.toString())
+				.stream()
+				.filter(r-> r.getSourceType().equalsIgnoreCase("user"))
+				.collect(Collectors.toList());
+
+		List<IRelationship> challengedList = serviceRelationship.findWithSourceTypeAndSourceIdAndType(
+				"Event",
+				event.getId(),
+				RelationshipType.CHALLENGE.toString());
+
+		// TODO: we should just have 1 relationship in each list
+
+		// LADDER->Event
+		// User->Event
+		// Event->User
+
+		Long userChallengerId = challengerList.get(0).getSourceId();
+		Long userChallengedId = challengedList.get(0).getDestinationId();
+
+		IUser userChallenger = serviceUser.findOne(userChallengerId);
+		IUser userChallenged = serviceUser.findOne(userChallengedId);
+
+		// FIXME: Handle situation where user cannot be found - is this possible?
+		// Perhaps the user has been deleted and we haven't tidied-up properly
+
+		eventLadder.setChallengerId(userChallengerId);
+		eventLadder.setChallengedId(userChallengedId);
+
+		return eventLadder;
+	}
+
+	public static class DtoGroupMemberEx extends DtoGroupMemberOrdered  {
+		private IEvent challenged ;
+		private IEvent challenger ;
+
+		public DtoGroupMemberEx (IGroupMember gm){
+			super(gm);
+		}
+
+		public IEvent getChallenged() {
+			return challenged;
+		}
+
+		public void setChallenged(IEvent challenged) {
+			this.challenged = challenged;
+		}
+
+		public IEvent getChallenger() {
+			return challenger;
+		}
+
+		public void setChallenger(IEvent challenger) {
+			this.challenger = challenger;
+		}
+	}
+
+	@Override
+	public List<IGroupMember> readLadderMembers(long ladderId, long userId) {
+
+		// We need to find all relationships of type CHALLENGE to the ladder
+		// Once we have these relationships we can locate the event
+		// then for each event
+		// find the challenger and the challenged
+
+		Events events = this.getEvents(ladderId);
+
+		// find all events for the ladder
+		// for each each locate the players (users) relationships - once will be the challenger, one will be the challenged
+
+		// filter the events - only those relating to the user should be included
+
+		// finally step through group member's decorating them with meta data where necessary
+		// - simply append the event to the groupMember and the player data to the event data
+
+		class Property {
+			private final String name;
+			private final Object value;
+
+			Property(String name, Object value) {
+				this.name = name;
+				this.value = value;
+			}
+
+			public String getName() {
+				return name;
+			}
+
+			public Object getValue() {
+				return value;
+			}
+		}
+
+		Events challengesMadeByUser = events.findWhereChallengerIs(userId);
+
+		// we want to use META-DATA to pass data to the client so we will convert to DtoGroupMemberLadder objects
+
+		final List<IGroupMember> members = serviceGroup.getGroupMembershipsForGroup(ladderId);
+
+		return members.stream().map(gm -> {
+
+					DtoGroupMemberEx gmx = new DtoGroupMemberEx(gm);
+
+					// TODO: should only ever be a single "open" event
+					// check to see if there is a ladder challenge between the logged-in user and the group member
+					// find an event of type "CHALLENGE" between them
+					// TODO: implement a position property of the group (use the group meta data)
+					gmx.setPosition(members.indexOf(gm));
+
+					Events challengesMadeByUserToMember = challengesMadeByUser.findWhereChallengedIs(gm.getUserId());
+					if (challengesMadeByUserToMember.size() > 0) {
+						// the user has challenged the ladder member
+						gmx.setChallenged(challengesMadeByUserToMember.get(0));
+					}
+
+					Events challengesMadeByMember = events.findWhereChallengerIs(gm.getUserId());
+					Events challengesMadeByMemberToUser = challengesMadeByMember.findWhereChallengedIs(userId);
+					if (challengesMadeByMemberToUser.size() > 0) {
+						// the ladder member has challenged the user
+						gmx.setChallenger(challengesMadeByMemberToUser.get(0));
+					}
+
+					return gmx;
+				}).collect(Collectors.toList());
+	}
+
+	public void updateLadderMember(){
+		// TODO: Add functionality
+	}
+
+	public void deleteLadderMember(){
+		// TODO: Add functionality
+	}
+
+	// Ladder Challenge Functions (CRUD)
+
+	@Override
+	public IEvent createLadderChallenge(Long ladderId, Long challengerId, Long challengedId)
+			throws ServiceLadderExceptionNotAllowed,
+			ServiceLadderExceptionNotFound {
+
+		// TODO: validate this inputs
+
+		// TODO: We should ensure that there is not already an 'open' challenge between the 2 players
+
+		IGroup ladder = readLadderGroup(ladderId);
+
+		if (!isLadderMemberActive(ladderId, challengedId)) {
+			String message = "Challenged player is not an active member of the ladder - ladderId=" + ladderId;
+			LOGGER.warn(() -> message);
+			throw new ServiceLadderExceptionNotFound(message);
+		}
+
+		IUser challenger = serviceUser.findOne(challengerId);
+		if (challenger == null) {
+			String message = "Cannot find challenger - id=" + challengerId;
+			LOGGER.warn(() -> message);
+			throw new ServiceLadderExceptionNotFound(message);
+		}
+		IUser challenged = serviceUser.findOne(challengedId);
+		if (challenged == null) {
+			String message = "Cannot find challenged user - id=" + challengedId;
+			LOGGER.warn(() -> message);
+			throw new ServiceLadderExceptionNotFound(message);
+		}
+
+		IEvent event = new Event();
+
+		// Create the event
+
+		IRelationship rLadder = null;
+		IRelationship r1 = null;
+		IRelationship r2 = null;
+		try {
+			event.setDateTime(new Date());
+			event.setDescription(String.format("Ladder challenge - challenger (%d) challenged {%d)",
+					challengerId, challengedId));
+			event.setName("Ladder challenge");
+			event.setOwnerId(challengerId);
+			event.setType(EventType.CHALLENGE.toString());
+
+			event = serviceEvent.create(event);
+
+			// We now create the relationship - users & event
+			// link the two players to the event using relationships
+			// Ladder >-(r0)-> Event
+			// Challenger >-(r1)-> Event
+			// Event >-(r2)->Challenged
+
+			rLadder = new Relationship();
+			{
+				rLadder.setBiDirectional(false);
+				rLadder.setType(RelationshipType.CHALLENGE.toString());
+				rLadder.setSourceType("Ladder");
+				rLadder.setSourceId(ladderId);
+				rLadder.setDestinationType("Event");
+				rLadder.setDestinationId(event.getId());
+			}
+
+			r1 = new Relationship();
+			{
+				r1.setBiDirectional(false);
+				r1.setType(RelationshipType.CHALLENGE.toString());
+				r1.setSourceType("User");
+				r1.setSourceId(challengerId);
+				r1.setDestinationType("Event");
+				r1.setDestinationId(event.getId());
+			}
+
+			r2 = new Relationship();
+			{
+				r2.setBiDirectional(false);
+				r2.setType(RelationshipType.CHALLENGE.toString());
+				r2.setSourceType("Event");
+				r2.setSourceId(event.getId());
+				r2.setDestinationType("User");
+				r2.setDestinationId(challengedId);
+			}
+
+			// TODO - make these transactional
+
+			serviceRelationship.create(rLadder);
+			serviceRelationship.create(r1);
+			serviceRelationship.create(r2);
+
+		} catch (Exception ex) {
+			// TODO: Rollback: remove the event and the relationships
+			if(r2!=null){
+				serviceRelationship.delete(r2);
+			}
+			if(r1!=null){
+				serviceRelationship.delete(r1);
+			}
+			if(rLadder!=null){
+				serviceRelationship.delete(rLadder);
+			}
+			if(event!=null){
+				serviceEvent.delete(event);
+			}
+		}
+		return event;
+	}
+
+	public List<IEvent> readLadderChallenges(long ladderId){
+		// TODO: Add functionality
+		return new ArrayList<>();
+	}
+
+	public IEvent updateLadderChallenge(IEvent event){
+		// TODO: Add functionality
+		return event;
+	}
+
+	public void deleteLadderChallenge(IEvent event){
+		// TODO: Add functionality
+	}
 }

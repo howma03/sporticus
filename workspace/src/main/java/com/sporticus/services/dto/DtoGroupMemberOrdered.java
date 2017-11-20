@@ -9,6 +9,7 @@ public class DtoGroupMemberOrdered extends DtoGroupMember {
 	public DtoGroupMemberOrdered() {
 
 	}
+
 	public DtoGroupMemberOrdered(final IGroupMember from) {
 		IGroupMember.COPY (from, this);
 	}

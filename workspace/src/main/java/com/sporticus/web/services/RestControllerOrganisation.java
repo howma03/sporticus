@@ -1,6 +1,5 @@
 package com.sporticus.web.services;
 
-import com.sporticus.domain.entities.Organisation;
 import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.interfaces.IServiceOrganisation;
@@ -42,7 +41,7 @@ public class RestControllerOrganisation extends ControllerAbstract {
         // Now determine the number of groups the user is a member of
 
         if(o.getOwnerId() != null) {
-            final IUser owner = this.serviceUser.findUser(o.getOwnerId());
+            final IUser owner = this.serviceUser.findOne(o.getOwnerId());
             if(owner != null) {
                 dtoOrganisation.setOwnerEmail(owner.getEmail());
             }

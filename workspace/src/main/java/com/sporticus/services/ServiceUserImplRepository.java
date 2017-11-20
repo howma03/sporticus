@@ -130,7 +130,7 @@ public class ServiceUserImplRepository implements IServiceUser {
     }
 
     @Override
-    public IUser findUser(final Long userId) {
+    public IUser findOne(final Long userId) {
         return repositoryUser.findOne(userId);
     }
 

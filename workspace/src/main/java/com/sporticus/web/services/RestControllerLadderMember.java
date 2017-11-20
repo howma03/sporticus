@@ -1,21 +1,12 @@
 package com.sporticus.web.services;
 
-import com.sporticus.domain.entities.Group;
-import com.sporticus.domain.entities.GroupMember;
-import com.sporticus.domain.entities.Organisation;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
-import com.sporticus.domain.interfaces.IGroupMember.Permission;
-import com.sporticus.domain.interfaces.IGroupMember.Status;
-import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryGroup;
-import com.sporticus.domain.repositories.IRepositoryGroupMember;
 import com.sporticus.domain.repositories.IRepositoryUser;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceLadder;
-import com.sporticus.interfaces.IServiceOrganisation;
-import com.sporticus.services.dto.DtoGroup;
 import com.sporticus.services.dto.DtoGroupMemberOrdered;
 import com.sporticus.services.dto.DtoList;
 import com.sporticus.util.logging.LogFactory;
@@ -30,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.PostConstruct;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +55,7 @@ public class RestControllerLadderMember extends ControllerAbstract {
      * @param gm
      * @return DtoGroupMemberOrdered
      */
-    private DtoGroupMemberOrdered convertToDtoGroupMemberLadder (final IGroupMember gm) {
+    private DtoGroupMemberOrdered convertToDtoGroupMemberOrdered (final IGroupMember gm) {
         final DtoGroupMemberOrdered dtoGroupMemberLadder = new DtoGroupMemberOrdered(gm);
         final IUser user = repositoryUser.findOne (gm.getUserId ());
         if (user != null) {
@@ -86,7 +75,7 @@ public class RestControllerLadderMember extends ControllerAbstract {
     private DtoList<DtoGroupMemberOrdered> convertToDtoGroupMembers (final List<IGroupMember> list) {
         final DtoList<DtoGroupMemberOrdered> out = new DtoList<> ();
         list.forEach (gm -> {
-            DtoGroupMemberOrdered gml =convertToDtoGroupMemberLadder(gm);
+            DtoGroupMemberOrdered gml = convertToDtoGroupMemberOrdered(gm);
             gml.setPosition(list.indexOf(gm));
             out.add(gml);
         });
@@ -100,7 +89,7 @@ public class RestControllerLadderMember extends ControllerAbstract {
      * @return ResponseEntity<DtoGroup>
      */
     @RequestMapping(value = "/{id}/members", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DtoList<DtoGroupMemberOrdered>> read(@PathVariable("id") final long id) {
+    public ResponseEntity<DtoList<IGroupMember>> read(@PathVariable("id") final long id) {
         if(id == -1) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -111,9 +100,12 @@ public class RestControllerLadderMember extends ControllerAbstract {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        List<IGroupMember> members = serviceLadder.getLadderMembers(id);
+        List<IGroupMember> members = serviceLadder.readLadderMembers(id, getLoggedInUserId());
 
-        return new ResponseEntity<>(convertToDtoGroupMembers(members), HttpStatus.OK);
+        DtoList<IGroupMember> list = new DtoList<>();
+        list.setData(members);
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     // TODO: We need Create, Update and Delete operations for Ladder Members - these will only be allowed for the owner of the ladder
