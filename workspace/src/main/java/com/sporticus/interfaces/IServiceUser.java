@@ -17,7 +17,7 @@ public interface IServiceUser {
 
     long getUserCount();
 
-    IUser findUser(Long userId);
+    IUser findOne(Long userId);
 
     IUser findUserByEmail(String email);
 

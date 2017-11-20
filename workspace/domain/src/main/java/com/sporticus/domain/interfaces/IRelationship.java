@@ -19,19 +19,15 @@ public interface IRelationship {
         return null;
     }
 
+    String getType();
+
+    IRelationship setType(String type);
+
     Date getCreated();
 
     IRelationship setCreated(Date created);
 
     String getCreatedString();
-
-    String getName();
-
-    IRelationship setName(String name);
-
-    Long getOwnerId();
-
-    IRelationship setOwnerId(Long ownerId);
 
     String getSourceType();
 

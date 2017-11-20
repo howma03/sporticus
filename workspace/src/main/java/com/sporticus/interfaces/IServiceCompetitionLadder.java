@@ -1,4 +1,4 @@
 package com.sporticus.interfaces;
 
-public class IServiceCompetitionLadder {
+public interface IServiceCompetitionLadder {
 }
