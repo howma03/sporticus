@@ -22,4 +22,6 @@ public interface IServiceEvent {
 	List<IEvent> getAgenda(Long actorUser);
 
 	IEvent readEvent(long id, IUser actorUser);
+
+	IEvent save(IEvent event);
 }

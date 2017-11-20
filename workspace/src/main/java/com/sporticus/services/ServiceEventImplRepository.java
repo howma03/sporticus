@@ -78,6 +78,11 @@ public class ServiceEventImplRepository  implements IServiceEvent {
 	}
 
 	@Override
+	public IEvent save(IEvent event) {
+		return repositoryEvent.save((Event)event);
+	}
+
+	@Override
 	public void delete(Long eventId) {
 		if (eventId != null) {
 			repositoryEvent.delete(eventId);

@@ -3,6 +3,8 @@ package com.sporticus.interfaces;
 import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
+import com.sporticus.domain.interfaces.IUser;
+import com.sporticus.services.dto.DtoEventLadder;
 
 import java.util.List;
 
@@ -70,8 +72,8 @@ public interface IServiceLadder {
 	 * @throws ServiceLadderExceptionNotAllowed
 	 * @throws ServiceLadderExceptionNotFound
 	 */
-	IEvent createLadderChallenge(Long ladderId, Long challengerId, Long challengedId) throws ServiceLadderExceptionNotAllowed,
-			ServiceLadderExceptionNotFound;
+	IEvent createLadderChallenge(Long ladderId, Long challengerId, Long challengedId)
+			throws ServiceLadderExceptionNotAllowed, ServiceLadderExceptionNotFound;
 
 	/**
 	 * Returns a list of all members of the ladder
@@ -80,5 +82,13 @@ public interface IServiceLadder {
 	 *
 	 */
 	List<IGroupMember> readLadderMembers(long ladderId);
+
+	/**
+	 * Function to allow the ladder challenge event to be updated
+	 * @param actor
+	 * @param event
+	 * @return IEvent
+	 */
+	IEvent updateLadderChallenge(IUser actor, DtoEventLadder event);
 
 }

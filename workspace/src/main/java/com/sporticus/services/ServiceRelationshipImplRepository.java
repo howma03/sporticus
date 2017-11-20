@@ -58,7 +58,8 @@ public class ServiceRelationshipImplRepository implements IServiceRelationship{
 	}
 
 	@Override
-	public void delete(IRelationship r2) {
-
+	public void delete(long relationshipId) {
+		// TODO: get the actor so we can verify they are allowed to delete the relationship
+		repositoryRelationship.delete(relationshipId);
 	}
 }

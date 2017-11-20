@@ -66,7 +66,6 @@ public class RestControllerEvent extends ControllerAbstract {
             LOGGER.warn(() -> "Event not found - id=" + id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         return new ResponseEntity<>(convertToDtoEvent(found), HttpStatus.OK);
     }
 

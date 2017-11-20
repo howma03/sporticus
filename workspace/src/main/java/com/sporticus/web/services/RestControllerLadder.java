@@ -104,4 +104,5 @@ public class RestControllerLadder extends ControllerAbstract {
         // TODO: check it is a ladder group
         return new ResponseEntity<>(convertToDtoGroup(found.get()), HttpStatus.OK);
     }
+
 }

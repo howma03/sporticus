@@ -62,9 +62,9 @@ public interface IServiceRelationship {
 
 	/**
 	 * Function to delete a relationship
-	 * @param r2
+	 * @param relationshipId
 	 */
-	default void delete(IRelationship r2) {
+	default void delete(long relationshipId) {
 
 	}
 
