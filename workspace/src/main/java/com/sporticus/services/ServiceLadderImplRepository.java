@@ -285,6 +285,27 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 		}
 	}
 
+	/**
+	 * Function construct the DtoGroupMemberOrdered
+	 *
+	 * @param gm
+	 * @return DtoGroupMemberOrdered
+	 */
+	private void addDetails (final DtoGroupMember gm) {
+		final IUser user = serviceUser.findOne (gm.getUserId ());
+		if (user != null) {
+			gm.setEmail (user.getEmail ());
+			gm.setFirstName (user.getFirstName ());
+			gm.setLastName (user.getLastName ());
+			gm.setUserName (user.getFirstName () + " " + user.getLastName ());
+		}
+		final Optional<IGroup> found = serviceGroup.readGroup(gm.getGroupId ());
+		if (found.isPresent()) {
+			gm.setGroupName (found.get().getName ());
+			gm.setGroupDescription (found.get().getDescription ());
+		}
+	}
+
 	@Override
 	public List<IGroupMember> readLadderMembers(long ladderId, long userId) {
 
@@ -349,6 +370,10 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 						// the ladder member has challenged the user
 						gmx.setChallenger(challengesMadeByMemberToUser.get(0));
 					}
+
+					// populate additional data items
+
+					addDetails(gmx);
 
 					return gmx;
 				}).collect(Collectors.toList());
