@@ -83,7 +83,7 @@ export class ChallengeFormComponent implements OnInit {
   /**
    * Test that both scores have been provided if any score is provided
    * @param {AbstractControl} c
-   * @returns {{[p: string]: boolean}}
+   * @returns {[{[key: string]: boolean}]}
    */
   scoreMatcher(c: AbstractControl): {[key: string]: boolean} | null {
     let scoreChallengerControl = c.get('scoreChallenger');
@@ -101,11 +101,9 @@ export class ChallengeFormComponent implements OnInit {
    */
   enableScores(values) {
     if (this.challengeForm.get('date').valid && new Date(this.eventDate.value) < new Date()) {
-      this.challengeForm.get('scores').get('scoreChallenger').enable();
-      this.challengeForm.get('scores').get('scoreChallenged').enable();
+      this.challengeForm.get('scores').enable();
     } else {
-      this.challengeForm.get('scores').get('scoreChallenger').disable();
-      this.challengeForm.get('scores').get('scoreChallenged').disable();
+      this.challengeForm.get('scores').disable();
     }
   }
 }
