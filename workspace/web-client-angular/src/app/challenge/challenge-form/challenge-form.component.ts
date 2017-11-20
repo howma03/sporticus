@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {LadderUser} from "../../services/ladder.service";
 import {Challenge, ChallengeService} from '../../services/challenge.service';
 
@@ -8,11 +8,9 @@ import {Challenge, ChallengeService} from '../../services/challenge.service';
   templateUrl: './challenge-form.component.html',
   styleUrls: ['./challenge-form.component.css'],
 })
-export class ChallengeFormComponent implements OnInit, OnChanges {
+export class ChallengeFormComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private challengeService : ChallengeService) {
-    this.createForm();
-  }
+  constructor(private fb: FormBuilder, private challengeService : ChallengeService) {}
 
   @Input()
   rung: LadderUser;
@@ -30,37 +28,21 @@ export class ChallengeFormComponent implements OnInit, OnChanges {
     return this.challengeForm.get('eventTime')
   }
 
-  get lastName() {
+  get scoreChallenger() {
     return this.challengeForm.get('scoreChallenger')
   }
 
-  get password() {
+  get scoreChallenged() {
     return this.challengeForm.get('scoreChallenged')
   }
 
   ngOnInit() {
-  }
-
-  ngOnChanges() {
-    this.challengeForm.reset({
-      eventDate: null,
-      scoreChallenger: null,
-      scoreChallenged: null
-    });
-  }
-
-  createForm() {
-    let eventDate = new FormControl(null, Validators.required); // TODO: We're waiting upon the Material datetime picker
-    let eventTime = new FormControl(null, Validators.required); // to enter date and time as a single field
-    let scoreChallenger = new FormControl(null);
-    let scoreChallenged = new FormControl(null);
-
     this.challengeForm = this.fb.group({
-      eventDate,
-      eventTime,
-      scoreChallenger,
-      scoreChallenged
-    });
+      eventDate: [null, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
+      eventTime: [null, [Validators.required]], // to enter date and time as a single field,
+      scoreChallenger: [null],
+      scoreChallenged: [null]
+    }, {validator: this.scoreMatcher});
   }
 
   onSave() {
@@ -89,7 +71,21 @@ export class ChallengeFormComponent implements OnInit, OnChanges {
   }
 
   onDone() {
-    this.ngOnChanges();
     this.done.emit();
+  }
+
+  /**
+   * Test that both scores have been provided if any score is provided
+   * @param {AbstractControl} c
+   * @returns {{[p: string]: boolean}}
+   */
+  scoreMatcher(c: AbstractControl): {[key: string]: boolean} | null {
+    let scoreChallengerControl = c.get('scoreChallenger');
+    let scoreChallengedControl = c.get('scoreChallenged');
+
+    if ((scoreChallengerControl.value == null) !== (scoreChallengedControl.value == null)) {
+      return {'bothscores': true}
+    }
+    return null;
   }
 }

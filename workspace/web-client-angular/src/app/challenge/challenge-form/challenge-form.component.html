@@ -6,7 +6,7 @@
   </mat-form-field>
   <mat-form-field>
     <input matInput placeholder="Time of event" name="eventTime" formControlName="eventTime" type="time" min="00:00" max="23:59" step="60"/>
-    <mat-error *ngIf="eventDate.hasError('required')">A time is required</mat-error>
+    <mat-error *ngIf="eventTime.hasError('required')">A time is required</mat-error>
   </mat-form-field>
   <br/>
   <mat-form-field>
@@ -15,6 +15,7 @@
   <mat-form-field>
     <input matInput placeholder="Challenger Score" name="scoreChallenger" formControlName="scoreChallenger" type="number"/>
   </mat-form-field>
+  <mat-error *ngIf="challengeForm.hasError('bothscores')">Both scores must br provided together (or none)</mat-error>
   <br/>
   <button type="submit" [disabled]="challengeForm.pristine || !challengeForm.valid" mat-raised-button>
     Save
