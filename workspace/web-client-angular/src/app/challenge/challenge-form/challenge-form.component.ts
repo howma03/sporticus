@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {LadderUser} from "../../services/ladder.service";
+import {Challenge, ChallengeService} from '../../services/challenge.service';
 
 @Component({
   selector: 'app-challenge-form',
@@ -9,7 +10,7 @@ import {LadderUser} from "../../services/ladder.service";
 })
 export class ChallengeFormComponent implements OnInit, OnChanges {
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private challengeService : ChallengeService) {
     this.createForm();
   }
 
@@ -23,6 +24,10 @@ export class ChallengeFormComponent implements OnInit, OnChanges {
 
   get eventDate() {
     return this.challengeForm.get('eventDate')
+  }
+
+  get eventTime() {
+    return this.challengeForm.get('eventTime')
   }
 
   get lastName() {
@@ -45,38 +50,38 @@ export class ChallengeFormComponent implements OnInit, OnChanges {
   }
 
   createForm() {
-    let eventDate = new FormControl(null, Validators.required);
+    let eventDate = new FormControl(null, Validators.required); // TODO: We're waiting upon the Material datetime picker
+    let eventTime = new FormControl(null, Validators.required); // to enter date and time as a single field
     let challengerScore = new FormControl(null);
     let challengedScore = new FormControl(null);
-//    let confirmPassword = new FormControl('', me => password.value === me.value ? null : {mismatch: true});
-//
-//     password.valueChanges.subscribe(() => confirmPassword.updateValueAndValidity());
 
     this.challengeForm = this.fb.group({
       eventDate,
+      eventTime,
       challengerScore,
       challengedScore
     });
   }
 
   onSave() {
-    // const formModel = this.profileForm.value;
-    // const toSave: User = {
-    //   id: this.user.id,
-    //   email: this.user.email,
-    //
-    //   firstName: formModel.firstName,
-    //   lastName: formModel.lastName
-    // };
-    // if (formModel.password) {
-    //   toSave.password = formModel.password;
-    // }
-    //
-    // this.profileService.saveUser(toSave)
-    //   .subscribe(user => {
-    //     this.user = user;
-    //     this.onDone();
-    //   })
+    const formModel = this.challengeForm.value;
+    const toSave: Challenge = {
+      id: this.rung.challenger.id,
+      name: this.rung.challenger.name,
+      created: this.rung.challenger.created,
+      dateTime: formModel.eventDate, // TODO: Combine the time
+      status: 'ACCEPTED',
+      challengerId: this.rung.challenger.challengerId,
+      challengedId: this.rung.challenger.challengedId,
+      challengerScore: formModel.challengerScore,
+      challengedScore:formModel.challengedScore
+    };
+
+    this.challengeService.putChallenge(toSave)
+      .subscribe(challenge => {
+        this.rung.challenger = challenge;
+        this.onDone();
+      })
   }
 
   onCancel() {

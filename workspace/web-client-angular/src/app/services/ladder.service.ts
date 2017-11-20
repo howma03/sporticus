@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
 import {User} from "./users.service";
 import {List} from "./list";
+import {Challenge} from './challenge.service';
 
 @Injectable()
 export class LadderService extends BaseCrudService<Ladder> {
@@ -15,7 +16,7 @@ export class LadderService extends BaseCrudService<Ladder> {
   }
 
   getLadderUsers(id: number): Observable<List<LadderUser>> {
-    return this.http.get<List<LadderUser>>(this.url + `/${id}/members`);
+    return this.http.get<List<LadderUser>>(`${this.url}/${id}/members`);
   }
 }
 
@@ -33,9 +34,4 @@ export interface LadderUser extends User {
   userId: number;
   challenged: Challenge;
   challenger: Challenge;
-}
-
-export interface Challenge {
-  challengedId: number;
-  challengerId: number;
 }
