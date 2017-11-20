@@ -13,13 +13,16 @@ export class OrganisationService extends BaseCrudService<Organisation> {
 }
 
 export interface Organisation {
-  id?: number;
   name: string;
+  urlFragment: string;
+
+  domain?: string;
+  id?: number;
   created?: Date,
   createdString?: string;
   ownerId?: number;
   isEnabled?: boolean;
   ownerEmail?: string;
   address?: string;
-  domain: string;
+
 }

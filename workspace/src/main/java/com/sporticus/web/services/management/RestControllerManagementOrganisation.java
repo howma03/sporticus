@@ -54,6 +54,11 @@ public class RestControllerManagementOrganisation extends ControllerAbstract {
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoOrganisation> create(@RequestBody final DtoOrganisation organisation) {
         LOGGER.debug(() -> "Creating Organisation " + organisation.getName());
+        if(organisation.getOwnerId() == null) {
+            LOGGER.warn(() -> "As the organisation has no owner, this sets the logged in user to be the owner");
+            organisation.setOwnerId(this.getLoggedInUserId());
+        }
+
         return new ResponseEntity<>(convertToDtoOrganisation(serviceOrganisation.createOrganisation(organisation)), HttpStatus.OK);
     }
 
