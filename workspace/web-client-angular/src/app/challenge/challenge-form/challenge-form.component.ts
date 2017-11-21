@@ -37,9 +37,13 @@ export class ChallengeFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    let datetime : Date = new Date(this.rung.challenger.dateTime);
-    let dateOnly : string = datetime.toISOString().substring(0, 10);
-    let timeOnly : string = ('0' + datetime.getHours()).slice(-2) + ":" + ('0' + datetime.getMinutes()).slice(-2);
+    let dateOnly : string = null;
+    let timeOnly : string = null;
+    if (this.rung.challenger.dateTime) {
+      let datetime : Date = new Date(this.rung.challenger.dateTime);
+      dateOnly = datetime.toISOString().substring(0, 10);
+      timeOnly = ('0' + datetime.getHours()).slice(-2) + ":" + ('0' + datetime.getMinutes()).slice(-2);
+    }
 
     this.challengeForm = this.fb.group({
       date: this.fb.group({
@@ -52,6 +56,7 @@ export class ChallengeFormComponent implements OnInit {
       }, {validator: this.scoreMatcher}),
     });
 
+    this.enableScores(this.challengeForm.get('date').value);
     this.challengeForm.get('date').valueChanges.subscribe(value => this.enableScores(value));
   }
 
