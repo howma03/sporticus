@@ -1,15 +1,17 @@
-  <main class='md-padding' layout="row" flex>
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="!loading">
     <ux-ebox>
       <ux-ebox-header>
-        <h3>{{organisation.name}}</h3>
+        <h2>{{organisation.name}}</h2>
+        <h3>Created by {{owner.name}}</h3>
       </ux-ebox-header>
 
       <ux-ebox-content>
 
-        <div *ngIf="loading">Loading...</div>
-        <div *ngIf="!loading">
-        </div>
+      Address - {{organisation.address}}<br/><br/>
+      Domain - {{organisation.domain}}<br/><br/>
+      Created - {{organisation.created}}
       </ux-ebox-content>
     </ux-ebox>
-  </main>
 
+</div>

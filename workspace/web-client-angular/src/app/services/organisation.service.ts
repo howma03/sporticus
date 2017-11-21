@@ -13,9 +13,7 @@ export class OrganisationService extends BaseCrudService<Organisation> {
   url = '/api/organisation';
 
   public getOrganisationByUrlFragment(urlFragment: string): Observable<organisationFromFragment> {
-    debugger;
-    return this.http.get<organisationFromFragment>(this.url + "/findByUrlFragment", {
-      params: new HttpParams().set('urlFragment', urlFragment)
+    return this.http.get<organisationFromFragment>(this.url + "/findByUrlFragment/" + urlFragment, {
     });
   }
 }
@@ -32,7 +30,6 @@ export interface organisationFromFragment {
   isEnabled?: boolean;
   ownerEmail?: string;
   address?: string;
-
 }
 
 export interface Organisation {
