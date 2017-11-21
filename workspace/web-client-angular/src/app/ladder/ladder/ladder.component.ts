@@ -3,6 +3,7 @@ import {Ladder, LadderService, LadderUser} from "../../services/ladder.service";
 import {Subscription} from "rxjs/Subscription";
 import {ChallengeDialogComponent} from "../../challenge/challenge-dialog/challenge-dialog.component";
 import {MatDialog} from "@angular/material";
+import {ChallengeService} from "../../services/challenge.service";
 
 @Component({
   selector: 'app-ladder',
@@ -13,7 +14,8 @@ export class LadderComponent implements OnInit, OnDestroy {
 
   constructor(
     private ladderService: LadderService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private challengeService : ChallengeService) {
   }
 
   public ladderUsers: LadderUser[] = [];
@@ -56,28 +58,16 @@ export class LadderComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(challenge => {
-      this.subscription.unsubscribe();
-      this.subscription = this.ladderService.getLadderUsers(this.ladder.id)
-        .subscribe((ladderUsers: LadderUser[])=>{
-          this.ladderUsers = ladderUsers;
-        });
-      // this.challengeService.createChallenge(this.ladder, challenge)
-      //   .subscribe(
-      //   item => {
-      //     ladderUser.isChallenged = true;
-      //     ladderUser.canChallenge = false;
-      //   }
-      // );
-
-      this.subscription.unsubscribe();
-      this.subscription = this.ladderService.getLadderUsers(this.ladder.id)
-        .subscribe((ladderUsers: LadderUser[])=>{
-          this.ladderUsers = ladderUsers;
-        });
+      this.reload();
     });
 
   }
 
+  /**
+   * Edit a challenge in order to set a date and optionally give a score (if the date was in the past)
+   * Currently this is only called by the challenged user in order to accept a challenge.
+   * @param {LadderUser} ladderUser
+   */
   editChallenge(ladderUser : LadderUser) {
     let dialogRef = this.dialog.open(ChallengeDialogComponent, {
       disableClose: true,
@@ -87,12 +77,28 @@ export class LadderComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(challenge => {
-      this.subscription.unsubscribe();
-      this.subscription = this.ladderService.getLadderUsers(this.ladder.id)
-        .subscribe((ladderUsers: LadderUser[])=>{
-          this.ladderUsers = ladderUsers;
-        });
+      this.reload();
     });
+  }
+
+  /**
+   *
+   * @param {LadderUser} ladderUser
+   */
+  cancelChallenge(ladderUser : LadderUser) {
+    this.challengeService.deleteChallenge(this.ladder, ladderUser.challenged)
+      .subscribe((thing : any) => {
+        this.reload();
+      }
+    );
+  }
+
+  private reload() {
+    this.subscription.unsubscribe();
+    this.subscription = this.ladderService.getLadderUsers(this.ladder.id)
+      .subscribe((ladderUsers: LadderUser[])=>{
+        this.ladderUsers = ladderUsers;
+      });
   }
 
   ngOnDestroy() {

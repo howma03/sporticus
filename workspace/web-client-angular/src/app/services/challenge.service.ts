@@ -9,6 +9,10 @@ export class ChallengeService extends BaseCrudService<Challenge> {
 
   url = '/api/ladder/challenge';
 
+  public deleteChallenge(ladder : Ladder, challenge : Challenge): Observable<any> {
+    return this.http.delete(this.url + "/" + ladder.id + "/" + challenge.id);
+  }
+
   public postChallenge(ladder : Ladder, challenge : Challenge): Observable<Challenge> {
     return this.http.post<Challenge>(this.url + "/" + ladder.id, challenge);
   }
