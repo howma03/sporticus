@@ -9,8 +9,8 @@ export class ChallengeService extends BaseCrudService<Challenge> {
 
   url = '/api/ladder/challenge';
 
-  public createChallenge(ladder : Ladder, challenger : User, challenged : LadderUser): Observable<Challenge> {
-    return this.http.post<Challenge>(this.url + "/" + ladder.id + "/" + challenger.id + "/" + challenged.userId, null);
+  public postChallenge(ladder : Ladder, challenge : Challenge): Observable<Challenge> {
+    return this.http.post<Challenge>(this.url + "/" + ladder.id, challenge);
   }
 
   public putChallenge(challenge : Challenge) {

@@ -11,7 +11,7 @@
     </mat-form-field>
   </div>
   <br/>
-  <div formGroupName="scores">
+  <div *ngIf="!isNew" formGroupName="scores">
     <mat-form-field>
       <input matInput placeholder="Challenged Score" name="scoreChallenged" formControlName="scoreChallenged" type="number"/>
     </mat-form-field>

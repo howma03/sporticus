@@ -1,7 +1,8 @@
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {LadderUser} from "../../services/ladder.service";
+import {Ladder, LadderUser} from "../../services/ladder.service";
 import {Challenge, ChallengeService} from '../../services/challenge.service';
+import {AuthService} from '../../login/auth.service';
 
 @Component({
   selector: 'app-challenge-form',
@@ -10,15 +11,22 @@ import {Challenge, ChallengeService} from '../../services/challenge.service';
 })
 export class ChallengeFormComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private challengeService : ChallengeService) {}
+  constructor(private fb: FormBuilder,
+              private challengeService : ChallengeService,
+              private authService: AuthService) {}
 
   @Input()
   rung: LadderUser;
+
+  @Input()
+  ladder: Ladder;
 
   @Output()
   done = new EventEmitter<LadderUser>();
 
   challengeForm: FormGroup;
+
+  isNew: boolean = false;
 
   get eventDate() {
     return this.challengeForm.get('date').get('eventDate')
@@ -37,6 +45,24 @@ export class ChallengeFormComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    if (!this.rung.challenger) {
+      // this is a new challenge from a challenger
+      this.isNew = true;
+
+      this.rung.challenger = {
+        id: null,
+        name: 'New Challenge',
+        created: new Date(),
+        status: 'PROPOSED',
+        dateTime: new Date(),
+        challengerId: this.authService.getCurrentUser().id,
+        challengedId: this.rung.userId,
+        scoreChallenger: null,
+        scoreChallenged: null,
+      }
+    }
+
     let dateOnly : string = null;
     let timeOnly : string = null;
     if (this.rung.challenger.dateTime) {
@@ -81,11 +107,19 @@ export class ChallengeFormComponent implements OnInit {
       scoreChallenged: this.scoreChallenged.value
     };
 
-    this.challengeService.putChallenge(toSave)
-      .subscribe(challenge => {
-        this.rung.challenger = challenge;
-        this.onDone();
-      })
+    if (this.isNew) {
+      this.challengeService.postChallenge(this.ladder, toSave)
+        .subscribe(challenge => {
+          this.rung.challenger = challenge;
+          this.onDone();
+        })
+    } else {
+      this.challengeService.putChallenge(toSave)
+        .subscribe(challenge => {
+          this.rung.challenger = challenge;
+          this.onDone();
+        })
+    }
   }
 
   onCancel() {
