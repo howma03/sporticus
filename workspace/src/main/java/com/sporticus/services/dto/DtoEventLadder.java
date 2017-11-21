@@ -16,12 +16,17 @@ public class DtoEventLadder extends DtoEvent {
 		super(e);
 
 		// Extract scores from the event meta data
-		if(e.getMetaDataType().equalsIgnoreCase("text")){
-			String metaData = e.getMetaData();
-			if(metaData.length()>0) {
-				String[] elements = metaData.split(":");
-				this.setScoreChallenger(Integer.valueOf(elements[1]));
-				this.setScoreChallenged(Integer.valueOf(elements[2]));
+		if(e.getMetaDataType().equalsIgnoreCase("text")) {
+			try {
+				String metaData = e.getMetaData();
+				if (metaData.length() > 0) {
+					String[] elements = metaData.split(":");
+					this.setScoreChallenger(Integer.valueOf(elements[1]));
+					this.setScoreChallenged(Integer.valueOf(elements[2]));
+				}
+			} catch (Exception ex) {
+				System.err.println("Error when parsing meta data");
+				ex.printStackTrace();
 			}
 		}
 	}
