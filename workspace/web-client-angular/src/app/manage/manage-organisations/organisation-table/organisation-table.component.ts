@@ -49,18 +49,17 @@ export class OrganisationTableComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result === true) {
-        this.delete(item.id);
+        this.deleteOrganisation(item.id);
       }
     });
   }
 
-  public delete(itemId) {
+  public deleteOrganisation(itemId) {
     console.info("delete - id="+itemId);
     this.organisationService.deleteOne(itemId).subscribe();
   }
 
   public openModal(itemId) : void {
-    debugger;
     let item = this.orgs.find(item => item.id === itemId);
 
     console.info("Launch dialog");
@@ -71,9 +70,8 @@ export class OrganisationTableComponent implements OnInit, OnDestroy {
       height: '900px',
       width: '1200px',
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(() => {
       console.log('The dialog was closed');
-      // this.animal = result;
     });
   }
 }

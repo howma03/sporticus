@@ -20,8 +20,11 @@ export class OrganisationComponent implements OnInit {
 
     if(this.data.item !== undefined) {
       this.organisationDetails = this.data.item;
+      this.organisationCreationDescription = "This allows the user admin to modify the details for the organisation"
     }
   }
+
+  organisationCreationDescription = "To create a new organisation, please enter a few details";
 
   organisationDetails = {
     name: '',

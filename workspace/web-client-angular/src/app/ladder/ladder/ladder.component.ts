@@ -1,7 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Ladder, LadderService, LadderUser} from "../../services/ladder.service";
 import {Subscription} from "rxjs/Subscription";
-import {ChallengeService} from "../../services/challenge.service";
 import {ChallengeDialogComponent} from "../../challenge/challenge-dialog/challenge-dialog.component";
 import {MatDialog} from "@angular/material";
 
@@ -57,7 +56,6 @@ export class LadderComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(challenge => {
-      debugger;
       this.subscription.unsubscribe();
       this.subscription = this.ladderService.getLadderUsers(this.ladder.id)
         .subscribe((ladderUsers: LadderUser[])=>{
