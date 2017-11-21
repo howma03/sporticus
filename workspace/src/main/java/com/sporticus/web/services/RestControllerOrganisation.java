@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class RestControllerOrganisation extends ControllerAbstract {
             this.serviceOrganisation.readAllOrganisations().forEach(o -> list.add(convertToDtoOrganisation(o)));
         }
 
-        return new ResponseEntity<>(new DtoList<DtoOrganisation>(list), HttpStatus.OK);
+        return new ResponseEntity<>(new DtoList<>(list), HttpStatus.OK);
     }
 
     /**
@@ -123,6 +124,20 @@ public class RestControllerOrganisation extends ControllerAbstract {
         }
 
         return new ResponseEntity<>(convertToDtoOrganisation(found), HttpStatus.OK);
+    }
+
+    /**
+     * Function to find an organisation given a url fragment
+     *
+     * @return ResponseEntity<DtoOrganisations>
+     */
+    @RequestMapping(value = "findByUrlFragment", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DtoOrganisation> findByUrlFragment(@RequestParam("urlFragment") final String urlFragment) {
+        IOrganisation organisation = this.serviceOrganisation.findByUrlFragment(urlFragment);
+        if(organisation == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(convertToDtoOrganisation(organisation), HttpStatus.OK);
     }
 
     /**

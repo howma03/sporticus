@@ -38,7 +38,7 @@ public class Organisation implements IOrganisation {
     @Column(nullable = true)
     private String domain = "";
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String urlFragment = "";
 
     public Organisation() {
