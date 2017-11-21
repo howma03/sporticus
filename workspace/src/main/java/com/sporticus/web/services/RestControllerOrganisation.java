@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/organisation")
@@ -93,11 +95,13 @@ public class RestControllerOrganisation extends ControllerAbstract {
                 LOGGER.error(() -> "Organisations can only be read by system administrators or owners");
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
+
             /**
              * As well as the standard organisation data we want to include statistics for number of users and groups
              * (as well as number of open invitations) - this is performed by the converter
              */
-            this.serviceOrganisation.readAllOrganisations().forEach(o -> list.add(convertToDtoOrganisation(o)));
+            list.addAll(this.serviceOrganisation.readAllOrganisations().stream()
+                    .map(o -> convertToDtoOrganisation(o)).collect(Collectors.toList()));
         }
 
         return new ResponseEntity<>(new DtoList<>(list), HttpStatus.OK);
@@ -131,8 +135,8 @@ public class RestControllerOrganisation extends ControllerAbstract {
      *
      * @return ResponseEntity<DtoOrganisations>
      */
-    @RequestMapping(value = "findByUrlFragment", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DtoOrganisation> findByUrlFragment(@RequestParam("urlFragment") final String urlFragment) {
+    @RequestMapping(value = "findByUrlFragment/{urlFragment}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DtoOrganisation> findByUrlFragment(@PathVariable ("urlFragment") final String urlFragment) {
         IOrganisation organisation = this.serviceOrganisation.findByUrlFragment(urlFragment);
         if(organisation == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
