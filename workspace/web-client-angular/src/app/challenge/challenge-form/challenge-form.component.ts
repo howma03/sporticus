@@ -37,14 +37,18 @@ export class ChallengeFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    let datetime : Date = new Date(this.rung.challenger.dateTime);
+    let dateOnly : string = datetime.toISOString().substring(0, 10);
+    let timeOnly : string = ('0' + datetime.getHours()).slice(-2) + ":" + ('0' + datetime.getMinutes()).slice(-2);
+
     this.challengeForm = this.fb.group({
       date: this.fb.group({
-        eventDate: [null, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
-        eventTime: [null, [Validators.required]], // to enter date and time as a single field,
+        eventDate: [dateOnly, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
+        eventTime: [timeOnly, [Validators.required]], // to enter date and time as a single field,
       }),
       scores: this.fb.group({
-        scoreChallenger: {value: null,  disabled: true},
-        scoreChallenged: {value: null,  disabled: true}
+        scoreChallenger: {value: this.rung.challenger.scoreChallenger,  disabled: true},
+        scoreChallenged: {value: this.rung.challenger.scoreChallenged,  disabled: true}
       }, {validator: this.scoreMatcher}),
     });
 
