@@ -1,0 +1,15 @@
+  <main class='md-padding' layout="row" flex>
+    <ux-ebox>
+      <ux-ebox-header>
+        <h3>{{organisation.name}}</h3>
+      </ux-ebox-header>
+
+      <ux-ebox-content>
+
+        <div *ngIf="loading">Loading...</div>
+        <div *ngIf="!loading">
+        </div>
+      </ux-ebox-content>
+    </ux-ebox>
+  </main>
+

@@ -13,6 +13,7 @@ import {NgxCarouselModule} from "ngx-carousel";
 import 'hammerjs';
 import {ManageModule} from "./manage/manage.module";
 import {LadderModule} from "./ladder/ladder.module";
+import {OrganisationModule} from "./organisation/organisation.module";
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import {LadderModule} from "./ladder/ladder.module";
     LandingModule,
     ManageModule,
     LadderModule,
+    OrganisationModule,
     // Keep routing module last!
     AppRoutingModule
   ],

@@ -37,7 +37,7 @@ export class OrganisationComponent implements OnInit {
     this.organisationService.createOne(newOrganisation)
       .subscribe(success => {
         if (success) {
-         alert("Organisation" + newOrganisation.name +  " successfully created.");
+         alert("Organisation " + newOrganisation.name +  " successfully created.");
          this.closeWindow();
         }
       }, err => {

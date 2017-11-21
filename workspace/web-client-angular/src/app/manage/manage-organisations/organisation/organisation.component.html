@@ -43,8 +43,14 @@
 
           <div class="form-group">
             <label class="form-label case-label">Domain</label>
-            <input type="text" placeholder="Enter Address" class="form-control" name="domain"
+            <input type="text" placeholder="Enter Domain" class="form-control" name="domain"
                    [(ngModel)]="organisationDetails.domain"/>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label case-label">Url Fragment</label>
+            <input type="text" placeholder="Enter Url Fragment" class="form-control" name="urlFragment"
+                   [(ngModel)]="organisationDetails.urlFragment"/>
           </div>
 
           <div class="marquee-footer">
