@@ -52,11 +52,19 @@ export class ChallengeFormComponent implements OnInit {
   }
 
   onSave() {
+    let dateOnly = this.challengeForm.get('date').get('eventDate').value;
+    let timeOnly = this.challengeForm.get('date').get('eventTime').value;
+
+    let dateTime = new Date(dateOnly);
+    let splitTime = timeOnly.split(":");
+    dateTime.setHours(+splitTime[0]);
+    dateTime.setMinutes(+splitTime[1]);
+
     const toSave: Challenge = {
       id: this.rung.challenger.id,
       name: this.rung.challenger.name,
       created: this.rung.challenger.created,
-      dateTime: this.challengeForm.get('date').get('eventDate').value, // TODO: Combine the time
+      dateTime: dateTime,
       status: 'ACCEPTED',
       challengerId: this.rung.challenger.challengerId,
       challengedId: this.rung.challenger.challengedId,
