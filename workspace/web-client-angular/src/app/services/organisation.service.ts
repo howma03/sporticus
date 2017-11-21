@@ -25,11 +25,11 @@ export interface organisationFromFragment {
   domain?: string;
   id?: number;
   created?: Date,
-  createdString?: string;
   ownerId?: number;
   isEnabled?: boolean;
   ownerEmail?: string;
   address?: string;
+  postcode?: string
 }
 
 export interface Organisation {
@@ -44,5 +44,6 @@ export interface Organisation {
   isEnabled?: boolean;
   ownerEmail?: string;
   address?: string;
+  postcode?: string
 
 }

@@ -9,8 +9,11 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 })
 export class DeletePromptComponent implements OnInit {
 
-  constructor(public dialogRef: MatDialogRef<DeletePromptComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(
+    public dialogRef: MatDialogRef<DeletePromptComponent>,
+    @Inject(MAT_DIALOG_DATA)public data: any,
+    public activatedRoute: ActivatedRoute
+  ) { }
 
   ngOnInit() {
   }

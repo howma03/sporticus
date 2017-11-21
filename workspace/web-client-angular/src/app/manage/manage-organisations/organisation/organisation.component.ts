@@ -17,13 +17,18 @@ export class OrganisationComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
+
+    if(this.data.item !== undefined) {
+      this.organisationDetails = this.data.item;
+    }
   }
 
   organisationDetails = {
     name: '',
     address: '',
     domain: '',
-    urlFragment: ''
+    urlFragment: '',
+    postcode: ''
   };
 
   addOrganisation() {
@@ -31,7 +36,8 @@ export class OrganisationComponent implements OnInit {
       name: this.organisationDetails.name,
       address: this.organisationDetails.address,
       domain: this.organisationDetails.domain,
-      urlFragment: this.organisationDetails.urlFragment
+      urlFragment: this.organisationDetails.urlFragment,
+      postcode: this.organisationDetails.postcode
     };
 
     this.organisationService.createOne(newOrganisation)

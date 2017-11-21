@@ -35,7 +35,7 @@ export class OrganisationTableComponent implements OnInit, OnDestroy {
 
   public view(itemId) {
     console.info("view - id="+itemId);
-    this.openModal();
+    this.openModal(itemId);
   }
 
   openDeleteDialog(item) {
@@ -59,9 +59,15 @@ export class OrganisationTableComponent implements OnInit, OnDestroy {
     this.organisationService.deleteOne(itemId).subscribe();
   }
 
-  public openModal() : void {
+  public openModal(itemId) : void {
+    debugger;
+    let item = this.orgs.find(item => item.id === itemId);
+
     console.info("Launch dialog");
     let dialogRef = this.dialog.open(OrganisationComponent, {
+      data: {
+        item: item
+      },
       height: '900px',
       width: '1200px',
     });
