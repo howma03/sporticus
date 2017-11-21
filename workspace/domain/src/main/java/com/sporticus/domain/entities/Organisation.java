@@ -41,6 +41,9 @@ public class Organisation implements IOrganisation {
     @Column(nullable = true)
     private String urlFragment = "";
 
+    @Column(nullable = true)
+    private String postcode = "";
+
     public Organisation() {
 
     }
@@ -144,6 +147,17 @@ public class Organisation implements IOrganisation {
     public IOrganisation setUrlFragment(String urlFragment) {
         this.urlFragment = urlFragment;
         return this;
+    }
+
+    @Override
+    public IOrganisation setPostcode(String postcode) {
+        this.postcode = postcode;
+        return this;
+    }
+
+    @Override
+    public String getPostcode() {
+        return postcode;
     }
 
     @Override

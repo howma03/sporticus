@@ -19,6 +19,7 @@ public class DtoOrganisation implements IOrganisation {
     private String name;
     private String ownerEmail;
     private String address;
+    private String postcode;
     private String domain;
     private String urlFragment;
     private Long countGroup = 4l;
@@ -38,8 +39,18 @@ public class DtoOrganisation implements IOrganisation {
     }
 
     @Override
+    public String getPostcode() {
+        return postcode;
+    }
+
+    @Override
     public String getUrlFragment() {
         return urlFragment;
+    }
+
+    public DtoOrganisation setPostcode(String postcode) {
+        this.postcode = postcode;
+        return null;
     }
 
     @Override

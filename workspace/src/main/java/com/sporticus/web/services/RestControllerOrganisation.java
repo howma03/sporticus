@@ -72,6 +72,11 @@ public class RestControllerOrganisation extends ControllerAbstract {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
+        if(organisation.getOwnerId()==null){
+            LOGGER.warn(() -> "Preventing an organisation being created without an owner");
+            organisation.setOwnerId(this.getLoggedInUserId());
+        }
+
         return new ResponseEntity<>(convertToDtoOrganisation(serviceOrganisation.createOrganisation(organisation)), HttpStatus.OK);
     }
 

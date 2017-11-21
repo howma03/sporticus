@@ -60,4 +60,8 @@ public interface IOrganisation {
     IOrganisation setDomain(String domain);
 
     IOrganisation setUrlFragment(String urlFragment);
+
+    IOrganisation setPostcode(String postcode);
+
+    String getPostcode();
 }
