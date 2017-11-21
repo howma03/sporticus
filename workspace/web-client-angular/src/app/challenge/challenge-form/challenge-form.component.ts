@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {LadderUser} from "../../services/ladder.service";
 import {Challenge, ChallengeService} from '../../services/challenge.service';
 
@@ -8,11 +8,9 @@ import {Challenge, ChallengeService} from '../../services/challenge.service';
   templateUrl: './challenge-form.component.html',
   styleUrls: ['./challenge-form.component.css'],
 })
-export class ChallengeFormComponent implements OnInit, OnChanges {
+export class ChallengeFormComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private challengeService : ChallengeService) {
-    this.createForm();
-  }
+  constructor(private fb: FormBuilder, private challengeService : ChallengeService) {}
 
   @Input()
   rung: LadderUser;
@@ -23,58 +21,64 @@ export class ChallengeFormComponent implements OnInit, OnChanges {
   challengeForm: FormGroup;
 
   get eventDate() {
-    return this.challengeForm.get('eventDate')
+    return this.challengeForm.get('date').get('eventDate')
   }
 
   get eventTime() {
-    return this.challengeForm.get('eventTime')
+    return this.challengeForm.get('date').get('eventTime')
   }
 
-  get lastName() {
-    return this.challengeForm.get('scoreChallenger')
+  get scoreChallenger() {
+    return this.challengeForm.get('scores').get('scoreChallenger')
   }
 
-  get password() {
-    return this.challengeForm.get('scoreChallenged')
+  get scoreChallenged() {
+    return this.challengeForm.get('scores').get('scoreChallenged')
   }
 
   ngOnInit() {
-  }
-
-  ngOnChanges() {
-    this.challengeForm.reset({
-      eventDate: null,
-      scoreChallenger: null,
-      scoreChallenged: null
-    });
-  }
-
-  createForm() {
-    let eventDate = new FormControl(null, Validators.required); // TODO: We're waiting upon the Material datetime picker
-    let eventTime = new FormControl(null, Validators.required); // to enter date and time as a single field
-    let scoreChallenger = new FormControl(null);
-    let scoreChallenged = new FormControl(null);
+    let dateOnly : string = null;
+    let timeOnly : string = null;
+    if (this.rung.challenger.dateTime) {
+      let datetime : Date = new Date(this.rung.challenger.dateTime);
+      dateOnly = datetime.toISOString().substring(0, 10);
+      timeOnly = ('0' + datetime.getHours()).slice(-2) + ":" + ('0' + datetime.getMinutes()).slice(-2);
+    }
 
     this.challengeForm = this.fb.group({
-      eventDate,
-      eventTime,
-      scoreChallenger,
-      scoreChallenged
+      date: this.fb.group({
+        eventDate: [dateOnly, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
+        eventTime: [timeOnly, [Validators.required]], // to enter date and time as a single field,
+      }),
+      scores: this.fb.group({
+        scoreChallenger: {value: this.rung.challenger.scoreChallenger,  disabled: true},
+        scoreChallenged: {value: this.rung.challenger.scoreChallenged,  disabled: true}
+      }, {validator: this.scoreMatcher}),
     });
+
+    this.enableScores(this.challengeForm.get('date').value);
+    this.challengeForm.get('date').valueChanges.subscribe(value => this.enableScores(value));
   }
 
   onSave() {
-    const formModel = this.challengeForm.value;
+    let dateOnly = this.challengeForm.get('date').get('eventDate').value;
+    let timeOnly = this.challengeForm.get('date').get('eventTime').value;
+
+    let dateTime = new Date(dateOnly);
+    let splitTime = timeOnly.split(":");
+    dateTime.setHours(+splitTime[0]);
+    dateTime.setMinutes(+splitTime[1]);
+
     const toSave: Challenge = {
       id: this.rung.challenger.id,
       name: this.rung.challenger.name,
       created: this.rung.challenger.created,
-      dateTime: formModel.eventDate, // TODO: Combine the time
+      dateTime: dateTime,
       status: 'ACCEPTED',
       challengerId: this.rung.challenger.challengerId,
       challengedId: this.rung.challenger.challengedId,
-      scoreChallenger: formModel.scoreChallenger,
-      scoreChallenged: formModel.scoreChallenged
+      scoreChallenger: this.scoreChallenger.value,
+      scoreChallenged: this.scoreChallenged.value
     };
 
     this.challengeService.putChallenge(toSave)
@@ -89,7 +93,33 @@ export class ChallengeFormComponent implements OnInit, OnChanges {
   }
 
   onDone() {
-    this.ngOnChanges();
     this.done.emit();
+  }
+
+  /**
+   * Test that both scores have been provided if any score is provided
+   * @param {AbstractControl} c
+   * @returns {[{[key: string]: boolean}]}
+   */
+  scoreMatcher(c: AbstractControl): {[key: string]: boolean} | null {
+    let scoreChallengerControl = c.get('scoreChallenger');
+    let scoreChallengedControl = c.get('scoreChallenged');
+
+    if ((scoreChallengerControl.value == null) !== (scoreChallengedControl.value == null)) {
+      return {'bothscores': true}
+    }
+    return null;
+  }
+
+  /**
+   * Enable the scores only of the date is valid and is a past date
+   * @param values
+   */
+  enableScores(values) {
+    if (this.challengeForm.get('date').valid && new Date(this.eventDate.value) < new Date()) {
+      this.challengeForm.get('scores').enable();
+    } else {
+      this.challengeForm.get('scores').disable();
+    }
   }
 }
