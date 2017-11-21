@@ -23,6 +23,15 @@ public class ConfigurationSecurity extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private HttpAuthenticationEntryPoint authenticationEntryPoint;
+
+    @Autowired
+    private AuthFailureHandler authFailureHandler;
+
+    @Autowired
+    private HttpLogoutSuccessHandler logoutSuccessHandler;
+
 //    @Bean
 //    public HttpSessionEventPublisher httpSessionEventPublisher() {
 //        return new HttpSessionEventPublisher();
@@ -54,25 +63,25 @@ public class ConfigurationSecurity extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/invalidSession.html");
 
         http.httpBasic().and()
+
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
+                .and()
+
                 .authorizeRequests()
+
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/resources/**").permitAll()
                 .antMatchers("/papi/**").permitAll()
 
-                .antMatchers("/landing*").permitAll()
-                .antMatchers("/landing/**").permitAll()
-                .antMatchers("/registration*").permitAll()
-                .antMatchers("/registration/**").permitAll()
-                .antMatchers("/password*").permitAll()
-                .antMatchers("/password/**").permitAll()
                 .antMatchers("/login*").permitAll()
                 .antMatchers("/logout*").permitAll()
+                .antMatchers("/app/**").permitAll()
                 .antMatchers("/accessDenied*").permitAll()
+
                 .antMatchers("/home*").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
                 .antMatchers("/home/**").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-
-                .antMatchers("/app/**").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
                 .antMatchers("/api/**").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+
                 .anyRequest().authenticated()
 
                 .and()
@@ -86,8 +95,7 @@ public class ConfigurationSecurity extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
+                .logoutSuccessHandler(logoutSuccessHandler)
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true)
