@@ -100,12 +100,7 @@ public class RestControllerLadderMember extends ControllerAbstract {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        List<IGroupMember> members = serviceLadder.readLadderMembers(id, getLoggedInUserId());
-
-        DtoList<IGroupMember> list = new DtoList<>();
-        list.setData(members);
-
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        return new ResponseEntity<>(new DtoList<>(serviceLadder.readLadderMembers(id, getLoggedInUserId())), HttpStatus.OK);
     }
 
     // TODO: We need Create, Update and Delete operations for Ladder Members - these will only be allowed for the owner of the ladder

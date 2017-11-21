@@ -18,8 +18,24 @@ export class MainComponent implements OnInit {
               private dialog: MatDialog) {
   }
 
-
   ngOnInit() {
+
+    if(this.authService.currentUser.admin){
+      this.items.push({
+        icon: 'hpe-support',
+        title: 'Administration',
+        children: [
+          {
+            title: 'Users',
+            select: () => this.router.navigate(['main/manage-users'])
+          },
+          {
+            title: 'Organisations',
+            select: () => this.router.navigate(['main/manage-organisations'])
+          }
+        ]
+      });
+    }
   }
 
   title = 'Sporticus';
@@ -58,21 +74,8 @@ export class MainComponent implements OnInit {
           select: () => this.router.navigate(['main/manage-competitions'])
         }
       ]
-    },
-    {
-      icon: 'hpe-support',
-      title: 'Administration',
-      children: [
-        {
-          title: 'Users',
-          select: () => this.router.navigate(['main/manage-users'])
-        },
-        {
-          title: 'Organisations',
-          select: () => this.router.navigate(['main/manage-organisations'])
-        }
-      ]
     }
+
   ];
 
   iconMenus: PageHeaderIconMenu[] = [

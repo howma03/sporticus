@@ -19,6 +19,9 @@ public interface IUser {
             return null;
         }
         BeanUtils.copyProperties(from, to);
+        if(from.isAdmin() != null) {
+            to.setAdmin(from.isAdmin());
+        }
         if(from.isEnabled() != null) {
             to.setEnabled(from.isEnabled());
         }

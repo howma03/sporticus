@@ -134,11 +134,13 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 		}
 
 		public Events findWhereChallengerIs(long playerId) {
-			return new Events(list.stream().filter(e -> e.getChallengerId().equals(playerId)).collect(Collectors.toList()));
+			return new Events(list.stream().filter(e -> e.getStatus()!=STATUS.CLOSED &&
+					e.getChallengerId().equals(playerId)).collect(Collectors.toList()));
 		}
 
 		public Events findWhereChallengedIs(long playerId) {
-			return new Events(list.stream().filter(e -> e.getChallengedId().equals(playerId)).collect(Collectors.toList()));
+			return new Events(list.stream().filter(e -> e.getStatus()!=STATUS.CLOSED &&
+					e.getChallengedId().equals(playerId)).collect(Collectors.toList()));
 		}
 
 		public int size() {
@@ -335,7 +337,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 		// TODO: Add functionality
 	}
 
-	public void deleteLadderMember() {
+	public void deleteLadderMember(long ladderId, long memberId) {
 		// TODO: Add functionality
 	}
 
@@ -405,7 +407,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 			IEvent newEvent = new Event(event);
 
-			newEvent.setDescription(String.format("Ladder challenge - challenger (%s) challenged {%s)",
+			newEvent.setDescription(String.format("Ladder challenge - challenger (%s) challenged (%s)",
 					challenger.getFormattedFirstName()+ " "+challenger.getFormattedLastName(),
 					challenged.getFormattedFirstName()+ " "+challenged.getFormattedLastName()));
 			newEvent.setName("Ladder challenge");
@@ -506,7 +508,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 		// TODO: Update ladder order based on result
 
-		return new DtoEventLadder(serviceEvent.save(eventLadder));
+		return new DtoEventLadder(serviceEvent.save(new Event(eventLadder)));
 	}
 
 	@Override

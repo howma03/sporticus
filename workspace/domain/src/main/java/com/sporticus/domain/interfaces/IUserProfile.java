@@ -55,9 +55,7 @@ public interface IUserProfile {
         return false;
     }
 
-    default IUserProfile setAdmin(final Boolean flag) {
-        return this;
-    }
+    IUserProfile setAdmin(final Boolean flag) ;
 
     default IUserProfile setEnabled(final Boolean flag) {
         return this;

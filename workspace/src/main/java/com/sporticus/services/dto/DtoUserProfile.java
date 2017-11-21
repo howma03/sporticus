@@ -17,6 +17,9 @@ public class DtoUserProfile implements IUserProfile {
             return null;
         }
         BeanUtils.copyProperties(from, to);
+        if(from.isAdmin() != null) {
+            to.setAdmin(from.isAdmin());
+        }
         if(from.isEnabled() != null) {
             to.setEnabled(from.isEnabled());
         }
@@ -31,6 +34,7 @@ public class DtoUserProfile implements IUserProfile {
     private String createdString = "";
     private Long id;
 
+    private Boolean admin;
     private String email;
     private String firstName;
     private String lastName;
@@ -44,12 +48,22 @@ public class DtoUserProfile implements IUserProfile {
     }
 
     public DtoUserProfile(IUser user){
-        // TODO: for now we copy all properties - we need to restrict these in future
         COPY(user, this);
     }
+
+    public Boolean getAdmin() {
+        return admin;
+    }
+
     @Override
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public DtoUserProfile setAdmin(Boolean admin) {
+        this.admin = admin;
+        return this;
     }
 
     @Override
