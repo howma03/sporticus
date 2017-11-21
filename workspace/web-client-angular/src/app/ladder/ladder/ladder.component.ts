@@ -26,12 +26,12 @@ export class LadderComponent implements OnInit, OnDestroy {
   public ladderUsers: LadderUser[] = [];
   private subscription: Subscription;
 
-  private myLadder: Ladder; // TODO: Get rid of this once we know why this.ladder not working
+  private _ladder: Ladder;
 
   @Input()
   set ladder(ladder: Ladder) {
-    console.log(ladder);
     if (ladder) {
+      this._ladder = ladder;// TODO: Why does is this.ladder not set?
       this.subscription = this.ladderService.getLadderUsers(ladder.id)
         .map(list=>{
           let loggedInUser = this.authService.getCurrentUser();
@@ -53,8 +53,11 @@ export class LadderComponent implements OnInit, OnDestroy {
         .subscribe((ladderUsers: LadderUser[])=>{
           this.ladderUsers = ladderUsers;
         });
-      this.myLadder = ladder;// TODO: Why does is this.ladder not set?
     }
+  }
+
+  get ladder() {
+    return this._ladder;
   }
 
   dataSource = null;
@@ -65,7 +68,7 @@ export class LadderComponent implements OnInit, OnDestroy {
 
   challenge(ladderUser : LadderUser) {
     this.challengeService.createChallenge(
-      this.myLadder, // TODO: Why does this.ladder not work?
+      this.ladder, // TODO: Why does this.ladder not work?
       this.authService.getCurrentUser(),
       ladderUser).subscribe(
         item => {
@@ -83,6 +86,7 @@ export class LadderComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(user => {
+      this.ladderService.getLadderUsers(this.ladder.id);
       // if (user) {
       //   this.authService.currentUser = user
       // }
