@@ -29,11 +29,11 @@ export class ChallengeFormComponent implements OnInit {
   }
 
   get scoreChallenger() {
-    return this.challengeForm.get('scoreChallenger')
+    return this.challengeForm.get('scores').get('scoreChallenger')
   }
 
   get scoreChallenged() {
-    return this.challengeForm.get('scoreChallenged')
+    return this.challengeForm.get('scores').get('scoreChallenged')
   }
 
   ngOnInit() {
@@ -52,17 +52,16 @@ export class ChallengeFormComponent implements OnInit {
   }
 
   onSave() {
-    const formModel = this.challengeForm.value;
     const toSave: Challenge = {
       id: this.rung.challenger.id,
       name: this.rung.challenger.name,
       created: this.rung.challenger.created,
-      dateTime: formModel.eventDate, // TODO: Combine the time
+      dateTime: this.challengeForm.get('date').get('eventDate').value, // TODO: Combine the time
       status: 'ACCEPTED',
       challengerId: this.rung.challenger.challengerId,
       challengedId: this.rung.challenger.challengedId,
-      scoreChallenger: formModel.scoreChallenger,
-      scoreChallenged: formModel.scoreChallenged
+      scoreChallenger: this.scoreChallenger.value,
+      scoreChallenged: this.scoreChallenged.value
     };
 
     this.challengeService.putChallenge(toSave)
