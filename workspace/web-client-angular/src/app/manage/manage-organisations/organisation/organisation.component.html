@@ -22,7 +22,7 @@
     <div class="row">
       <div class="col-sm-9">
 
-        <form #organisationForm="ngForm" (ngSubmit)="addOrganisation()">
+        <form #organisationForm="ngForm" (ngSubmit)="makeOrganisationChange()">
 
           <div class="form-group">
             <label class="form-label case-label">Name *</label>
@@ -59,8 +59,8 @@
           </div>
 
           <div class="marquee-footer">
-            <button type="button" class="btn button-primary m-r-xs" type="submit">Create</button>
-            <button type="button" class="btn button-secondary" (click)="closeWindow()">Cancel</button>
+            <button type="button" style="width: 80px" class="btn button-primary m-r-xs" type="submit">{{submitText}}</button>
+            <button type="button" style="width: 80px;" class="btn button-secondary" (click)="closeWindow()">Cancel</button>
           </div>
 
         </form>
