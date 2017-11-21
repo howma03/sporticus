@@ -64,20 +64,6 @@ public class RestControllerManagementOrganisation extends ControllerAbstract {
     }
 
     /**
-     * Function to find an organisation given a url fragment
-     *
-     * @return ResponseEntity<DtoOrganisations>
-     */
-    @RequestMapping(value = "findByUrlFragment", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DtoOrganisation> findByUrlFragment(@RequestParam("urlFragment") final String urlFragment) {
-        IOrganisation organisation = this.serviceOrganisation.findByUrlFragment(urlFragment);
-        if(organisation == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(convertToDtoOrganisation(organisation), HttpStatus.OK);
-    }
-
-    /**
      * Function to read all organisations
      *
      * @return ResponseEntity<DtoOrganisations>

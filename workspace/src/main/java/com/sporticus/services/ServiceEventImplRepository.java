@@ -57,12 +57,12 @@ public class ServiceEventImplRepository  implements IServiceEvent {
 		// Find all relationships from/to user and Event
 		List<IEvent> events = new ArrayList<>();
 		{
-			List<IRelationship> relationshipsSource = serviceRelationship.findWithSourceTypeAndSourceIdAndDestinationType("User", actorUserId, "Event");
+			List<IRelationship> relationshipsSource = serviceRelationship.findBySourceTypeAndSourceIdAndDestinationType("User", actorUserId, "Event");
 
 			events.addAll(relationshipsSource.stream().map(r -> findOne(r.getDestinationId())).collect(Collectors.toList()));
 		}
 		{
-			List<IRelationship> relationshipsDestination = serviceRelationship.findWithSourceTypeAndDestinationTypeAndDestinationId("Event", "User", actorUserId);
+			List<IRelationship> relationshipsDestination = serviceRelationship.findBySourceTypeAndDestinationTypeAndDestinationId("Event", "User", actorUserId);
 
 			events.addAll(relationshipsDestination.stream().map(r -> findOne(r.getSourceId())).collect(Collectors.toList()));
 		}
@@ -92,6 +92,9 @@ public class ServiceEventImplRepository  implements IServiceEvent {
 
 	@Override
 	public void delete(IEvent event) {
-
+		serviceRelationship.findBySourceTypeAndSourceId("Event", event.getId())
+				.stream().forEach(r->serviceRelationship.delete(r.getId()));
+		serviceRelationship.findByDestinationTypeAndDestinationId("Event", event.getId())
+				.stream().forEach(r->serviceRelationship.delete(r.getId()));
 	}
 }

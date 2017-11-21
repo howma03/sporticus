@@ -38,7 +38,7 @@ public class ServiceRelationshipImplRepository implements IServiceRelationship{
 	}
 
 	@Override
-	public List<IRelationship> findWithSourceTypeAndSourceIdAndType(String sourceType, Long sourceId, String type){
+	public List<IRelationship> findBySourceTypeAndSourceIdAndType(String sourceType, Long sourceId, String type){
 		return repositoryRelationship.findBySourceTypeAndSourceIdAndType(sourceType,sourceId, type);
 	}
 
@@ -48,13 +48,23 @@ public class ServiceRelationshipImplRepository implements IServiceRelationship{
 	}
 
 	@Override
-	public List<IRelationship> findWithSourceTypeAndSourceIdAndDestinationType(String sourceType, Long sourceId, String destinationType) {
+	public List<IRelationship> findBySourceTypeAndSourceIdAndDestinationType(String sourceType, Long sourceId, String destinationType) {
 		return repositoryRelationship.findBySourceTypeAndSourceIdAndDestinationType(sourceType, sourceId, destinationType);
 	}
 
 	@Override
-	public List<IRelationship> findWithSourceTypeAndDestinationTypeAndDestinationId(String sourceType, String destinationType, Long destinationId) {
+	public List<IRelationship> findBySourceTypeAndDestinationTypeAndDestinationId(String sourceType, String destinationType, Long destinationId) {
 		return repositoryRelationship.findBySourceTypeAndDestinationTypeAndDestinationId(sourceType, destinationType, destinationId);
+	}
+
+	@Override
+	public List<IRelationship> findBySourceTypeAndSourceId(String type, Long id) {
+		return repositoryRelationship.findBySourceTypeAndSourceId(type, id);
+	}
+
+	@Override
+	public List<IRelationship> findByDestinationTypeAndDestinationId(String type, Long id) {
+		return repositoryRelationship.findByDestinationTypeAndDestinationId(type, id);
 	}
 
 	@Override

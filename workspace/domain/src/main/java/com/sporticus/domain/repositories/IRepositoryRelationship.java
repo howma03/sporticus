@@ -12,7 +12,11 @@ import java.util.List;
 @Transactional
 public interface IRepositoryRelationship extends PagingAndSortingRepository<Relationship, Long> {
 
-    List<IRelationship> findByType(String type);
+	List<IRelationship> findByType(String type);
+
+	List<IRelationship> findBySourceTypeAndSourceId(String type, Long id);
+
+	List<IRelationship> findByDestinationTypeAndDestinationId(String type, Long id);
 
     List<IRelationship> findBySourceTypeAndSourceIdAndType(String sourceType, Long sourceId, String type);
 

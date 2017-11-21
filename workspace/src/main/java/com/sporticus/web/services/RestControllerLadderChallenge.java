@@ -41,7 +41,6 @@ public class RestControllerLadderChallenge extends ControllerAbstract {
     @Autowired
     public RestControllerLadderChallenge(final IServiceUser serviceUser,
                                          final IServiceGroup serviceGroup,
-                                         final IRepositoryGroupMember repositoryGroupMember,
                                          final IServiceLadder serviceLadder) {
         this.serviceUser = serviceUser;
         this.serviceGroup = serviceGroup;
@@ -52,24 +51,21 @@ public class RestControllerLadderChallenge extends ControllerAbstract {
      * Function to create a ladder challenge
      *
      * @param ladderId
-     * @param challengerId
-     * @param challengedId
+     * @param event
      * @return ResponseEntity<DtoEvent>
      */
-    @RequestMapping(value = "/{ladderId}/{challengerId}/{challengedId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> create(@PathVariable("ladderId") final Long ladderId,
-                                    @PathVariable("challengerId") final Long challengerId,
-                                    @PathVariable("challengedId") final Long challengedId) {
-
-        LOGGER.debug(() -> String.format("Creating Challenge - ladderId=[%d], challengerId=[%s], challengedId=[%d]",
-                ladderId, challengerId, challengedId));
-
-        // TODO: Only a member of the ladder can challenger another member of the ladder
-
+    @RequestMapping(value = "/{ladderId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> create(@PathVariable("ladderId") final long ladderId,
+                                    @RequestBody final DtoEventLadder event) {
         try {
-            IEvent event = serviceLadder.createLadderChallenge(ladderId, challengerId, challengedId);
 
-            return new ResponseEntity<>(event, HttpStatus.OK);
+            LOGGER.debug(() -> String.format("Creating Challenge - ladderId=[%d], challengerId=[%s], challengedId=[%d]",
+                    ladderId, event.getChallengerId(), event.getChallengedId()));
+
+            // TODO: Only a member of the ladder can challenger another member of the ladder
+            IEvent result = new DtoEventLadder(serviceLadder.createLadderChallenge(ladderId, event));
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
 
         } catch (ServiceLadderExceptionNotFound ex) {
             LOGGER.warn(() -> "Failed to create challenge", ex);
@@ -85,12 +81,12 @@ public class RestControllerLadderChallenge extends ControllerAbstract {
     /**
      * Function to update a ladder challenge - only challenger or challenged can perform this operation
      *
-     * @param id
+     * @param ladderId
      * @param event
      * @return ResponseEntity<DtoUser>
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@PathVariable("id") final long id,
+    @RequestMapping(value = "/{ladderId}", method = RequestMethod.PUT)
+    public ResponseEntity<?> update(@PathVariable("ladderId") final long ladderId,
                                     @RequestBody final DtoEventLadder event) {
         return new ResponseEntity<>(serviceLadder.updateLadderChallenge(getLoggedInUser(), event), HttpStatus.OK);
     }

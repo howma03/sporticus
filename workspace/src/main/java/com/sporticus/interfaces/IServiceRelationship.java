@@ -45,7 +45,7 @@ public interface IServiceRelationship {
 	 * Find all relationships with given Source Type, Source Id and Relationship Type
 	 * @return List<IRelationship>
 	 */
-	List<IRelationship> findWithSourceTypeAndSourceIdAndType(String sourceType, Long sourceId, String type);
+	List<IRelationship> findBySourceTypeAndSourceIdAndType(String sourceType, Long sourceId, String type);
 
 	/**
 	 * Finally all relationships with the given destination type, id and type
@@ -57,8 +57,11 @@ public interface IServiceRelationship {
 	 */
 	List<IRelationship> findWithDestinationTypeAndDestinationIdAndType(String destinationType, Long destinationId, String type);
 
-	List<IRelationship> findWithSourceTypeAndSourceIdAndDestinationType(String sourceType, Long sourceId, String destinationType);
-	List<IRelationship> findWithSourceTypeAndDestinationTypeAndDestinationId(String sourceType, String destinationType, Long destinationId);
+	List<IRelationship> findBySourceTypeAndSourceIdAndDestinationType(String sourceType, Long sourceId, String destinationType);
+	List<IRelationship> findBySourceTypeAndDestinationTypeAndDestinationId(String sourceType, String destinationType, Long destinationId);
+
+	List<IRelationship> findBySourceTypeAndSourceId(String type, Long id);
+	List<IRelationship> findByDestinationTypeAndDestinationId(String type, Long id);
 
 	/**
 	 * Function to delete a relationship

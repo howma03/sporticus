@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface IServiceLadder {
 
+	void deleteLadderChallenge(DtoEventLadder event);
+
 	final class ServiceLadderExceptionNotAllowed extends RuntimeException {
 		public ServiceLadderExceptionNotAllowed(String message) {
 			super(message);
@@ -66,14 +68,14 @@ public interface IServiceLadder {
 	 * Function records a challenge for a ladder between two ladder members (one the challenger, one the challenged)
 	 *
 	 * @param ladderId
-	 * @param challengerId
-	 * @param challengedId
+	 * @param event
 	 * @return
 	 * @throws ServiceLadderExceptionNotAllowed
 	 * @throws ServiceLadderExceptionNotFound
 	 */
-	IEvent createLadderChallenge(Long ladderId, Long challengerId, Long challengedId)
-			throws ServiceLadderExceptionNotAllowed, ServiceLadderExceptionNotFound;
+	IEvent createLadderChallenge(Long ladderId, DtoEventLadder event)
+			throws ServiceLadderExceptionNotAllowed,
+			ServiceLadderExceptionNotFound;
 
 	/**
 	 * Returns a list of all members of the ladder

@@ -14,21 +14,7 @@ public class DtoEventLadder extends DtoEvent {
 
 	public DtoEventLadder(IEvent e){
 		super(e);
-
-		// Extract scores from the event meta data
-		if(e.getMetaDataType().equalsIgnoreCase("text")) {
-			try {
-				String metaData = e.getMetaData();
-				if (metaData.length() > 0) {
-					String[] elements = metaData.split(":");
-					this.setScoreChallenger(Integer.valueOf(elements[1]));
-					this.setScoreChallenged(Integer.valueOf(elements[2]));
-				}
-			} catch (Exception ex) {
-				System.err.println("Error when parsing meta data");
-				ex.printStackTrace();
-			}
-		}
+		parseMetaData();
 	}
 
 	@Override
@@ -38,36 +24,64 @@ public class DtoEventLadder extends DtoEvent {
 		return this;
 	}
 
+	private void generateMetaData(){
+		this.setMetaDataType("text");
+		this.setMetaData(String.format("score:%d:%d", this.getScoreChallenger(), this.getScoreChallenged()));
+	}
+
+	private void parseMetaData() {
+		// Extract scores from the event meta data
+		try {
+			if (getMetaDataType().equalsIgnoreCase("text")) {
+				String metaData = getMetaData();
+				if (metaData.length() > 0) {
+					String[] elements = metaData.split(":");
+					this.setScoreChallenger(Integer.valueOf(elements[1]));
+					this.setScoreChallenged(Integer.valueOf(elements[2]));
+				}
+			}
+		} catch (Exception ex) {
+			System.err.println("Error when parsing meta data");
+			ex.printStackTrace();
+		}
+	}
+
 	public Long getChallengerId() {
 		return challengerId;
 	}
 
-	public void setChallengerId(Long challengerId) {
+	public DtoEventLadder setChallengerId(Long challengerId) {
 		this.challengerId = challengerId;
+		return this;
 	}
 
 	public Long getChallengedId() {
 		return challengedId;
 	}
 
-	public void setChallengedId(Long challengedId) {
+	public DtoEventLadder setChallengedId(Long challengedId) {
 		this.challengedId = challengedId;
+		return this;
 	}
 
 	public int getScoreChallenger() {
 		return scoreChallenger;
 	}
 
-	public void setScoreChallenger(int scoreChallenger) {
+	public DtoEventLadder setScoreChallenger(int scoreChallenger) {
 		this.scoreChallenger = scoreChallenger;
+		this.generateMetaData();
+		return this;
 	}
 
 	public int getScoreChallenged() {
 		return scoreChallenged;
 	}
 
-	public void setScoreChallenged(int scoreChallenged) {
+	public DtoEventLadder setScoreChallenged(int scoreChallenged) {
 		this.scoreChallenged = scoreChallenged;
+		this.generateMetaData();
+		return this;
 	}
 
 	@Override

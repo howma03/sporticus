@@ -1,8 +1,5 @@
 package com.sporticus.services;
 
-import com.amazonaws.transform.MapEntry;
-import com.amazonaws.util.DateUtils;
-import com.sporticus.domain.entities.Event;
 import com.sporticus.domain.entities.Relationship;
 import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IEvent.STATUS;
@@ -15,11 +12,9 @@ import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceLadder;
 import com.sporticus.interfaces.IServiceRelationship;
 import com.sporticus.interfaces.IServiceUser;
-import com.sporticus.services.dto.DtoEvent;
 import com.sporticus.services.dto.DtoEventLadder;
 import com.sporticus.services.dto.DtoGroupMember;
 import com.sporticus.services.dto.DtoGroupMemberOrdered;
-import com.sporticus.services.dto.DtoUser;
 import com.sporticus.types.EventType;
 import com.sporticus.types.GroupType;
 import com.sporticus.types.RelationshipType;
@@ -32,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -177,7 +171,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 		Events events = new Events();
 
-		List<IRelationship> relationshipLadderToEvent = serviceRelationship.findWithSourceTypeAndSourceIdAndType(
+		List<IRelationship> relationshipLadderToEvent = serviceRelationship.findBySourceTypeAndSourceIdAndType(
 				GroupType.LADDER.toString(),
 				ladderId,
 				RelationshipType.CHALLENGE.toString());
@@ -214,7 +208,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 				.filter(r -> r.getSourceType().equalsIgnoreCase("user"))
 				.collect(Collectors.toList());
 
-		List<IRelationship> challengedList = serviceRelationship.findWithSourceTypeAndSourceIdAndType(
+		List<IRelationship> challengedList = serviceRelationship.findBySourceTypeAndSourceIdAndType(
 				"Event",
 				event.getId(),
 				RelationshipType.CHALLENGE.toString());
@@ -347,9 +341,19 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 	// Ladder Challenge Functions (CRUD)
 
 	@Override
-	public IEvent createLadderChallenge(Long ladderId, Long challengerId, Long challengedId)
+	public IEvent createLadderChallenge(Long ladderId, DtoEventLadder event)
 			throws ServiceLadderExceptionNotAllowed,
-			ServiceLadderExceptionNotFound {
+				ServiceLadderExceptionNotFound {
+
+		if(event.getDateTime()==null) {
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DAY_OF_YEAR, 7);
+			Date dateTime = cal.getTime();
+			event.setDateTime(dateTime);
+		}
+		else if(event.getDateTime().before(new Date())){
+			throw new ServiceLadderExceptionNotAllowed("DateTime of event cannot be in the past");
+		}
 
 		// TODO: validate the inputs
 		// TODO: We should ensure that there is not already an 'open' challenge between the 2 players
@@ -360,7 +364,10 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 		// finally step through group member's decorating them with meta data where necessary
 		// - simply append the event to the groupMember and the player data to the event data
 
-		Events events = this.getEvents(ladderId).findActiveChallengesBetween(challengerId, challengedId);
+		Long challengerId = event.getChallengerId();
+		Long challengedId = event.getChallengedId();
+
+		Events events = this.getEvents(ladderId).findActiveChallengesBetween(challengerId,challengedId);
 		if(events.size()>0){
 			throw new ServiceLadderExceptionNotAllowed("There is an open challenge between those players for the ladder");
 		}
@@ -386,8 +393,6 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			throw new ServiceLadderExceptionNotFound(message);
 		}
 
-		IEvent event = new Event();
-
 		// Create the event
 
 		IRelationship rLadder = null;
@@ -397,18 +402,14 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			// We set the initial date/time for the challenge a week in the future
 			// this can be modified by either challenger/challenged
 
-			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.DAY_OF_YEAR, 7);
-			Date dateTime = cal.getTime();
-
-			event.setDateTime(dateTime);
-			event.setDescription(String.format("Ladder challenge - challenger (%d) challenged {%d)",
-					challengerId, challengedId));
+			event.setDescription(String.format("Ladder challenge - challenger (%s) challenged {%s)",
+					challenger.getFormattedFirstName()+ " "+challenger.getFormattedLastName(),
+					challenged.getFormattedFirstName()+ " "+challenged.getFormattedLastName()));
 			event.setName("Ladder challenge");
 			event.setOwnerId(challengerId);
 			event.setType(EventType.CHALLENGE.toString());
 
-			event = serviceEvent.create(event);
+			event = new DtoEventLadder(serviceEvent.create(event));
 
 			// We now create the relationship - users & event
 			// link the two players to the event using relationships
@@ -487,27 +488,28 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 		// TODO: ensure only the challenger/challenged can make the change
 
+		DtoEventLadder eventLadder = new DtoEventLadder(found);
 		if (event.getDateTime() != null) {
-			found.setDateTime(event.getDateTime());
+			eventLadder.setDateTime(event.getDateTime());
 		}
 
 		// Game is marked as completed if there is a score
 
-		if(event.getScoreChallenger()+event.getScoreChallenged()>0) {
-			found.setMetaDataType("text");
-			found.setMetaData(String.format("score:%d:%d",
-					event.getScoreChallenger(), event.getScoreChallenged()));
-			found.setStatus(STATUS.CLOSED);
+		if (event.getScoreChallenger() + event.getScoreChallenged() > 0) {
+			eventLadder.setScoreChallenger(event.getScoreChallenger());
+			eventLadder.setScoreChallenged(event.getScoreChallenged());
+			eventLadder.setStatus(STATUS.CLOSED);
 		}
 
 		// TODO: Update ladder order based on result
 
-		return new DtoEventLadder(serviceEvent.save(found));
+		return new DtoEventLadder(serviceEvent.save(eventLadder));
 	}
 
-	public void deleteLadderChallenge(IEvent event) {
-		// We need to delete relationships to/from event
-
+	@Override
+	public void deleteLadderChallenge(DtoEventLadder event) {
+		// TODO: We need to delete relationships to/from event
+		// the event delete should tidy-up all relationships to the delete event
 		serviceEvent.delete(event);
 	}
 }
