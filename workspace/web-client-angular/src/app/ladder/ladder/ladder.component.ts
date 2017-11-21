@@ -53,6 +53,7 @@ export class LadderComponent implements OnInit, OnDestroy {
       ladderUser).subscribe(
         item => {
           ladderUser.isChallenged = true;
+          ladderUser.canChallenge = false;
         }
     );
   }
