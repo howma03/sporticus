@@ -1,42 +1,37 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HomeComponent} from './home/home.component';
-import {MatGridListModule, MatTableModule} from '@angular/material';
-import {FutureMatchesTableComponent} from './future-matches-table/future-matches-table.component';
-import {PreviousMatchesTableComponent} from './previous-matches-table/previous-matches-table.component';
-import {AvailableChallengesTableComponent} from './available-challenges-table/available-challenges-table.component';
-import {MyChallengesTableComponent} from './my-challenges-table/my-challenges-table.component';
-import {CheckboxModule, DashboardModule} from '@ux-aspects/ux-aspects';
-import {MyTeamsTableComponent} from './my-teams-table/my-teams-table.component';
-import {LogService} from './home/log.service';
-import {RestExampleComponent} from './rest-example/rest-example.component';
-import {RestService} from './rest-example/rest.service';
+import {DashboardModule, LayoutSwitcherModule} from '@ux-aspects/ux-aspects';
 import {ServicesModule} from "../services/services.module";
+import {LadderModule} from "../ladder/ladder.module";
+import {AgendaComponent} from './agenda/agenda.component';
+import {UtilModule} from "../util/util.module"
+import {MomentModule} from "angular2-moment";
+import {MatButtonToggleModule, MatCardModule, MatToolbarModule} from "@angular/material";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [
-    CheckboxModule,
     CommonModule,
+    FormsModule,
     DashboardModule,
-    MatTableModule,
-    MatGridListModule,
-    ServicesModule
+    LadderModule,
+    ServicesModule,
+    UtilModule,
+    MomentModule,
+    LayoutSwitcherModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatButtonToggleModule
   ],
   exports: [
     HomeComponent
   ],
   declarations: [
     HomeComponent,
-    FutureMatchesTableComponent,
-    PreviousMatchesTableComponent,
-    AvailableChallengesTableComponent,
-    MyChallengesTableComponent,
-    MyTeamsTableComponent,
-    RestExampleComponent
+    AgendaComponent
   ],
   providers: [
-    LogService,
-    RestService
   ]
 })
 export class HomeModule { }

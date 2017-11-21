@@ -1,7 +1,5 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
-import { ColorService, DashboardOptions } from '@ux-aspects/ux-aspects';
-import {LogService} from './log.service';
-// import 'chance';
+import {DashboardOptions} from '@ux-aspects/ux-aspects';
 
 @Component({
   selector: 'app-home',
@@ -18,11 +16,7 @@ export class HomeComponent {
     minWidth: 187
   };
 
-  constructor(
-    private logService : LogService,
-    private cd: ChangeDetectorRef)
-  {
-    this.logService.logMessage("Home Started"); // Just an example of a simple service
+  constructor(private cd: ChangeDetectorRef) {
   }
 
   ngAfterViewInit() {

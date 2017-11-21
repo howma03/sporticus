@@ -69,7 +69,11 @@ public class ServiceEventImplRepository  implements IServiceEvent {
 
 		Date now = new Date();
 		return events.stream()
-			.filter(e->e.getDateTime().after(now) && e.getStatus()!= STATUS.CLOSED).collect(Collectors.toList());
+				.filter(e -> e != null)
+				.filter(e -> e.getDateTime() != null)
+				.filter(e -> e.getDateTime().after(now))
+				.filter(e -> e.getStatus() != STATUS.CLOSED)
+				.collect(Collectors.toList());
 	}
 
 	@Override

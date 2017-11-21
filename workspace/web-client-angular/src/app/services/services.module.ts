@@ -7,6 +7,7 @@ import {ErrorHandlingService} from "./error-handling.service";
 import {LadderService} from "./ladder.service";
 import {ProfileService} from "./profile.service";
 import {ChallengeService} from "./challenge.service";
+import {AgendaService} from "./agenda.service";
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import {ChallengeService} from "./challenge.service";
     RegistrationService,
     OrganisationService,
     LadderService,
-    ProfileService
+    ProfileService,
+    AgendaService
   ],
   declarations: [
   ]
