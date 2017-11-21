@@ -1,5 +1,6 @@
 package com.sporticus.services;
 
+import com.sporticus.domain.entities.Event;
 import com.sporticus.domain.entities.Relationship;
 import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IEvent.STATUS;
@@ -402,14 +403,16 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			// We set the initial date/time for the challenge a week in the future
 			// this can be modified by either challenger/challenged
 
-			event.setDescription(String.format("Ladder challenge - challenger (%s) challenged {%s)",
+			IEvent newEvent = new Event(event);
+
+			newEvent.setDescription(String.format("Ladder challenge - challenger (%s) challenged {%s)",
 					challenger.getFormattedFirstName()+ " "+challenger.getFormattedLastName(),
 					challenged.getFormattedFirstName()+ " "+challenged.getFormattedLastName()));
-			event.setName("Ladder challenge");
-			event.setOwnerId(challengerId);
-			event.setType(EventType.CHALLENGE.toString());
+			newEvent.setName("Ladder challenge");
+			newEvent.setOwnerId(challengerId);
+			newEvent.setType(EventType.CHALLENGE.toString());
 
-			event = new DtoEventLadder(serviceEvent.create(event));
+			event = new DtoEventLadder(serviceEvent.create(newEvent));
 
 			// We now create the relationship - users & event
 			// link the two players to the event using relationships
@@ -507,7 +510,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 	}
 
 	@Override
-	public void deleteLadderChallenge(DtoEventLadder event) {
+	public void deleteLadderChallenge(long event) {
 		// TODO: We need to delete relationships to/from event
 		// the event delete should tidy-up all relationships to the delete event
 		serviceEvent.delete(event);

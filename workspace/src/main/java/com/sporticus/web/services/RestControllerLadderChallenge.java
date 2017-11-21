@@ -5,6 +5,7 @@ import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryGroupMember;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceLadder;
+import com.sporticus.interfaces.IServiceLadder.ServiceLadderExceptionNotAllowed;
 import com.sporticus.interfaces.IServiceLadder.ServiceLadderExceptionNotFound;
 import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.services.dto.DtoEvent;
@@ -70,6 +71,9 @@ public class RestControllerLadderChallenge extends ControllerAbstract {
         } catch (ServiceLadderExceptionNotFound ex) {
             LOGGER.warn(() -> "Failed to create challenge", ex);
             return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+        } catch (ServiceLadderExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Failed to create challenge", ex);
+            return new ResponseEntity<>(ex, HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
@@ -88,6 +92,37 @@ public class RestControllerLadderChallenge extends ControllerAbstract {
     @RequestMapping(value = "/{ladderId}", method = RequestMethod.PUT)
     public ResponseEntity<?> update(@PathVariable("ladderId") final long ladderId,
                                     @RequestBody final DtoEventLadder event) {
-        return new ResponseEntity<>(serviceLadder.updateLadderChallenge(getLoggedInUser(), event), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(serviceLadder.updateLadderChallenge(getLoggedInUser(), event), HttpStatus.OK);
+        } catch (ServiceLadderExceptionNotFound ex) {
+            LOGGER.warn(() -> "Failed to update challenge", ex);
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+        } catch (ServiceLadderExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Failed to update challenge", ex);
+            return new ResponseEntity<>(ex, HttpStatus.NOT_ACCEPTABLE);
+        }
     }
+
+    /**
+     * Function to update a ladder challenge - only challenger or challenged can perform this operation
+     *
+     * @param ladderId
+     * @param eventId
+     * @return ResponseEntity<DtoUser>
+     */
+    @RequestMapping(value = "/{ladderId}/{eventId}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> cancel(@PathVariable("ladderId") final long ladderId,
+                                    @PathVariable("eventId") final long eventId) {
+        try{
+            serviceLadder.deleteLadderChallenge(eventId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ServiceLadderExceptionNotFound ex) {
+            LOGGER.warn(() -> "Failed to delete challenge", ex);
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+        } catch (ServiceLadderExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Failed to delete challenge", ex);
+            return new ResponseEntity<>(ex, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
 }

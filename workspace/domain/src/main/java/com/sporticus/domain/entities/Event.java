@@ -56,6 +56,10 @@ public class Event implements IEvent {
 
     }
 
+    public Event(IEvent e) {
+        IEvent.COPY(e,this);
+    }
+
     @Override
     public Long getId() {
         return id;

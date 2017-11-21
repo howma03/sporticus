@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface IServiceLadder {
 
-	void deleteLadderChallenge(DtoEventLadder event);
 
 	final class ServiceLadderExceptionNotAllowed extends RuntimeException {
 		public ServiceLadderExceptionNotAllowed(String message) {
@@ -92,5 +91,11 @@ public interface IServiceLadder {
 	 * @return IEvent
 	 */
 	IEvent updateLadderChallenge(IUser actor, DtoEventLadder event);
+
+	/**
+	 * Function to delete a ladder challenge event
+	 * @param event
+	 */
+	void deleteLadderChallenge(long event);
 
 }
