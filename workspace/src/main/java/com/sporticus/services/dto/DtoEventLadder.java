@@ -14,6 +14,23 @@ public class DtoEventLadder extends DtoEvent {
 
 	public DtoEventLadder(IEvent e){
 		super(e);
+
+		// Extract scores from the event meta data
+		if(e.getMetaDataType().equalsIgnoreCase("text")){
+			String metaData = e.getMetaData();
+			if(metaData.length()>0) {
+				String[] elements = metaData.split(":");
+				this.setScoreChallenger(Integer.valueOf(elements[1]));
+				this.setScoreChallenged(Integer.valueOf(elements[2]));
+			}
+		}
+	}
+
+	@Override
+	public IEvent setMetaData(String data){
+		// TODO: validate the meta data score:%d:%d
+		super.setMetaData(data);
+		return this;
 	}
 
 	public Long getChallengerId() {
@@ -50,7 +67,7 @@ public class DtoEventLadder extends DtoEvent {
 
 	@Override
 	public String toString() {
-		return String.format("DtoEventLadder - Date {%s] Challenger [%s] Challenged [%s",
+		return String.format("DtoEventLadder - Date {%s] Challenger [%s] Challenged [%s]",
 				this.getDateTimeString(), challengerId, challengedId);
 	}
 

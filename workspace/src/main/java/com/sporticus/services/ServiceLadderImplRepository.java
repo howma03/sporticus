@@ -131,6 +131,13 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			list.add(e);
 		}
 
+		public Events findActiveChallengesBetween(Long player1Id, Long player2Id) {
+			return new Events(list.stream().filter(e -> !e.getStatus().equals(STATUS.CLOSED) &&
+					(e.getChallengerId().equals(player1Id) && e.getChallengerId().equals(player2Id)) ||
+							(e.getChallengerId().equals(player2Id) && e.getChallengerId().equals(player1Id))
+			).collect(Collectors.toList()));
+		}
+
 		public Events findWhereChallengerIs(long playerId) {
 			return new Events(list.stream().filter(e -> e.getChallengerId().equals(playerId)).collect(Collectors.toList()));
 		}
@@ -177,13 +184,11 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 		relationshipLadderToEvent.stream().forEach(er -> {
 			Long eventId = er.getDestinationId();
-
 			IEvent event = serviceEvent.findOne(eventId);
 			if (event == null) {
 				LOGGER.warn(() -> "Failed to locate event - id=" + er.getDestinationId());
 				return;
 			}
-
 			events.add(getEvent(event));
 		});
 
@@ -346,9 +351,19 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			throws ServiceLadderExceptionNotAllowed,
 			ServiceLadderExceptionNotFound {
 
-		// TODO: validate this inputs
-
+		// TODO: validate the inputs
 		// TODO: We should ensure that there is not already an 'open' challenge between the 2 players
+
+		// for each each locate the players (users) relationships - once will be the challenger, one will be the challenged
+		// filter the events - only those relating to the user should be included
+
+		// finally step through group member's decorating them with meta data where necessary
+		// - simply append the event to the groupMember and the player data to the event data
+
+		Events events = this.getEvents(ladderId).findActiveChallengesBetween(challengerId, challengedId);
+		if(events.size()>0){
+			throw new ServiceLadderExceptionNotAllowed("There is an open challenge between those players for the ladder");
+		}
 
 		IGroup ladder = readLadderGroup(ladderId);
 
@@ -491,6 +506,8 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 	}
 
 	public void deleteLadderChallenge(IEvent event) {
-		// TODO: Add functionality
+		// We need to delete relationships to/from event
+
+		serviceEvent.delete(event);
 	}
 }

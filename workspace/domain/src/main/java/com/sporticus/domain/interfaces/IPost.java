@@ -33,4 +33,8 @@ public interface IPost {
 	String getTitle();
 
 	IPost setTitle(String title);
+
+	String getContent();
+
+	IPost setContent(String content);
 }
