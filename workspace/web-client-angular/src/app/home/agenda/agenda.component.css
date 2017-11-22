@@ -1,14 +1,3 @@
-
-.toolbar-fill {
-  flex: 1 1 auto;
-}
-
-.agenda-body {
-}
-
-.events-cards {
-}
-
 .event-card {
   display: inline-block;
   width: calc(33% - 20px);

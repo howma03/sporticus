@@ -13,11 +13,14 @@
   </ux-dashboard-widget>
 
   <ux-dashboard-widget id="my-ladder-widget" colSpan="2" rowSpan="2" resizable=true>
-    <app-my-ladders-widget>
-      <div ux-dashboard-widget-drag-handle widget-title>
-        Your Ladders
-      </div>
-    </app-my-ladders-widget>
+    <div class="widget-content">
+      <app-my-ladders-widget>
+        <span ux-dashboard-widget-drag-handle widget-title>
+          <i class="hpe-icon hpe-drag"></i>
+          Your Ladders
+        </span>
+      </app-my-ladders-widget>
+    </div>
   </ux-dashboard-widget>
 </ux-dashboard>
 
