@@ -27,7 +27,10 @@ public class RestControllerPushImplSse extends ControllerAbstract {
 			sseEngine.getEmitters().put(getLoggedInUserId(), new SseEmitter(30000L));
 		}
 		SseEmitter emitter = sseEngine.getEmitters().get(getLoggedInUserId());
-		this.send(emitter, new Notification().setTitle("Test"));
+		this.send(emitter, new Notification()
+				.setOwnerId(this.getLoggedInUserId())
+				.setTitle("Test")
+				.setText("Something happened"));
 		return emitter;
 	}
 
