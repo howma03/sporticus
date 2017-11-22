@@ -10,6 +10,7 @@ import {MomentModule} from "angular2-moment";
 import {MatButtonToggleModule, MatCardModule} from "@angular/material";
 import {FormsModule} from "@angular/forms";
 import {SharedModule} from "../shared/shared.module";
+import {NotificationModule} from "../notification/notification.module";
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import {SharedModule} from "../shared/shared.module";
     MomentModule,
     LayoutSwitcherModule,
     MatCardModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    NotificationModule
   ],
   exports: [
     HomeComponent

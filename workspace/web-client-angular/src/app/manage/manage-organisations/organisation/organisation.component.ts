@@ -49,7 +49,6 @@ export class OrganisationComponent implements OnInit {
   };
 
   makeOrganisationChange() {
-    debugger;
     let organisation : Organisation = {
       name: this.organisationDetails.name,
       address: this.organisationDetails.address,

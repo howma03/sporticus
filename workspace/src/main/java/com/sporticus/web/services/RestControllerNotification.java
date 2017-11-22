@@ -64,7 +64,7 @@ public class RestControllerNotification extends ControllerAbstract {
      *
      * @return ResponseEntity<DtoNotification>
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoList<DtoNotification>> readAll() {
         return new ResponseEntity<>(new DtoList(serviceNotification.findAllOwnedBy(this.getLoggedInUserId()).stream().map(n->new DtoNotification(n)).collect(Collectors.toList())), HttpStatus.OK);
     }

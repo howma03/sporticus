@@ -141,7 +141,6 @@ export class LadderComponent implements OnInit, OnDestroy {
 
   isMe(rung) : boolean {
     let currentUser : User = this.authService.getCurrentUser();
-    debugger;
     return currentUser.id === rung.userId;
   }
 
