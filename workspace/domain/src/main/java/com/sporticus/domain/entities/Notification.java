@@ -1,6 +1,7 @@
 package com.sporticus.domain.entities;
 
 import com.sporticus.domain.interfaces.INotification;
+import com.sporticus.util.Utility;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +26,9 @@ public class Notification implements INotification {
 	@NotNull
 	private Date created = new Date();
 
+	@Column(nullable = false)
+	private Long ownerId; // userId
+
 	@Column(nullable = true)
 	private TYPE type;
 
@@ -43,76 +47,85 @@ public class Notification implements INotification {
 
 	@Override
 	public Date getCreated() {
-		return null;
+		return created;
 	}
 
 	@Override
 	public INotification setCreated(Date created) {
-		return null;
+		if (created != null) {
+			this.created.setTime(created.getTime());
+		}
+		return this;
 	}
 
 	@Override
 	public String getCreatedString() {
-		return null;
+		return Utility.format(created);
 	}
 
 	@Override
 	public String getTitle() {
-		return null;
+		return title;
 	}
 
 	@Override
 	public INotification setTitle(String title) {
+		this.title = title;
 		return this;
 	}
 
 	@Override
 	public Long getOwnerId() {
-		return this.getOwnerId();
+		return this.ownerId;
 	}
 
 	@Override
 	public INotification setOwnerId(Long ownerId) {
-		return null;
+		this.ownerId = ownerId;
+		return this;
 	}
 
 	@Override
 	public STATUS getStatus() {
-		return null;
+		return status;
 	}
 
 	@Override
 	public INotification setStatus(STATUS status) {
-		return null;
+		this.status = status;
+		return this;
 	}
 
 	@Override
 	public SEVERITY getSeverity() {
-		return null;
+		return severity;
 	}
 
 	@Override
 	public INotification setSeverity(SEVERITY severity) {
-		return null;
+		this.severity = severity;
+		return this;
 	}
 
 	@Override
 	public TYPE getType() {
-		return null;
+		return type;
 	}
 
 	@Override
 	public INotification setType(TYPE type) {
-		return null;
+		this.type = type;
+		return this;
 	}
 
 	@Override
 	public String getText() {
-		return null;
+		return text;
 	}
 
 	@Override
 	public INotification setText(String text) {
-		return null;
+		this.text = text;
+		return this;
 	}
 }
