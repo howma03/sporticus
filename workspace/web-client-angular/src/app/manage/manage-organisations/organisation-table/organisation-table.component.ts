@@ -75,6 +75,7 @@ export class OrganisationTableComponent implements OnInit {
       width: '1200px',
     });
     dialogRef.afterClosed().subscribe((updateRequired) => {
+      debugger;
       if(updateRequired) {
         this.updateOrganisationDetails();
       }

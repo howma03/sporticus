@@ -30,6 +30,7 @@
     "core-js": "^2.4.1",
     "hammerjs": "^2.0.8",
     "jquery": "^3.2.1",
+    "ng-event-source": "^1.0.6",
     "ngx-carousel": "^1.3.2",
     "popper.js": "^1.12.6",
     "rxjs": "^5.4.2",

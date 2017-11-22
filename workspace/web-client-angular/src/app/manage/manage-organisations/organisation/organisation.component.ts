@@ -24,6 +24,7 @@ export class OrganisationComponent implements OnInit {
       this.organisationDetails.domain = this.data.item.domain;
       this.organisationDetails.urlFragment = this.data.item.urlFragment;
       this.organisationDetails.postcode = this.data.item.postcode;
+      this.organisationDetails.id = this.data.item.id;
 
 
       this.editMode = true;
@@ -43,17 +44,19 @@ export class OrganisationComponent implements OnInit {
     address: '',
     domain: '',
     urlFragment: '',
-    postcode: ''
+    postcode: '',
+    id: ''
   };
 
   makeOrganisationChange() {
-
+    debugger;
     let organisation : Organisation = {
       name: this.organisationDetails.name,
       address: this.organisationDetails.address,
       domain: this.organisationDetails.domain,
       urlFragment: this.organisationDetails.urlFragment,
-      postcode: this.organisationDetails.postcode
+      postcode: this.organisationDetails.postcode,
+      id: this.organisationDetails.id
     };
 
     if(this.editMode === true) {
@@ -68,7 +71,7 @@ export class OrganisationComponent implements OnInit {
       .subscribe(success => {
         if (success) {
          alert("The organisation - " + organisation.name +  " successfully created.");
-         this.closeWindow();
+         this.closeWindow(true);
         }
       }, err => {
           this.errorHandlingService.handleError(err);
@@ -81,14 +84,18 @@ export class OrganisationComponent implements OnInit {
       .subscribe(success => {
         if (success) {
           alert("The organisation - " + organisation.name +  " successfully edited.");
-          this.closeWindow();
+          this.closeWindow(true);
         }
       }, err => {
         this.errorHandlingService.handleError(err);
       });
   }
 
-  closeWindow() {
-    this.dialogRef.close();
+  cancel() {
+    this.closeWindow(false)
+  }
+
+  closeWindow(requiresUpdate: boolean) {
+    this.dialogRef.close(requiresUpdate);
   }
 }

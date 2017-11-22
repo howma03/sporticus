@@ -37,7 +37,7 @@ export interface Organisation {
   urlFragment: string;
 
   domain?: string;
-  id?: number;
+  id?: string;
   created?: Date,
   createdString?: string;
   ownerId?: number;
