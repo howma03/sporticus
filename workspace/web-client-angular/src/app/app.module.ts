@@ -14,6 +14,7 @@ import 'hammerjs';
 import {ManageModule} from "./manage/manage.module";
 import {LadderModule} from "./ladder/ladder.module";
 import {OrganisationModule} from "./organisation/organisation.module";
+import {NotificationModule} from "./notification/notification.module";
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import {OrganisationModule} from "./organisation/organisation.module";
     ManageModule,
     LadderModule,
     OrganisationModule,
+    NotificationModule,
     // Keep routing module last!
     AppRoutingModule
   ],
