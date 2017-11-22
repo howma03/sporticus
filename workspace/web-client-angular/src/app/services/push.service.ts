@@ -5,7 +5,7 @@ import {EventSourcePolyfill} from "ng-event-source";
 export class PushService {
 
   constructor() {
-    let eventSource = new EventSourcePolyfill('/api/push', {headers: { headerName: 'HeaderValue', header2: 'HeaderValue2' }});
+    let eventSource = new EventSourcePolyfill('/api/notification/feed', {headers: { headerName: 'HeaderValue', header2: 'HeaderValue2' }});
 
     eventSource.onmessage = (data => {
       alert("beef")
