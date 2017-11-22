@@ -10,7 +10,6 @@
     <tr class="table-header-dark">
       <th>Position</th>
       <th>Name</th>
-      <th>Challenged</th>
       <th></th>
     </tr>
     </thead>
@@ -19,11 +18,9 @@
       <td class="text-black">{{ rung.position }}</td>
       <td class="text-black">{{ rung.userName }}</td>
       <td>
-        <i *ngIf="rung.isChallenged" class="hpe-icon hpe-vulnerability hover-action-icon" (click)="cancelChallenge(rung)" tooltip="Challenged"></i>
-        <i *ngIf="rung.isChallenger" class="hpe-icon hpe-alarm hover-action-icon" (click)="editChallenge(rung)" tooltip="Challenger"></i>
-        <i *ngIf="rung.canChallenge"  class="hpe-icon hpe-target hover-action-icon" (click)="createChallenge(rung)" tooltip="Challenge" uxHoverAction></i>
-      </td>
-      <td>
+        <i *ngIf="rung.isChallenged" class="hpe-icon hpe-vulnerability hover-action-icon" (click)="cancelChallenge(rung)" [matTooltip]="getTooltip(rung)"></i>
+        <i *ngIf="rung.isChallenger" class="hpe-icon hpe-alarm hover-action-icon" (click)="editChallenge(rung)" [matTooltip]="getTooltip(rung)"></i>
+        <i *ngIf="rung.canChallenge"  class="hpe-icon hpe-target hover-action-icon" (click)="createChallenge(rung)" [matTooltip]="getTooltip(rung)" uxHoverAction></i>
       </td>
     </tr>
     </tbody>

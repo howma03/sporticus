@@ -1,4 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import { DatePipe } from '@angular/common';
 import {Ladder, LadderService, LadderUser} from "../../services/ladder.service";
 import {Subscription} from "rxjs/Subscription";
 import {ChallengeDialogComponent} from "../../challenge/challenge-dialog/challenge-dialog.component";
@@ -9,14 +10,15 @@ import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog
 @Component({
   selector: 'app-ladder',
   templateUrl: './ladder.component.html',
-  styleUrls: ['./ladder.component.css'],
+  styleUrls: ['./ladder.component.css']
 })
 export class LadderComponent implements OnInit, OnDestroy {
 
   constructor(
     private ladderService: LadderService,
     private dialog: MatDialog,
-    private challengeService : ChallengeService) {
+    private challengeService : ChallengeService,
+    private datePipe: DatePipe) {
   }
 
   public ladderUsers: LadderUser[] = [];
@@ -103,6 +105,18 @@ export class LadderComponent implements OnInit, OnDestroy {
           );
       }
     });
+  }
+
+  getTooltip(rung : LadderUser) {
+    if (rung.isChallenged) {
+      return `You have challenged ${rung.userName} to a match on ${this.datePipe.transform(new Date(rung.challenged.dateTime), 'MMM d, y, h:mm a')}. Click here to cancel that challenge.`;
+    }
+    if (rung.isChallenger) {
+      return `You have an outstanding challenge from ${rung.userName} to a match on ${this.datePipe.transform(new Date(rung.challenger.dateTime), 'MMM d, y, h:mm a')}. Click here to accept the challenge.`;
+    }
+    if (rung.canChallenge) {
+      return `Click here to create a new challenge against ${rung.userName}.`;
+    }
   }
 
   /**
