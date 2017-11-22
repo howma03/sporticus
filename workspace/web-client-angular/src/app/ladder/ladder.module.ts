@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 import {LadderComponent} from './ladder/ladder.component';
 import {MyLaddersComponent} from './my-ladders/my-ladders.component';
 import {ServicesModule} from "../services/services.module";
@@ -30,7 +30,8 @@ import {SharedModule} from '../shared/shared.module';
   entryComponents: [
     LadderDialogComponent
   ],
-  declarations: [LadderComponent, MyLaddersComponent, LadderDialogComponent, MyLaddersWidgetComponent]
+  declarations: [LadderComponent, MyLaddersComponent, LadderDialogComponent, MyLaddersWidgetComponent],
+  providers: [DatePipe]
 })
 export class LadderModule {
 }

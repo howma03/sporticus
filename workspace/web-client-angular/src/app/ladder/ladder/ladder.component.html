@@ -18,9 +18,9 @@
       <td class="text-black">{{ rung.position }}</td>
       <td class="text-black">{{ rung.userName }}</td>
       <td>
-        <i *ngIf="rung.isChallenged" class="hpe-icon hpe-vulnerability hover-action-icon" (click)="cancelChallenge(rung)" matTooltip="You challenged xx to a match on a date. Click to cancel this match."></i>
-        <i *ngIf="rung.isChallenger" class="hpe-icon hpe-alarm hover-action-icon" (click)="editChallenge(rung)" matTooltip="You have been challenged by yy to a match. Click to accept and set a date for this match."></i>
-        <i *ngIf="rung.canChallenge"  class="hpe-icon hpe-target hover-action-icon" (click)="createChallenge(rung)" matTooltip="Click to challenge xx to a match" uxHoverAction></i>
+        <i *ngIf="rung.isChallenged" class="hpe-icon hpe-vulnerability hover-action-icon" (click)="cancelChallenge(rung)" [matTooltip]="getTooltip(rung)"></i>
+        <i *ngIf="rung.isChallenger" class="hpe-icon hpe-alarm hover-action-icon" (click)="editChallenge(rung)" [matTooltip]="getTooltip(rung)"></i>
+        <i *ngIf="rung.canChallenge"  class="hpe-icon hpe-target hover-action-icon" (click)="createChallenge(rung)" [matTooltip]="getTooltip(rung)" uxHoverAction></i>
       </td>
     </tr>
     </tbody>
