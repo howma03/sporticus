@@ -47,9 +47,10 @@ dependencyManagement {
         // mavenBom 'io.spring.platform:platform-bom:Athens-SR1'
         // mavenBom 'io.spring.platform:platform-bom:Athens-SR2'
         // mavenBom 'io.spring.platform:platform-bom:Athens-SR3'
+	   //  mavenBom 'io.spring.platform:platform-bom:Athens-SR5'
         // mavenBom 'io.spring.platform:platform-bom:Athens-BUILD-SNAPSHOT'
-        mavenBom 'io.spring.platform:platform-bom:Brussels-RC1'
-        // mavenBom 'io.spring.platform:platform-bom:Brussels-BUILD-SNAPSHOT'
+        mavenBom 'io.spring.platform:platform-bom:Brussels-SR5'
+	    // mavenBom 'io.spring.platform:platform-bom:Brussels-BUILD-SNAPSHOT'
     }
 }
 

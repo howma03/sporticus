@@ -203,7 +203,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 		DtoEventLadder eventLadder = new DtoEventLadder(event);
 
 		// find the challenger and challenged
-		List<IRelationship> challengerList = serviceRelationship.findWithDestinationTypeAndDestinationIdAndType(
+		List<IRelationship> challengerList = serviceRelationship.findByDestinationTypeAndDestinationIdAndType(
 				"Event",
 				event.getId(),
 				RelationshipType.CHALLENGE.toString())
