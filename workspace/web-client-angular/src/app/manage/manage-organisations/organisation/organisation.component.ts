@@ -67,7 +67,7 @@ export class OrganisationComponent implements OnInit {
     this.organisationService.createOne(organisation)
       .subscribe(success => {
         if (success) {
-         alert("Organisation " + organisation.name +  " successfully created.");
+         alert("The organisation - " + organisation.name +  " successfully created.");
          this.closeWindow();
         }
       }, err => {
@@ -80,7 +80,7 @@ export class OrganisationComponent implements OnInit {
     this.organisationService.updateOne(organisation.id, organisation)
       .subscribe(success => {
         if (success) {
-          alert("Organisation " + organisation.name +  " successfully edited.");
+          alert("The organisation - " + organisation.name +  " successfully edited.");
           this.closeWindow();
         }
       }, err => {
