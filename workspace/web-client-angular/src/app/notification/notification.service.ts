@@ -21,5 +21,6 @@ export class NotificationService {
 }
 
 export interface Notification {
-  id?: number;
+  id: number;
+  name?: string;
 }

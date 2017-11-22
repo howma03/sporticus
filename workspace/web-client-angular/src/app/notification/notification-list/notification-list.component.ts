@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {NotificationService} from "../notification.service";
+import {NotificationService, Notification} from "../notification.service";
 
 @Component({
   selector: 'app-notification-list',
@@ -22,7 +22,6 @@ export class NotificationListComponent implements OnInit {
     this.notificationService.retrieveAll()
       .map(list=>list.data)
       .subscribe((data)=>{
-        debugger;
         this.notifications = data;
       });
   }
