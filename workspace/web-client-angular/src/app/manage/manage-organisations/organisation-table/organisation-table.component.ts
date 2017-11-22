@@ -4,7 +4,7 @@ import {Subscription} from "rxjs/Subscription";
 import 'rxjs/add/observable/of';
 import {OrganisationComponent} from "../organisation/organisation.component";
 import {MatDialog} from "@angular/material";
-import {DeletePromptComponent} from "../../delete-prompt/delete-prompt.component";
+import {ConfirmDialogComponent} from "../../../shared/confirm-dialog/confirm-dialog.component";
 
 @Component({
   selector: 'organisation-table',
@@ -38,10 +38,13 @@ export class OrganisationTableComponent implements OnInit {
   }
 
   openDeleteDialog(item) {
-    let dialogRef = this.dialog.open(DeletePromptComponent, {
+    let title = 'Confirm delete'
+    let description = "Are you sure you want to delete the organisation - " + item.name
+
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        id: item.id,
-        type: 'organisation',
+        title: title,
+        description: description,
         organisationName: item.name
       }
     });
