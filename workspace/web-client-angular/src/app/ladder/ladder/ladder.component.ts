@@ -6,6 +6,8 @@ import {ChallengeDialogComponent} from "../../challenge/challenge-dialog/challen
 import {MatDialog} from "@angular/material";
 import {ChallengeService} from "../../services/challenge.service";
 import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
+import {AuthService} from '../../login/auth.service';
+import {User} from '../../services/users.service';
 
 const dateFormat : string = 'MMM d, y, h:mm a'; // TODO: Using short format does not internationalize well, need to work out why and keep the format in some common place.
 
@@ -20,7 +22,8 @@ export class LadderComponent implements OnInit, OnDestroy {
     private ladderService: LadderService,
     private dialog: MatDialog,
     private challengeService : ChallengeService,
-    private datePipe: DatePipe) {
+    private datePipe: DatePipe,
+    private authService : AuthService) {
   }
 
   public ladderUsers: LadderUser[] = [];
@@ -32,10 +35,7 @@ export class LadderComponent implements OnInit, OnDestroy {
   set ladder(ladder: Ladder) {
     if (ladder) {
       this._ladder = ladder;
-      this.subscription = this.ladderService.getLadderUsers(ladder.id)
-        .subscribe((ladderUsers: LadderUser[])=>{
-          this.ladderUsers = ladderUsers;
-        });
+      this.reload();
     }
   }
 
@@ -109,6 +109,11 @@ export class LadderComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Return a tooltip customized for the item being hovered over
+   * @param {LadderUser} rung
+   * @returns {string}
+   */
   getTooltip(rung : LadderUser) {
     if (rung.isChallenged) {
       return `You have challenged ${rung.userName} to a match on ${this.datePipe.transform(new Date(rung.challenged.dateTime), dateFormat)}. Click here to cancel that challenge.`;
@@ -125,11 +130,19 @@ export class LadderComponent implements OnInit, OnDestroy {
    * Reload the ladder
    */
   private reload() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     this.subscription = this.ladderService.getLadderUsers(this.ladder.id)
       .subscribe((ladderUsers: LadderUser[])=>{
         this.ladderUsers = ladderUsers;
       });
+  }
+
+  isMe(rung) : boolean {
+    let currentUser : User = this.authService.getCurrentUser();
+    debugger;
+    return currentUser.id === rung.userId;
   }
 
   ngOnDestroy() {
