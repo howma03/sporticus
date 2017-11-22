@@ -58,6 +58,10 @@ export class MainComponent implements OnInit {
       select: () => this.router.navigate(['main/track-competitions'])
     },
     {
+      title: 'Calendar',
+      select: () => this.router.navigate(['main/calendar'])
+    },
+    {
       icon: 'hpe-analytics',
       title: 'Manage',
       children: [

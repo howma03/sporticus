@@ -8,6 +8,7 @@ import {TrackCompetitionsComponent} from "../track-competitions/track-competitio
 import {MainComponent} from "./main/main.component";
 import {AuthGuard} from "../login/auth.guard";
 import {ManageMainComponent} from "../manage/manage-main/manage-main.component";
+import {CalendarWrapperComponent} from "../calendar/calendar-wrapper/calendar-wrapper.component";
 
 const mainRoutes: Routes = [
   {
@@ -35,6 +36,7 @@ const mainRoutes: Routes = [
       {path: 'manage-teams', component: ManageTeamsComponent},
       {path: 'manage-competitions', component: ManageCompetitionsComponent},
       {path: 'track-competitions', component: TrackCompetitionsComponent},
+      {path: 'calendar', component: CalendarWrapperComponent},
       {path: '', redirectTo: '/main/home', pathMatch: 'full'},
       {path: '**', redirectTo: '/main/home', pathMatch: 'full'}
     ]

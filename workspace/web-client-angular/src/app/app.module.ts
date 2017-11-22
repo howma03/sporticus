@@ -15,6 +15,7 @@ import {ManageModule} from "./manage/manage.module";
 import {LadderModule} from "./ladder/ladder.module";
 import {OrganisationModule} from "./organisation/organisation.module";
 import {NotificationModule} from "./notification/notification.module";
+import {CalendarModule} from "./calendar/calendar.module";
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import {NotificationModule} from "./notification/notification.module";
   imports: [
     NgxCarouselModule,
     BrowserModule,
+    CalendarModule,
     RegistrationModule,
     HttpClientModule,
     LoginModule,
