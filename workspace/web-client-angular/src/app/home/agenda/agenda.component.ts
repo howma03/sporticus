@@ -8,8 +8,9 @@ import {AgendaService, CalenderEvent} from "../../services/agenda.service";
 })
 export class AgendaComponent implements OnInit {
 
-  events: CalenderEvent[];
+  events: CalenderEvent[] = [];
 
+  loading: boolean = true;
 
   width: number = 100;
   layout: string = 'card';
@@ -34,6 +35,7 @@ export class AgendaComponent implements OnInit {
     this.agendaService.getAgenda()
       .map(list => list.data)
       .subscribe((events: CalenderEvent[]) => {
+        this.loading = false;
         this.events = events.sort((eventa, eventb) => eventb.dateTime.getTime() - eventa.dateTime.getTime());
       });
   }

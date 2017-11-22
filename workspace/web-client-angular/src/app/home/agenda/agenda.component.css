@@ -9,3 +9,7 @@
   width: calc(100% - 20px);
   margin: 10px;
 }
+
+.empty {
+  margin: 10px;
+}

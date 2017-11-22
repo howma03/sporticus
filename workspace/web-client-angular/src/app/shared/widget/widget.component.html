@@ -1,6 +1,13 @@
-<mat-toolbar>
+<mat-toolbar class="toolbar">
   <ng-content select="[widget-title]"></ng-content>
   <span class="toolbar-fill"></span>
   <ng-content select="[widget-tools]"></ng-content>
 </mat-toolbar>
-<ng-content select="[widget-body]"></ng-content>
+<div class="body">
+  <div *ngIf="loading" class="center-spinner">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+  <ng-content *ngIf="!loading" select="[widget-body]">
+  </ng-content>
+</div>
+
