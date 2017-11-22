@@ -1,3 +1,18 @@
 .toolbar-fill {
   flex: 1 1 auto;
 }
+
+.toolbar {
+  height: 64px;
+}
+
+.body {
+  height: calc(100% - 64px);
+}
+
+.center-spinner {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ConfirmDialogComponent} from './confirm-dialog/confirm-dialog.component';
-import {MatButtonModule, MatDialogModule, MatToolbarModule} from '@angular/material';
+import {MatButtonModule, MatDialogModule, MatProgressSpinnerModule, MatToolbarModule} from '@angular/material';
 import {WidgetComponent} from "./widget/widget.component";
 
 @NgModule({
@@ -9,7 +9,8 @@ import {WidgetComponent} from "./widget/widget.component";
     CommonModule,
     MatDialogModule,
     MatButtonModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     WidgetComponent
