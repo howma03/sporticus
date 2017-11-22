@@ -1,5 +1,9 @@
 #Footer {
-  padding: 20px 0 0 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+
+  padding: 0;
   border-top: 1px solid #0a3761;
   background: #0c4751;
 }
