@@ -4,14 +4,14 @@ import {Subscription} from "rxjs/Subscription";
 import 'rxjs/add/observable/of';
 import {OrganisationComponent} from "../organisation/organisation.component";
 import {MatDialog} from "@angular/material";
-import {DeletePromptComponent} from "../../delete-prompt/delete-prompt.component";
+import {ConfirmDialogComponent} from "../../../shared/confirm-dialog/confirm-dialog.component";
 
 @Component({
   selector: 'organisation-table',
   templateUrl: './organisation-table.component.html',
   styleUrls: ['./organisation-table.component.css']
 })
-export class OrganisationTableComponent implements OnInit, OnDestroy {
+export class OrganisationTableComponent implements OnInit {
 
   public orgs: Organisation[] = [];
   private subscription: Subscription;
@@ -21,16 +21,7 @@ export class OrganisationTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.organisationService.retrieveAll()
-      .map(list=>list.data)
-      .subscribe((orgs: Organisation[])=>{
-        this.orgs = orgs;
-      });
-  }
-  ngOnDestroy() {
-    if(this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.updateOrganisationDetails()
   }
 
   public view(itemId) {
@@ -38,11 +29,22 @@ export class OrganisationTableComponent implements OnInit, OnDestroy {
     this.openModal(itemId);
   }
 
+  updateOrganisationDetails() {
+    this.organisationService.retrieveAll()
+      .map(list=>list.data)
+      .subscribe((orgs: Organisation[])=>{
+        this.orgs = orgs;
+      });
+  }
+
   openDeleteDialog(item) {
-    let dialogRef = this.dialog.open(DeletePromptComponent, {
+    let title = 'Confirm delete'
+    let description = "Are you sure you want to delete the organisation - " + item.name
+
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        id: item.id,
-        type: 'organisation',
+        title: title,
+        description: description,
         organisationName: item.name
       }
     });
@@ -56,7 +58,9 @@ export class OrganisationTableComponent implements OnInit, OnDestroy {
 
   public deleteOrganisation(itemId) {
     console.info("delete - id="+itemId);
-    this.organisationService.deleteOne(itemId).subscribe();
+    this.organisationService.deleteOne(itemId).subscribe(() => {
+      this.updateOrganisationDetails();
+    });
   }
 
   public openModal(itemId) : void {
@@ -70,8 +74,10 @@ export class OrganisationTableComponent implements OnInit, OnDestroy {
       height: '900px',
       width: '1200px',
     });
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
+    dialogRef.afterClosed().subscribe((updateRequired) => {
+      if(updateRequired) {
+        this.updateOrganisationDetails();
+      }
     });
   }
 }

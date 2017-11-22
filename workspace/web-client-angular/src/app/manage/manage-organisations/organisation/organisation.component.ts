@@ -19,12 +19,24 @@ export class OrganisationComponent implements OnInit {
   ngOnInit() {
 
     if(this.data.item !== undefined) {
-      this.organisationDetails = this.data.item;
+      this.organisationDetails.name = this.data.item.name;
+      this.organisationDetails.address = this.data.item.address;
+      this.organisationDetails.domain = this.data.item.domain;
+      this.organisationDetails.urlFragment = this.data.item.urlFragment;
+      this.organisationDetails.postcode = this.data.item.postcode;
+
+
+      this.editMode = true;
+      this.submitText = "SAVE";
       this.organisationCreationDescription = "This allows the user admin to modify the details for the organisation"
     }
   }
 
-  organisationCreationDescription = "To create a new organisation, please enter a few details";
+  editMode: boolean = false;
+
+  submitText: string = "CREATE";
+
+  organisationCreationDescription: String = "To create a new organisation, please enter a few details";
 
   organisationDetails = {
     name: '',
@@ -34,8 +46,9 @@ export class OrganisationComponent implements OnInit {
     postcode: ''
   };
 
-  addOrganisation() {
-    let newOrganisation : Organisation = {
+  makeOrganisationChange() {
+
+    let organisation : Organisation = {
       name: this.organisationDetails.name,
       address: this.organisationDetails.address,
       domain: this.organisationDetails.domain,
@@ -43,14 +56,35 @@ export class OrganisationComponent implements OnInit {
       postcode: this.organisationDetails.postcode
     };
 
-    this.organisationService.createOne(newOrganisation)
+    if(this.editMode === true) {
+      this.editOrganisation(organisation)
+    } else {
+      this.addOrganisation(organisation)
+    }
+  }
+
+  addOrganisation(organisation) {
+    this.organisationService.createOne(organisation)
       .subscribe(success => {
         if (success) {
-         alert("Organisation " + newOrganisation.name +  " successfully created.");
+         alert("The organisation - " + organisation.name +  " successfully created.");
          this.closeWindow();
         }
       }, err => {
           this.errorHandlingService.handleError(err);
+      });
+  }
+
+
+  editOrganisation(organisation) {
+    this.organisationService.updateOne(organisation.id, organisation)
+      .subscribe(success => {
+        if (success) {
+          alert("The organisation - " + organisation.name +  " successfully edited.");
+          this.closeWindow();
+        }
+      }, err => {
+        this.errorHandlingService.handleError(err);
       });
   }
 

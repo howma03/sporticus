@@ -133,7 +133,7 @@ export class ChallengeFormComponent implements OnInit {
   /**
    * Test that both scores have been provided if any score is provided
    * @param {AbstractControl} c
-   * @returns {[{[key: string]: boolean}]}
+   * @returns {{[key: string]: boolean}}
    */
   scoreMatcher(c: AbstractControl): {[key: string]: boolean} | null {
     let scoreChallengerControl = c.get('scoreChallenger');

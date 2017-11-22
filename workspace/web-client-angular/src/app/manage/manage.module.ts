@@ -6,7 +6,7 @@ import {EboxModule, PageHeaderModule} from "@ux-aspects/ux-aspects";
 import {ManageUsersModule} from "./manage-users/manage-users.module";
 import {MatTabsModule} from '@angular/material/tabs';
 import {ManageOrganisationsModule} from "./manage-organisations/manage-organisations.module";
-import {DeletePromptComponent} from './delete-prompt/delete-prompt.component';
+import {SharedModule} from "../shared/shared.module";
 
 @NgModule({
   imports: [
@@ -16,13 +16,13 @@ import {DeletePromptComponent} from './delete-prompt/delete-prompt.component';
     ManageRoutingModule,
     ManageUsersModule,
     ManageOrganisationsModule,
-    MatTabsModule
+    MatTabsModule,
+    SharedModule
   ],
   exports: [
   ],
   entryComponents: [
-    DeletePromptComponent
   ],
-  declarations: [ManageMainComponent, DeletePromptComponent]
+  declarations: [ManageMainComponent]
 })
 export class ManageModule { }

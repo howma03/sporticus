@@ -1,43 +1,48 @@
-<mat-toolbar>
-  <ng-content select="[widget-title]"></ng-content>
-  <span class="toolbar-fill"></span>
-  <mat-button-toggle-group [value]="layout" (change)="onLayoutChange($event.value)">
+<app-widget [loading]="loading">
+  <ng-content widget-title select="[widget-title]"></ng-content>
+  <mat-button-toggle-group widget-tools [value]="layout" (change)="onLayoutChange($event.value)">
     <mat-button-toggle value="card">Card</mat-button-toggle>
     <mat-button-toggle value="grid">Grid</mat-button-toggle>
   </mat-button-toggle-group>
-</mat-toolbar>
+  <div widget-body>
+    <div uxLayoutSwitcher *ngIf="events.length > 0" [group]="layout"
+       [style.width.%]="width" class="agenda-body">
+      <table *uxLayoutSwitcherItem="layouts.grid" class="table">
+        <thead class="table-header-dark">
+        <tr>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let event of events">
+          <td>{{event.name}}</td>
+          <td>{{event.dateTime | amCalendar}}</td>
+          <td>{{event.description}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="events-cards" *uxLayoutSwitcherItem="layouts.card">
+        <mat-card *ngFor="let event of events" class="event-card">
+          <mat-card-title>{{event.name}}</mat-card-title>
+          <mat-card-subtitle>{{event.dateTime | amCalendar}}</mat-card-subtitle>
+          <mat-card-content>{{event.description}}</mat-card-content>
+        </mat-card>
+      </div>
+      <div class="events-cards" *uxLayoutSwitcherItem="layouts.cardstack">
+        <mat-card *ngFor="let event of events" class="event-card-stacked">
+          <mat-card-title>{{event.name}}</mat-card-title>
+          <mat-card-subtitle>{{event.dateTime | amCalendar}}</mat-card-subtitle>
+          <mat-card-content>{{event.description}}</mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <div *ngIf="events.length==0" class="empty">
+      You have no upcoming Events
+    </div>
+  </div>
+</app-widget>
 
-<div uxLayoutSwitcher [group]="layout"
-     [style.width.%]="width" class="agenda-body">
-  <table *uxLayoutSwitcherItem="layouts.grid" class="table">
-    <thead class="table-header-dark">
-    <tr>
-      <th>Name</th>
-      <th>Date</th>
-      <th>Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let event of events">
-      <td>{{event.name}}</td>
-      <td>{{event.dateTime | amCalendar}}</td>
-      <td>{{event.description}}</td>
-    </tr>
-    </tbody>
-  </table>
-  <div class="events-cards" *uxLayoutSwitcherItem="layouts.card">
-    <mat-card *ngFor="let event of events" class="event-card">
-      <mat-card-title>{{event.name}}</mat-card-title>
-      <mat-card-subtitle>{{event.dateTime | amCalendar}}</mat-card-subtitle>
-      <mat-card-content>{{event.description}}</mat-card-content>
-    </mat-card>
-  </div>
-  <div class="events-cards" *uxLayoutSwitcherItem="layouts.cardstack">
-    <mat-card *ngFor="let event of events" class="event-card-stacked">
-      <mat-card-title>{{event.name}}</mat-card-title>
-      <mat-card-subtitle>{{event.dateTime | amCalendar}}</mat-card-subtitle>
-      <mat-card-content>{{event.description}}</mat-card-content>
-    </mat-card>
-  </div>
-</div>
+
 

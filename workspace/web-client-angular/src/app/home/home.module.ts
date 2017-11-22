@@ -7,11 +7,13 @@ import {LadderModule} from "../ladder/ladder.module";
 import {AgendaComponent} from './agenda/agenda.component';
 import {UtilModule} from "../util/util.module"
 import {MomentModule} from "angular2-moment";
-import {MatButtonToggleModule, MatCardModule, MatToolbarModule} from "@angular/material";
+import {MatButtonToggleModule, MatCardModule} from "@angular/material";
 import {FormsModule} from "@angular/forms";
+import {SharedModule} from "../shared/shared.module";
 
 @NgModule({
   imports: [
+    SharedModule,
     CommonModule,
     FormsModule,
     DashboardModule,
@@ -21,7 +23,6 @@ import {FormsModule} from "@angular/forms";
     MomentModule,
     LayoutSwitcherModule,
     MatCardModule,
-    MatToolbarModule,
     MatButtonToggleModule
   ],
   exports: [
