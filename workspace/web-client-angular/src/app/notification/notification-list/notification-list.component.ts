@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {NotificationService, Notification} from "../notification.service";
+import {PushService} from "../../services/push.service";
 
 @Component({
   selector: 'app-notification-list',
@@ -9,10 +10,12 @@ import {NotificationService, Notification} from "../notification.service";
 export class NotificationListComponent implements OnInit {
 
   constructor(
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private pushService: PushService
   ) { }
 
   ngOnInit() {
+    this.pushService.isEnabled();
     this.updateOrganisationDetails();
   }
 

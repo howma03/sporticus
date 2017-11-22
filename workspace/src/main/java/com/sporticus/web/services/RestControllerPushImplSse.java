@@ -41,7 +41,7 @@ public class RestControllerPushImplSse extends ControllerAbstract {
 	@Async
 	public void send(SseEmitter emitter, INotification notication) {
 		try {
-			Thread.sleep(1000 * 60);
+			Thread.sleep(100 * 60);
 			emitter.send(notication);
 		} catch (IOException e) {
 			e.printStackTrace();

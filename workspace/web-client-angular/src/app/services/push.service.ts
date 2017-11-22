@@ -18,4 +18,8 @@ export class PushService {
       // Do stuff here
     }
   }
+
+  isEnabled() {
+    return true;
+  }
 }

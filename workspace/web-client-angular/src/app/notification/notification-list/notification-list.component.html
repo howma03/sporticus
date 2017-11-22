@@ -1,21 +1,20 @@
-<p>
-  notification-list works!
-</p>
-
+Notifications list... temporary location...
 
 <div class="example-container mat-elevation-z8">
 
   <table class="table table-hover">
     <thead>
     <tr class="table-header-dark">
-      <th>Id</th>
-      <th>Name</th>
+      <th>Severity (Icon)</th>
+      <th>Title</th>
+      <th>Text</th>
     </tr>
     </thead>
     <tbody>
     <tr class="hover-action-container" *ngFor="let item of notifications" uxHoverActionContainer>
-      <td class="text-black">{{ item.id }}</td>
-      <td class="text-black">{{ item.name }}</td>
+      <td class="text-black">{{ item.severity }}</td>
+      <td class="text-black">{{ item.title }}</td>
+      <td class="text-black">{{ item.text }}</td>
     </tr>
     </tbody>
   </table>
