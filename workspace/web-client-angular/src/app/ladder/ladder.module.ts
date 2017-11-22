@@ -8,6 +8,7 @@ import {LadderDialogComponent} from './ladder-dialog/ladder-dialog.component';
 import {HoverActionModule, SparkModule} from "@ux-aspects/ux-aspects";
 import {ChallengeModule} from "../challenge/challenge.module";
 import {MyLaddersWidgetComponent} from './my-ladders-widget/my-ladders-widget.component';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import {MyLaddersWidgetComponent} from './my-ladders-widget/my-ladders-widget.co
     MatTableModule,
     MatGridListModule,
     MatFormFieldModule,
+    SharedModule,
     SparkModule
   ],
   exports: [MyLaddersComponent, MyLaddersWidgetComponent],

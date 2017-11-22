@@ -4,6 +4,7 @@ import {Subscription} from "rxjs/Subscription";
 import {ChallengeDialogComponent} from "../../challenge/challenge-dialog/challenge-dialog.component";
 import {MatDialog} from "@angular/material";
 import {ChallengeService} from "../../services/challenge.service";
+import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-ladder',
@@ -86,13 +87,27 @@ export class LadderComponent implements OnInit, OnDestroy {
    * @param {LadderUser} ladderUser
    */
   cancelChallenge(ladderUser : LadderUser) {
-    this.challengeService.deleteChallenge(this.ladder, ladderUser.challenged)
-      .subscribe((thing : any) => {
-        this.reload();
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirm delete',
+        description: 'Are you sure you want to delete the challenge'
       }
-    );
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === true) {
+        this.challengeService.deleteChallenge(this.ladder, ladderUser.challenged)
+          .subscribe(() => {
+              this.reload();
+            }
+          );
+      }
+    });
   }
 
+  /**
+   * Reload the ladder
+   */
   private reload() {
     this.subscription.unsubscribe();
     this.subscription = this.ladderService.getLadderUsers(this.ladder.id)
