@@ -1,5 +1,36 @@
-<app-widget>
+<app-widget [loading]="loading">
   <ng-content widget-title select="[widget-title]"></ng-content>
-  <span widget-tools></span>
-  <div widget-body></div>
+  <span widget-tools>
+    <ng-container *ngIf="ladders.length > 0">
+      <mat-form-field>
+      <mat-select [(value)]="currentLadder">
+        <mat-option *ngFor="let ladder of ladders" [value]="ladder">
+          {{ladder.name}}
+        </mat-option>
+      </mat-select>
+      </mat-form-field>
+    </ng-container>
+  </span>
+  <div widget-body>
+    <div *ngIf="ladders.length === 0" class="empty">
+      You are not a member of any Ladders
+    </div>
+    <table *ngIf="ladders.length > 0" class="table table-hover">
+      <thead>
+      <tr class="table-header-dark">
+        <th>Position</th>
+        <th>Name</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="hover-action-container" *ngFor="let rung of rungs"
+          [attr.cdk-focus-initial]="isMe(rung) ? '' : null" uxHoverActionContainer>
+        <td class="text-black">{{ rung.position }}</td>
+        <td class="text-black">{{ rung.userName }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </app-widget>
+
+

@@ -4,7 +4,12 @@ import {LadderComponent} from './ladder/ladder.component';
 import {MyLaddersComponent} from './my-ladders/my-ladders.component';
 import {ServicesModule} from "../services/services.module";
 import {
-  MatDialogModule, MatFormFieldModule, MatGridListModule, MatTableModule, MatTooltipModule
+  MatDialogModule,
+  MatFormFieldModule,
+  MatGridListModule,
+  MatSelectModule,
+  MatTableModule,
+  MatTooltipModule
 } from "@angular/material";
 import {LadderDialogComponent} from './ladder-dialog/ladder-dialog.component';
 import {HoverActionModule, SparkModule} from "@ux-aspects/ux-aspects";
@@ -23,6 +28,7 @@ import {SharedModule} from '../shared/shared.module';
     MatGridListModule,
     MatFormFieldModule,
     MatTooltipModule,
+    MatSelectModule,
     SharedModule,
     SparkModule
   ],
