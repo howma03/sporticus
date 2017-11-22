@@ -1,17 +1,20 @@
 package com.sporticus.domain.entities;
 
-import com.sporticus.domain.interfaces.IGroup.EmailFrequency;
 import com.sporticus.domain.interfaces.INotification;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+@Entity
+@Table(name = "notification")
 public class Notification implements INotification {
 
 	@Id
