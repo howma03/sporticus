@@ -82,25 +82,7 @@ export class MainComponent implements OnInit {
     {
       icon: 'hpe-notification',
       badge: 3,
-      dropdown: [
-        {
-          icon: 'hpe-chat',
-          title: 'You have 16 messages',
-          subtitle: '4 minutes ago',
-          divider: true
-        },
-        {
-          icon: 'hpe-social-twitter',
-          title: '3 New Followers',
-          subtitle: '12 minutes ago',
-          divider: true
-        },
-        {
-          icon: 'hpe-cloud',
-          title: 'Server Rebooted',
-          subtitle: '22 minutes ago'
-        }
-      ]
+      select: (menu) => this.createNotificationsMenu(menu)
     },
     {
       icon: 'hpe-actions',
@@ -126,6 +108,32 @@ export class MainComponent implements OnInit {
       ]
     }
   ];
+
+  /**
+   * Create a menu showing notifications received but not yet looked at.
+   * @param {PageHeaderIconMenu} menu The parent menu to attach to
+   */
+  createNotificationsMenu(menu : PageHeaderIconMenu) {
+    menu.dropdown = [
+      {
+        icon: 'hpe-chat',
+        title: 'You have 45 messages',
+        subtitle: '100 minutes ago',
+        divider: true
+      },
+      {
+        icon: 'hpe-social-twitter',
+        title: '3 New Followers',
+        subtitle: '12 minutes ago',
+        divider: true
+      },
+      {
+        icon: 'hpe-cloud',
+        title: 'Server Rebooted',
+        subtitle: '22 minutes ago'
+      }
+    ];
+  }
 
   getUserName() : string {
     return this.authService.currentUser.email;
