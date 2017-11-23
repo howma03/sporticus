@@ -31,4 +31,8 @@ export class NotificationListComponent implements OnInit {
         this.notifications = data;
       });
   }
+
+  openModal() {
+
+  }
 }
