@@ -51,38 +51,18 @@ public class RestControllerEvent extends ControllerAbstract {
         }
     }
 
-    /***
-     * Function to delete an Event
+    /**
+     * Function to delete an event
      * @param id
-     * @return success/failure
+     * @return ResponseEntity<?>
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteOne(@PathVariable("id") final long id) {
-        LOGGER.debug(() -> "Deleting Event with id " + id);
+    public ResponseEntity<?> delete(@PathVariable("id") final long id) {
         try {
             serviceEvent.delete(id, getLoggedInUser());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (ServiceEventExceptionNotAllowed ex) {
-            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
-        } catch (ServiceEventExceptionNotFound ex) {
-            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
-        }
-    }
-
-    /**
-     * Return an event given an identifier
-     *
-     * @param id
-     * @return ResponseEntity<DtoEvent>
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> read(@PathVariable("id") final long id) {
-        LOGGER.debug(() -> "Reading Event with id " + id);
-        try {
-            IEvent found = serviceEvent.readEvent(id, getLoggedInUser());
-            return new ResponseEntity<>(new DtoEvent(found), HttpStatus.OK);
-        } catch (ServiceEventExceptionNotAllowed ex) {
-            LOGGER.warn(() -> "Event not found - id=" + id);
+            LOGGER.warn(() -> "Delete not allowed - id=" + id);
             return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
         } catch (ServiceEventExceptionNotFound ex) {
             LOGGER.warn(() -> "Event not found - id=" + id);
@@ -104,8 +84,29 @@ public class RestControllerEvent extends ControllerAbstract {
     }
 
     /**
+     * Return an event given an identifier
+     *
+     * @param id
+     * @return ResponseEntity<DtoEvent>
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> read(@PathVariable("id") final long id) {
+        LOGGER.debug(() -> "Reading Event with id " + id);
+        try {
+            IEvent found = serviceEvent.readEvent(id, getLoggedInUser());
+            return new ResponseEntity<>(new DtoEvent(found), HttpStatus.OK);
+        } catch (ServiceEventExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Read not allowed - id=" + id);
+            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+        } catch (ServiceEventExceptionNotFound ex) {
+            LOGGER.warn(() -> "Event not found - id=" + id);
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
      * Function returns all events for the logged-in user
-     * @return
+     * @return ResponseEntity<?>
      */
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoList<DtoEvent>> readAll() {
@@ -119,29 +120,21 @@ public class RestControllerEvent extends ControllerAbstract {
      * Function to update an Event
      * @param id
      * @param event
-     * @return
+     * @return ResponseEntity<?>
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<DtoEvent> update(@PathVariable("id") final long id,
-                                           @RequestBody final DtoEvent event) {
-        LOGGER.debug(() -> "Updating Event " + id);
-        final IEvent found = serviceEvent.readEvent(id, getLoggedInUser());
-        if(found == null) {
-            LOGGER.warn(() -> "Event with id " + id + " not found");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> update(@PathVariable("id") final long id,
+                                    @RequestBody final DtoEvent event) {
+        try {
+            final IEvent updated = serviceEvent.update(event, getLoggedInUser());
+            LOGGER.info(() -> "Updated Event with id " + id);
+            return new ResponseEntity<>(new DtoEvent(updated), HttpStatus.OK);
+        } catch (ServiceEventExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Delete not allowed - id=" + id);
+            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+        } catch (ServiceEventExceptionNotFound ex) {
+            LOGGER.warn(() -> "Event not found - id=" + id);
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
         }
-
-        if (!this.getLoggedInUser().isAdmin() && !found.getOwnerId().equals(getLoggedInUserId())) {
-            LOGGER.error(() -> "Events can only be updated by owner or system admins");
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
-        if (!this.getLoggedInUser().isAdmin()) {
-            event.setOwnerId(found.getOwnerId()); // we dont allow the event to be assigned to someone (unless Admin)
-        }
-        IEvent.COPY(event, found);
-        final IEvent updated = serviceEvent.update(event, getLoggedInUser());
-        LOGGER.info(() -> "Updated Event with id " + id);
-        return new ResponseEntity<>(new DtoEvent(updated), HttpStatus.OK);
     }
 }

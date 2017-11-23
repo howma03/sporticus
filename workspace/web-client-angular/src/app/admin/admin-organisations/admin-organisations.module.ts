@@ -16,8 +16,8 @@ import {FormsModule} from "@angular/forms";
     MatGridListModule,
     ServicesModule,
     SparkModule,
-    HoverActionModule,
-    MatDialogModule
+    MatDialogModule,
+    HoverActionModule
   ],
   exports: [
     OrganisationTableComponent

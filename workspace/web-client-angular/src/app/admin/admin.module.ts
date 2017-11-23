@@ -18,7 +18,7 @@ import {SharedModule} from "../shared/shared.module";
     MatTabsModule,
     SharedModule,
     //Keep Routing Modules last
-    AdminRoutingModule,
+    AdminRoutingModule
   ],
   exports: [],
   entryComponents: [],

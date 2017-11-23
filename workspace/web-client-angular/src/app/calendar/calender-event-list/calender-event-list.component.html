@@ -1,3 +1,44 @@
-<p>
-  calender-event-list works!
-</p>
+<br/>
+<div>
+  <button type="button" class="btn button-primary" (click)="openModal()">
+    <span class="hpe-icon hpe-deployment" aria-hidden="true"></span>&nbsp;Add Event
+  </button>
+</div>
+
+<br/>
+
+<div class="user__list" *ngIf="!events || !events.length">
+  <p>No Events</p>
+</div>
+
+<div class="user__list" *ngIf="events.length">
+  <table class="table table-hover">
+    <thead>
+    <tr class="table-header-dark">
+      <th>Id</th>
+      <th>Created</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="hover-action-container" *ngFor="let item of events" uxHoverActionContainer>
+      <td class="text-black">{{ item.id }}</td>
+      <td class="text-black">{{ item.createdString }}</td>
+      <td>{{ item.name }}</td>
+      <td>{{ item.type }}</td>
+      <td>{{ item.description }}</td>
+      <td>{{ item.status }}</td>
+      <td>
+        <i class="hpe-icon hpe-view hover-action-icon" (click)="view(item.id)" tooltip="View" uxHoverAction></i>
+        <i class="hpe-icon hpe-trash hover-action-icon" (click)="openDeleteDialog(item)" tooltip="Delete"
+           uxHoverAction></i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

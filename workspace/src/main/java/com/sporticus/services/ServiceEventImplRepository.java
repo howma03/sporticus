@@ -110,7 +110,29 @@ public class ServiceEventImplRepository implements IServiceEvent {
 	}
 
 	@Override
-	public IEvent update(IEvent event, IUser actor) {
+	public IEvent update(IEvent event, IUser actor) throws ServiceEventExceptionNotFound,
+			ServiceNotificationExceptionNotAllowed {
+		final IEvent found = this.readEvent(event.getId(), actor);
+		if (found == null) {
+			String message = "Event with id " + event.getId() + " not found";
+			LOGGER.warn(() -> message);
+			throw new ServiceEventExceptionNotFound(message);
+		}
+
+		if (actor != null) {
+			if (!actor.isAdmin() && !found.getOwnerId().equals(actor.getId())) {
+				String message = "Events can only be updated by owner or system admins";
+				LOGGER.warn(() -> message);
+				throw new ServiceNotificationExceptionNotAllowed(message);
+			}
+			if (!actor.isAdmin()) {
+				event.setOwnerId(found.getOwnerId()); // we don't allow the event to be assigned to someone (unless Admin)
+			}
+		}
+
+		IEvent.COPY(event, found);
+		final IEvent updated = this.update(event, actor);
+		LOGGER.info(() -> "Updated Event with id " + event.getId());
 		return repositoryEvent.save((Event)event);
 	}
 }

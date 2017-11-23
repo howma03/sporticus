@@ -1,16 +1,12 @@
 package com.sporticus.web.services;
 
 import com.sporticus.domain.interfaces.IEvent;
-import com.sporticus.domain.interfaces.IUser;
-import com.sporticus.domain.repositories.IRepositoryGroupMember;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceLadder;
 import com.sporticus.interfaces.IServiceLadder.ServiceLadderExceptionNotAllowed;
 import com.sporticus.interfaces.IServiceLadder.ServiceLadderExceptionNotFound;
 import com.sporticus.interfaces.IServiceUser;
-import com.sporticus.services.dto.DtoEvent;
 import com.sporticus.services.dto.DtoEventLadder;
-import com.sporticus.services.dto.DtoUser;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
 import com.sporticus.web.controllers.ControllerAbstract;
@@ -23,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
 
 // Challenge functions
 // We have CRUD operations for the challenges (events)
@@ -104,14 +98,15 @@ public class RestControllerLadderChallenge extends ControllerAbstract {
     }
 
     /**
-     * Function to update a ladder challenge - only challenger or challenged can perform this operation
+     * Function to delete a ladder challenge
+     * TODO: only challenger or challenged can perform this operation
      *
      * @param ladderId
      * @param eventId
      * @return ResponseEntity<DtoUser>
      */
     @RequestMapping(value = "/{ladderId}/{eventId}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> cancel(@PathVariable("ladderId") final long ladderId,
+    public ResponseEntity<?> delete(@PathVariable("ladderId") final long ladderId,
                                     @PathVariable("eventId") final long eventId) {
         try{
             serviceLadder.deleteLadderChallenge(eventId);
