@@ -1,0 +1,47 @@
+<br/>
+<div>
+  <button type="button" class="btn button-primary" (click)="openModal()">
+    <span class="hpe-icon hpe-deployment" aria-hidden="true"></span>&nbsp;Add Organisation
+  </button>
+</div>
+
+<br/>
+
+<div class="user__list" *ngIf="!orgs || !orgs.length">
+  <p>No Organisations</p>
+</div>
+
+<div class="user__list" *ngIf="orgs.length">
+  <table class="table table-hover">
+    <thead>
+    <tr class="table-header-dark">
+      <th>Id</th>
+      <th>Name</th>
+      <th>Created</th>
+      <th>Address</th>
+      <th>Domain</th>
+      <th></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="hover-action-container" *ngFor="let item of orgs" uxHoverActionContainer>
+      <td class="text-black">{{ item.id }}</td>
+      <td class="text-black">{{ item.name }}</td>
+      <td>{{ item.createdString }}</td>
+      <td>{{ item.address }}</td>
+      <td>{{ item.domain }}</td>
+      <td>
+        <ux-spark theme="chart2" [value]="item.id" [inlineLabel]="item.id"
+                  barHeight="3"></ux-spark>
+      </td>
+      <td>
+        <i class="hpe-icon hpe-view hover-action-icon" (click)="view(item.id)" tooltip="View" uxHoverAction></i>
+        <i class="hpe-icon hpe-trash hover-action-icon" (click)="openDeleteDialog(item)" tooltip="Delete"
+           uxHoverAction></i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

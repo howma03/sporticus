@@ -1,0 +1,58 @@
+<div class="marquee-modal-window">
+  <div class="side-panel">
+    <div class="marquee-logo">
+      <i class="hpe-icon hpe-user hpe-5x text-secondary" aria-hidden="true"></i>
+      <!-- <div class="person-icon" ></div> -->
+    </div>
+
+    <div class="marquee-info-panel">
+      <h3 class="title">User Details</h3>
+      <p class="description">{{creationDescription}}</p>
+    </div>
+  </div>
+
+  <div class="main-panel">
+
+    <div class="marquee-header">
+      <h1 class="marquee-title">User</h1>
+    </div>
+
+    <div class="marquee-body case-modal">
+      <div class="row">
+        <div class="col-sm-9">
+
+          <form #userForm="ngForm" (ngSubmit)="makeUserChange()">
+
+            <div class="form-group">
+              <label class="form-label case-label">First Name *</label>
+              <input
+                type="text" placeholder="Enter First Name" class="form-control" name="firstName"
+                [(ngModel)]="details.firstName"/>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label case-label">Last Name</label>
+              <input type="text" placeholder="Enter Last Name" class="form-control" name="lastName"
+                     [(ngModel)]="details.lastName"/>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label case-label">Email</label>
+              <input type="text" placeholder="Enter Email" class="form-control" name="email"
+                     [(ngModel)]="details.email" required/>
+            </div>
+
+            <div class="marquee-footer">
+              <button type="button" style="width: 80px" class="btn button-primary m-r-xs" type="submit">{{submitText}}
+              </button>
+              <button type="button" style="width: 80px;" class="btn button-secondary" (click)="cancel()">Cancel</button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
