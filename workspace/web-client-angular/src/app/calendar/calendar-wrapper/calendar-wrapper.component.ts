@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import { CalendarComponent } from 'ng-fullcalendar';
-import { Options } from 'fullcalendar';
-import {EventService, Event} from '../../services/event.service';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {CalendarComponent} from 'ng-fullcalendar';
+import {Options} from 'fullcalendar';
+import {Event, EventService} from '../../services/event.service';
 
 const dateObj = new Date();
 const yearMonth = dateObj.getUTCFullYear() + '-' + (dateObj.getUTCMonth() + 1);
@@ -13,7 +13,8 @@ const yearMonth = dateObj.getUTCFullYear() + '-' + (dateObj.getUTCMonth() + 1);
   encapsulation: ViewEncapsulation.None
 })
 export class CalendarWrapperComponent implements OnInit {
-  private calendarOptions: Options;
+
+  calendarOptions: Options;
 
   public events: Event[] = [];
 
