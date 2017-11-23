@@ -2,16 +2,15 @@ package com.sporticus.services.dto;
 
 
 import com.sporticus.domain.interfaces.IEvent;
-import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.util.Utility;
 
 import java.util.Date;
 
 public class DtoEvent implements IEvent {
 
+    private Long id;
     private final Date created = new Date();
     private String createdString = "";
-    private Long id;
     private Date dateTime = new Date();
     private String dateTimeString = "";
     private String name;
