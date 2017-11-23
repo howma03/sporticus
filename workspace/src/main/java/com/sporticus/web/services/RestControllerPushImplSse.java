@@ -22,12 +22,15 @@ public class RestControllerPushImplSse extends ControllerAbstract {
 
 	@GetMapping("/api/notification/feed")
 	public ResponseEntity<SseEmitter> getResults() {
+
 		LOGGER.debug(() -> "Client requested feed");
+
 		final Long fLoggedInUserId = getLoggedInUserId();
 		SseEmitter emitter = sseEngine.getEmitters().get(fLoggedInUserId);
 		if (emitter == null) {
 			LOGGER.debug(() -> "Creating new emitter");
 			SseEmitter fEmitter = emitter = new SseEmitter();
+
 			emitter.onCompletion(() -> {
 				LOGGER.debug(() -> "Emitter completed");
 				sseEngine.getEmitters().remove(fLoggedInUserId);
