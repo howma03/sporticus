@@ -39,15 +39,23 @@ export class CalendarWrapperComponent implements OnInit {
             center: 'title',
             right: 'month,agendaWeek,agendaDay,listMonth'
           },
+          dayClick: (moment) => this.dayClick(moment),
           events: calenderEvents
         };
       });
   }
 
   clickButton(model: any) {
-    alert('clickButton');
+    console.log('clickButton');
     // this.displayEvent = model;
   }
+
+  dayClick(moment: any) {
+    alert('dayClick on ' + moment._d);
+    debugger;
+    // this.displayEvent = model;
+  }
+
   eventClick(model: any) {
     alert('eventClick');
     // model = {
