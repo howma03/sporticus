@@ -61,11 +61,7 @@ public class RestControllerPushImplSse extends ControllerAbstract {
 		new Thread(() -> {
 			try {
 				Thread.sleep(1000 * 10);
-				LOGGER.debug(() -> "Sending SSE Notifications ..");
-				for (int i = 10; i > 0; i--) {
-					LOGGER.debug(() -> "\tSending SSE Notifications");
-					emitter.send("Hello  " + i);
-				}
+					emitter.send("Hello");
 				emitter.complete();
 			} catch (IOException | InterruptedException ex) {
 				LOGGER.warn(() -> "Failed to push notification", ex);

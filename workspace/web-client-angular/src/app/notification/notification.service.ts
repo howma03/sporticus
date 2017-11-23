@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
 import {List} from "../services/list";
+import {PushService} from "../services/push.service";
 
 @Injectable()
 export class NotificationService {
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient
+  ) {
   }
 
   url = '/api/notification';
