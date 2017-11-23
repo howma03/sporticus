@@ -164,32 +164,138 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 	}
 
 
-	/**
-	 * Function gets all DtoEventLadder for a given ladder
-	 *
-	 * @param ladderId
-	 * @return
-	 */
-	private Events getEvents(long ladderId) {
+	@Override
+	public IEvent createLadderChallenge(Long ladderId, DtoEventLadder event)
+			throws ServiceLadderExceptionNotAllowed,
+			ServiceLadderExceptionNotFound {
 
-		Events events = new Events();
+		if (event.getDateTime() == null) {
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DAY_OF_YEAR, 7);
+			Date dateTime = cal.getTime();
+			event.setDateTime(dateTime);
+		} else if (event.getDateTime().before(new Date())) {
+			throw new ServiceLadderExceptionNotAllowed("DateTime of event cannot be in the past");
+		}
 
-		List<IRelationship> relationshipLadderToEvent = serviceRelationship.findBySourceTypeAndSourceIdAndType(
-				GroupType.LADDER.toString(),
-				ladderId,
-				RelationshipType.CHALLENGE.toString());
+		// TODO: validate the inputs
+		// TODO: We should ensure that there is not already an 'open' challenge between the 2 players
 
-		relationshipLadderToEvent.stream().forEach(er -> {
-			Long eventId = er.getDestinationId();
-			IEvent event = serviceEvent.findOne(eventId);
-			if (event == null) {
-				LOGGER.warn(() -> "Failed to locate event - id=" + er.getDestinationId());
-				return;
+		// for each each locate the players (users) relationships - once will be the challenger, one will be the challenged
+		// filter the events - only those relating to the user should be included
+
+		// finally step through group member's decorating them with meta data where necessary
+		// - simply append the event to the groupMember and the player data to the event data
+
+		Long challengerId = event.getChallengerId();
+		Long challengedId = event.getChallengedId();
+
+		Events events = this.getEvents(ladderId).findActiveChallengesBetween(challengerId, challengedId);
+		if (events.size() > 0) {
+			throw new ServiceLadderExceptionNotAllowed("There is an open challenge between those players for the ladder");
+		}
+
+		IGroup ladder = readLadderGroup(ladderId);
+
+		if (!isLadderMemberActive(ladderId, challengedId)) {
+			String message = "Challenged player is not an active member of the ladder - ladderId=" + ladderId;
+			LOGGER.warn(() -> message);
+			throw new ServiceLadderExceptionNotAllowed(message);
+		}
+
+		IUser challenger = serviceUser.findOne(challengerId);
+		if (challenger == null) {
+			String message = "Cannot find challenger - id=" + challengerId;
+			LOGGER.warn(() -> message);
+			throw new ServiceLadderExceptionNotFound(message);
+		}
+		IUser challenged = serviceUser.findOne(challengedId);
+		if (challenged == null) {
+			String message = "Cannot find challenged user - id=" + challengedId;
+			LOGGER.warn(() -> message);
+			throw new ServiceLadderExceptionNotFound(message);
+		}
+
+		// Create the event
+
+		IRelationship rLadder = null;
+		IRelationship r1 = null;
+		IRelationship r2 = null;
+		try {
+			// We set the initial date/time for the challenge a week in the future
+			// this can be modified by either challenger/challenged
+
+			IEvent newEvent = new Event(event);
+
+			newEvent.setDescription(String.format("Ladder challenge - challenger (%s) challenged (%s)",
+					challenger.getFormattedFirstName() + " " + challenger.getFormattedLastName(),
+					challenged.getFormattedFirstName() + " " + challenged.getFormattedLastName()));
+			newEvent.setName("Ladder challenge");
+			newEvent.setOwnerId(challengerId);
+			newEvent.setType(EventType.CHALLENGE.toString());
+
+			event = new DtoEventLadder(serviceEvent.create(newEvent, null));
+
+			// We now create the relationship - users & event
+			// link the two players to the event using relationships
+			// Ladder >-(r0)-> Event
+			// Challenger >-(r1)-> Event
+			// Event >-(r2)->Challenged
+
+			rLadder = new Relationship();
+			{
+				rLadder.setBiDirectional(false);
+				rLadder.setType(RelationshipType.CHALLENGE.toString());
+				rLadder.setSourceType("Ladder");
+				rLadder.setSourceId(ladderId);
+				rLadder.setDestinationType("Event");
+				rLadder.setDestinationId(event.getId());
 			}
-			events.add(getEvent(event));
-		});
 
-		return events;
+			r1 = new Relationship();
+			{
+				r1.setBiDirectional(false);
+				r1.setType(RelationshipType.CHALLENGE.toString());
+				r1.setSourceType("User");
+				r1.setSourceId(challengerId);
+				r1.setDestinationType("Event");
+				r1.setDestinationId(event.getId());
+			}
+
+			r2 = new Relationship();
+			{
+				r2.setBiDirectional(false);
+				r2.setType(RelationshipType.CHALLENGE.toString());
+				r2.setSourceType("Event");
+				r2.setSourceId(event.getId());
+				r2.setDestinationType("User");
+				r2.setDestinationId(challengedId);
+			}
+
+			// TODO - make these transactional
+
+			serviceRelationship.create(rLadder);
+			serviceRelationship.create(r1);
+			serviceRelationship.create(r2);
+
+		} catch (Exception ex) {
+
+			LOGGER.warn(() -> "Rollback: remove the event and the relationships", ex);
+
+			if (r2 != null) {
+				serviceRelationship.delete(r2.getId());
+			}
+			if (r1 != null) {
+				serviceRelationship.delete(r1.getId());
+			}
+			if (rLadder != null) {
+				serviceRelationship.delete(rLadder.getId());
+			}
+			if (event != null) {
+				serviceEvent.delete(event.getId(), null);
+			}
+		}
+		return event;
 	}
 
 	/**
@@ -343,139 +449,32 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 	// Ladder Challenge Functions (CRUD)
 
-	@Override
-	public IEvent createLadderChallenge(Long ladderId, DtoEventLadder event)
-			throws ServiceLadderExceptionNotAllowed,
-				ServiceLadderExceptionNotFound {
+	/**
+	 * Function gets all DtoEventLadder for a given ladder
+	 *
+	 * @param ladderId
+	 * @return Events
+	 */
+	private Events getEvents(long ladderId) {
 
-		if(event.getDateTime()==null) {
-			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.DAY_OF_YEAR, 7);
-			Date dateTime = cal.getTime();
-			event.setDateTime(dateTime);
-		}
-		else if(event.getDateTime().before(new Date())){
-			throw new ServiceLadderExceptionNotAllowed("DateTime of event cannot be in the past");
-		}
+		Events events = new Events();
 
-		// TODO: validate the inputs
-		// TODO: We should ensure that there is not already an 'open' challenge between the 2 players
+		List<IRelationship> relationshipLadderToEvent = serviceRelationship.findBySourceTypeAndSourceIdAndType(
+				GroupType.LADDER.toString(),
+				ladderId,
+				RelationshipType.CHALLENGE.toString());
 
-		// for each each locate the players (users) relationships - once will be the challenger, one will be the challenged
-		// filter the events - only those relating to the user should be included
-
-		// finally step through group member's decorating them with meta data where necessary
-		// - simply append the event to the groupMember and the player data to the event data
-
-		Long challengerId = event.getChallengerId();
-		Long challengedId = event.getChallengedId();
-
-		Events events = this.getEvents(ladderId).findActiveChallengesBetween(challengerId,challengedId);
-		if(events.size()>0){
-			throw new ServiceLadderExceptionNotAllowed("There is an open challenge between those players for the ladder");
-		}
-
-		IGroup ladder = readLadderGroup(ladderId);
-
-		if (!isLadderMemberActive(ladderId, challengedId)) {
-			String message = "Challenged player is not an active member of the ladder - ladderId=" + ladderId;
-			LOGGER.warn(() -> message);
-			throw new ServiceLadderExceptionNotAllowed(message);
-		}
-
-		IUser challenger = serviceUser.findOne(challengerId);
-		if (challenger == null) {
-			String message = "Cannot find challenger - id=" + challengerId;
-			LOGGER.warn(() -> message);
-			throw new ServiceLadderExceptionNotFound(message);
-		}
-		IUser challenged = serviceUser.findOne(challengedId);
-		if (challenged == null) {
-			String message = "Cannot find challenged user - id=" + challengedId;
-			LOGGER.warn(() -> message);
-			throw new ServiceLadderExceptionNotFound(message);
-		}
-
-		// Create the event
-
-		IRelationship rLadder = null;
-		IRelationship r1 = null;
-		IRelationship r2 = null;
-		try {
-			// We set the initial date/time for the challenge a week in the future
-			// this can be modified by either challenger/challenged
-
-			IEvent newEvent = new Event(event);
-
-			newEvent.setDescription(String.format("Ladder challenge - challenger (%s) challenged (%s)",
-					challenger.getFormattedFirstName()+ " "+challenger.getFormattedLastName(),
-					challenged.getFormattedFirstName()+ " "+challenged.getFormattedLastName()));
-			newEvent.setName("Ladder challenge");
-			newEvent.setOwnerId(challengerId);
-			newEvent.setType(EventType.CHALLENGE.toString());
-
-			event = new DtoEventLadder(serviceEvent.create(newEvent));
-
-			// We now create the relationship - users & event
-			// link the two players to the event using relationships
-			// Ladder >-(r0)-> Event
-			// Challenger >-(r1)-> Event
-			// Event >-(r2)->Challenged
-
-			rLadder = new Relationship();
-			{
-				rLadder.setBiDirectional(false);
-				rLadder.setType(RelationshipType.CHALLENGE.toString());
-				rLadder.setSourceType("Ladder");
-				rLadder.setSourceId(ladderId);
-				rLadder.setDestinationType("Event");
-				rLadder.setDestinationId(event.getId());
+		relationshipLadderToEvent.stream().forEach(er -> {
+			Long eventId = er.getDestinationId();
+			IEvent event = serviceEvent.readEvent(eventId, null);
+			if (event == null) {
+				LOGGER.warn(() -> "Failed to locate event - id=" + er.getDestinationId());
+				return;
 			}
+			events.add(getEvent(event));
+		});
 
-			r1 = new Relationship();
-			{
-				r1.setBiDirectional(false);
-				r1.setType(RelationshipType.CHALLENGE.toString());
-				r1.setSourceType("User");
-				r1.setSourceId(challengerId);
-				r1.setDestinationType("Event");
-				r1.setDestinationId(event.getId());
-			}
-
-			r2 = new Relationship();
-			{
-				r2.setBiDirectional(false);
-				r2.setType(RelationshipType.CHALLENGE.toString());
-				r2.setSourceType("Event");
-				r2.setSourceId(event.getId());
-				r2.setDestinationType("User");
-				r2.setDestinationId(challengedId);
-			}
-
-			// TODO - make these transactional
-
-			serviceRelationship.create(rLadder);
-			serviceRelationship.create(r1);
-			serviceRelationship.create(r2);
-
-		} catch (Exception ex) {
-
-			LOGGER.warn(() -> "Rollback: remove the event and the relationships", ex);
-
-			if (r2 != null) {
-				serviceRelationship.delete(r2.getId());
-			}
-			if (r1 != null) {
-				serviceRelationship.delete(r1.getId());
-			}
-			if (rLadder != null) {
-				serviceRelationship.delete(rLadder.getId());
-			}
-			if (event != null) {
-				serviceEvent.delete(event.getId());
-			}
-		}
-		return event;
+		return events;
 	}
 
 	public List<IEvent> readLadderChallenges(long ladderId) {
@@ -486,7 +485,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 	@Override
 	public IEvent updateLadderChallenge(IUser actor, DtoEventLadder event) {
 
-		IEvent found = serviceEvent.findOne(event.getId());
+		IEvent found = serviceEvent.readEvent(event.getId(), actor);
 		if (found == null) {
 			throw new ServiceLadderExceptionNotFound("Ladder Challenge not found - id=" + event.getId());
 		}
@@ -508,13 +507,13 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 		// TODO: Update ladder order based on result
 
-		return new DtoEventLadder(serviceEvent.save(new Event(eventLadder)));
+		return new DtoEventLadder(serviceEvent.create(new Event(eventLadder), null));
 	}
 
 	@Override
 	public void deleteLadderChallenge(long event) {
 		// TODO: We need to delete relationships to/from event
 		// the event delete should tidy-up all relationships to the delete event
-		serviceEvent.delete(event);
+		serviceEvent.delete(event, null);
 	}
 }

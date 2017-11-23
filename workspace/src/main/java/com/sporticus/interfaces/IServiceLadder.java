@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface IServiceLadder {
 
-
 	final class ServiceLadderExceptionNotAllowed extends RuntimeException {
 		public ServiceLadderExceptionNotAllowed(String message) {
 			super(message);

@@ -7,6 +7,7 @@ import com.sporticus.domain.interfaces.IRelationship;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryEvent;
 import com.sporticus.interfaces.IServiceEvent;
+import com.sporticus.interfaces.IServiceNotification.ServiceNotificationExceptionNotAllowed;
 import com.sporticus.interfaces.IServiceRelationship;
 import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.util.logging.LogFactory;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ServiceEventImplRepository  implements IServiceEvent {
+public class ServiceEventImplRepository implements IServiceEvent {
 
 	private static final Logger LOGGER = LogFactory.getLogger(ServiceEventImplRepository.class.getName());
 
@@ -38,34 +39,35 @@ public class ServiceEventImplRepository  implements IServiceEvent {
 	}
 
 	@Override
-	public IEvent create(IEvent event) {
+	public IEvent create(IEvent event, IUser actor) {
 		return repositoryEvent.save((Event)event);
 	}
 
-	@Override
-	public IEvent findOne(Long id) {
-		return repositoryEvent.findOne(id);
-	}
 
-	@Override
 	public List<IEvent> findByOwnerId(Long userId) {
 		return repositoryEvent.findByOwnerId(userId);
 	}
 
 	@Override
-	public List<IEvent> getAgenda(Long actorUserId) {
-		// Find all relationships from/to user and Event
-		List<IEvent> events = new ArrayList<>();
-		{
-			List<IRelationship> relationshipsSource = serviceRelationship.findBySourceTypeAndSourceIdAndDestinationType("User", actorUserId, "Event");
-
-			events.addAll(relationshipsSource.stream().map(r -> findOne(r.getDestinationId())).collect(Collectors.toList()));
+	public void delete(Long eventId, IUser actor) {
+		if (eventId != null) {
+			this.delete(repositoryEvent.findOne(eventId), actor);
 		}
-		{
-			List<IRelationship> relationshipsDestination = serviceRelationship.findBySourceTypeAndDestinationTypeAndDestinationId("Event", "User", actorUserId);
+	}
 
-			events.addAll(relationshipsDestination.stream().map(r -> findOne(r.getSourceId())).collect(Collectors.toList()));
-		}
+	@Override
+	public void delete(IEvent event, IUser actor) {
+		serviceRelationship.findBySourceTypeAndSourceId("Event", event.getId())
+				.stream().forEach(r -> serviceRelationship.delete(r.getId()));
+		serviceRelationship.findByDestinationTypeAndDestinationId("Event", event.getId())
+				.stream().forEach(r -> serviceRelationship.delete(r.getId()));
+		repositoryEvent.delete(event.getId());
+	}
+
+	@Override
+	public List<IEvent> getAgenda(Long userId, IUser actor) {
+
+		List<IEvent> events = this.readAll(userId, null);
 
 		Date now = new Date();
 		return events.stream()
@@ -77,28 +79,38 @@ public class ServiceEventImplRepository  implements IServiceEvent {
 	}
 
 	@Override
-	public IEvent readEvent(long id, IUser actorUser) {
-		// TODO: limit the response - only if the user owns the event or is related to it
-		return repositoryEvent.findOne(id);
-	}
+	public List<IEvent> readAll(Long userId, IUser actor) {
+		List<IEvent> events = new ArrayList<>();
+		{
+			List<IRelationship> relationshipsSource = serviceRelationship.findBySourceTypeAndSourceIdAndDestinationType("User", userId, "Event");
 
-	@Override
-	public IEvent save(IEvent event) {
-		return repositoryEvent.save((Event)event);
-	}
-
-	@Override
-	public void delete(Long eventId) {
-		if (eventId != null) {
-			repositoryEvent.delete(eventId);
+			events.addAll(relationshipsSource.stream().map(r -> readEvent(r.getDestinationId(), actor)).collect(Collectors.toList()));
 		}
+		{
+			List<IRelationship> relationshipsDestination = serviceRelationship.findBySourceTypeAndDestinationTypeAndDestinationId("Event", "User", userId);
+
+			events.addAll(relationshipsDestination.stream().map(r -> readEvent(r.getSourceId(), actor)).collect(Collectors.toList()));
+		}
+
+		return events.stream()
+				.filter(e -> e != null)
+				.filter(e -> e.getDateTime() != null)
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public void delete(IEvent event) {
-		serviceRelationship.findBySourceTypeAndSourceId("Event", event.getId())
-				.stream().forEach(r->serviceRelationship.delete(r.getId()));
-		serviceRelationship.findByDestinationTypeAndDestinationId("Event", event.getId())
-				.stream().forEach(r->serviceRelationship.delete(r.getId()));
+	public IEvent readEvent(long id, IUser actorUser) throws ServiceEventExceptionNotFound,
+			ServiceNotificationExceptionNotAllowed {
+		// TODO: limit the response - only if the user owns the event or is related to it
+		IEvent found = repositoryEvent.findOne(id);
+		if (found != null) {
+			return found;
+		}
+		throw new ServiceEventExceptionNotFound("Event not found - id=" + id);
+	}
+
+	@Override
+	public IEvent update(IEvent event, IUser actor) {
+		return repositoryEvent.save((Event)event);
 	}
 }
