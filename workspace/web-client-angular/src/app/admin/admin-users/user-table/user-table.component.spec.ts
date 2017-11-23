@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { UserTableComponent } from './user-table.component';
+import {UserTableComponent} from './user-table.component';
 
 describe('UserTableComponent', () => {
   let component: UserTableComponent;

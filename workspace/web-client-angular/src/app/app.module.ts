@@ -11,7 +11,7 @@ import {RegistrationModule} from "./registration/registration.module";
 import {AuthInterceptor} from "./login/auth.interceptor";
 import {NgxCarouselModule} from "ngx-carousel";
 import 'hammerjs';
-import {ManageModule} from "./manage/manage.module";
+import {AdminModule} from "./admin/admin.module";
 import {LadderModule} from "./ladder/ladder.module";
 import {OrganisationModule} from "./organisation/organisation.module";
 import {NotificationModule} from "./notification/notification.module";
@@ -30,7 +30,7 @@ import {CalendarModule} from "./calendar/calendar.module";
     LoginModule,
     MainModule,
     LandingModule,
-    ManageModule,
+    AdminModule,
     LadderModule,
     OrganisationModule,
     NotificationModule,

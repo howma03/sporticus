@@ -2,16 +2,14 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MainComponent} from './main/main.component';
 import {HomeModule} from "../home/home.module";
-import {ManageSportsModule} from "../manage-sports/manage-sports.module";
-import {ManageTeamsModule} from "../manage-teams/manage-teams.module";
 import {TrackCompetitionsModule} from "../track-competitions/track-competitions.module";
-import {ManageCompetitionsModule} from "../manage-competitions/manage-competitions.module";
 import {MainRoutingModule} from "./main-routing.module";
 import {ColorServiceModule, DashboardModule, PageHeaderModule, SparkModule} from "@ux-aspects/ux-aspects";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatDialogModule, MatGridListModule, MatTabsModule} from "@angular/material";
 import {ProfileModule} from "../profile/profile.module";
+import {AdminModule} from "../admin/admin.module";
 
 @NgModule({
   imports: [
@@ -27,10 +25,8 @@ import {ProfileModule} from "../profile/profile.module";
     MatGridListModule,
     PageHeaderModule,
     HomeModule,
-    ManageSportsModule,
-    ManageTeamsModule,
+    AdminModule,
     TrackCompetitionsModule,
-    ManageCompetitionsModule,
     ProfileModule,
 
     //Keep Routing Module at the bottom

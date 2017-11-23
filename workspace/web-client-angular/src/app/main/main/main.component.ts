@@ -27,11 +27,11 @@ export class MainComponent implements OnInit {
         children: [
           {
             title: 'Users',
-            select: () => this.router.navigate(['main/manage-users'])
+            select: () => this.router.navigate(['main/admin-users'])
           },
           {
             title: 'Organisations',
-            select: () => this.router.navigate(['main/manage-organisations'])
+            select: () => this.router.navigate(['main/admin-organisations'])
           }
         ]
       });
@@ -65,18 +65,6 @@ export class MainComponent implements OnInit {
       icon: 'hpe-analytics',
       title: 'Manage',
       children: [
-        {
-          title: 'Sports',
-          select: () => this.router.navigate(['main/manage-sports'])
-        },
-        {
-          title: 'Teams',
-          select: () => this.router.navigate(['main/manage-teams'])
-        },
-        {
-          title: 'Competitions',
-          select: () => this.router.navigate(['main/manage-competitions'])
-        }
       ]
     }
 
