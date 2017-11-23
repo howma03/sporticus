@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-manage-main',
@@ -8,20 +7,20 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class ManageMainComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute) {
+  constructor() {
   }
 
   ngOnInit() {
-    this.route.data.subscribe(data => {
-      this.initData(data['selectedIndex']);
-    });
   }
 
-  selectedIndex = 0;
-
-
-  initData(selectedIndex) {
-    this.selectedIndex = selectedIndex;
-  }
-
+  navLinks = [{
+    path: 'organisation',
+    label: 'Organisation'
+  }, {
+    path: 'members',
+    label: 'Members'
+  }, {
+    path: 'competitions',
+    label: 'Competitions'
+  }];
 }

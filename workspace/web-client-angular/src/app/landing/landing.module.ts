@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {LandingComponent} from './landing/landing.component';
 import {HeaderComponent} from './header/header.component';
-import {FooterComponent} from './footer/footer.component';
 import {ColorServiceModule, DashboardModule, EboxModule, PageHeaderModule, SparkModule} from "@ux-aspects/ux-aspects";
 import {LandingRoutingModule} from "./landing-routing.module";
 import {AboutComponent} from './about/about.component';
@@ -15,11 +14,15 @@ import {LegalDisclosurePolicyComponent} from './legal-disclosure-policy/legal-di
 import {InitialComponent} from './initial/initial.component';
 import {NgxCarouselModule} from "ngx-carousel";
 import {PricesComponent} from './prices/prices.component';
+import {LoginModule} from "../login/login.module";
+import {RegistrationModule} from "../registration/registration.module";
 
 @NgModule({
   imports: [
-    NgxCarouselModule,
+    LoginModule,
+    RegistrationModule,
     CommonModule,
+    NgxCarouselModule,
     EboxModule,
     ColorServiceModule,
     DashboardModule,
@@ -27,7 +30,7 @@ import {PricesComponent} from './prices/prices.component';
     SparkModule,
     LandingRoutingModule
   ],
-  exports: [FooterComponent],
-  declarations: [LandingComponent, HeaderComponent, FooterComponent, AboutComponent, LegalComponent, ContactComponent, ClubsComponent, HelpComponent, OverviewComponent, LegalDisclosurePolicyComponent, InitialComponent, PricesComponent ]
+  exports: [],
+  declarations: [LandingComponent, HeaderComponent, AboutComponent, LegalComponent, ContactComponent, ClubsComponent, HelpComponent, OverviewComponent, LegalDisclosurePolicyComponent, InitialComponent, PricesComponent]
 })
 export class LandingModule { }

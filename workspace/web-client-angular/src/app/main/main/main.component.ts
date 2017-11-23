@@ -27,11 +27,11 @@ export class MainComponent implements OnInit {
         children: [
           {
             title: 'Users',
-            select: () => this.router.navigate(['main/admin-users'])
+            select: () => this.router.navigate(['main/admin/users'])
           },
           {
             title: 'Organisations',
-            select: () => this.router.navigate(['main/admin-organisations'])
+            select: () => this.router.navigate(['main/admin/organisations'])
           }
         ]
       });
@@ -67,16 +67,17 @@ export class MainComponent implements OnInit {
       children: [
         {
           title: 'Organisation',
-          select: () => this.router.navigate(['main/manage-organisation'])
+          select: () => this.router.navigate(['main/manage/organisation'])
         },
         {
           title: 'Members',
-          select: () => this.router.navigate(['main/manage-members'])
+          select: () => this.router.navigate(['main/manage/members'])
         },
         {
           title: 'Competitions',
-          select: () => this.router.navigate(['main/manage-competition'])
+          select: () => this.router.navigate(['main/manage/competitions'])
         }
+
       ]
     }
 

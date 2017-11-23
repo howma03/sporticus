@@ -15,9 +15,10 @@ import {PricesComponent} from "./prices/prices.component";
 
 const landingRoutes: Routes = [
   {
-    path: 'landing',
+    path: '',
     component: LandingComponent,
     children: [
+      {path: '', component: InitialComponent},
       {path: 'login', component: LoginComponent},
       {path: 'resetpassword/:email', component: ResetPasswordComponent},
       {path: 'register', component: RegisterComponent},
@@ -29,15 +30,13 @@ const landingRoutes: Routes = [
       {path: 'legal', component: LegalComponent},
       {path: 'legal/disclosure_policy', component: LegalDisclosurePolicyComponent},
       {path: 'contact', component: ContactComponent},
-      {path: '', component: InitialComponent},
-      {path: '**', redirectTo: '/landing/about'}
+      {path: '**', redirectTo: 'about'}
     ]
   }
 ];
 
 @NgModule({
   imports: [
-
     RouterModule.forChild(
       landingRoutes
     )

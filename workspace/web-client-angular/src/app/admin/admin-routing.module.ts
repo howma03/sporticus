@@ -1,18 +1,35 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AdminMainComponent} from "./admin-main/admin-main.component";
+import {UserTableComponent} from "./admin-users/user-table/user-table.component";
+import {OrganisationTableComponent} from "./admin-organisations/organisation-table/organisation-table.component";
 
-const manageRoutes: Routes = [
+const adminRoutes: Routes = [
   {
-    path: 'admin/main',
+    path: '',
     component: AdminMainComponent,
+    children: [
+      {
+        path: 'users',
+        component: UserTableComponent,
+      },
+      {
+        path: 'organisations',
+        component: OrganisationTableComponent
+      },
+      {
+        path: '',
+        redirectTo: 'users',
+        pathMatch: 'full'
+      }
+    ]
   }
 ];
 
 @NgModule({
   imports: [
     RouterModule.forChild(
-      manageRoutes
+      adminRoutes
     )
   ],
   exports: [

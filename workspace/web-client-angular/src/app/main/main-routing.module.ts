@@ -4,69 +4,37 @@ import {HomeComponent} from "../home/home/home.component";
 import {TrackCompetitionsComponent} from "../track-competitions/track-competitions/track-competitions.component";
 import {MainComponent} from "./main/main.component";
 import {AuthGuard} from "../login/auth.guard";
-import {AdminMainComponent} from "../admin/admin-main/admin-main.component";
 import {CalendarWrapperComponent} from "../calendar/calendar-wrapper/calendar-wrapper.component";
-import {ManageMainComponent} from "../organisation/manage/manage-main/manage-main.component";
+import {ManageModule} from "../organisation/manage/manage.module";
+import {AdminModule} from "../admin/admin.module";
 
 const mainRoutes: Routes = [
   {
-    path: 'main',
+    path: '',
     component: MainComponent,
     canActivate: [AuthGuard],
     children: [
+      {path: '', redirectTo: 'home'},
       {path: 'home', component: HomeComponent},
-      {path: 'admin', redirectTo: 'admin-users'},
       {
-        path: 'admin-users',
-        component: AdminMainComponent,
-        data: {
-          selectedIndex: 0
-        }
+        path: 'admin',
+        loadChildren: () => AdminModule
       },
       {
-        path: 'admin-organisations',
-        component: AdminMainComponent,
-        data: {
-          selectedIndex: 1
-        }
+        path: 'manage',
+        loadChildren: () => ManageModule
       },
-
-      {path: 'manage', redirectTo: 'manage-organisation'},
-      {
-        path: 'manage-organisation',
-        component: ManageMainComponent,
-        data: {
-          selectedIndex: 0
-        }
-      },
-      {
-        path: 'manage-members',
-        component: ManageMainComponent,
-        data: {
-          selectedIndex: 1
-        }
-      },
-      {
-        path: 'manage-competition',
-        component: ManageMainComponent,
-        data: {
-          selectedIndex: 2
-        }
-      },
-
       {path: 'track-competitions', component: TrackCompetitionsComponent},
       {path: 'calendar', component: CalendarWrapperComponent},
-      {path: '', redirectTo: '/main/home', pathMatch: 'full'},
-      {path: '**', redirectTo: '/main/home', pathMatch: 'full'}
+      {path: '**', redirectTo: 'home'}
     ]
   }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(
-      mainRoutes,
-      {enableTracing: true} // <-- debugging purposes only
+    RouterModule.forChild(
+      mainRoutes
     )
   ],
   exports: [

@@ -6,16 +6,14 @@ import {TrackCompetitionsModule} from "../track-competitions/track-competitions.
 import {MainRoutingModule} from "./main-routing.module";
 import {ColorServiceModule, DashboardModule, PageHeaderModule, SparkModule} from "@ux-aspects/ux-aspects";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatDialogModule, MatGridListModule, MatTabsModule} from "@angular/material";
 import {ProfileModule} from "../profile/profile.module";
-import {AdminModule} from "../admin/admin.module";
+import {CalendarModule} from "../calendar/calendar.module"
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    BrowserAnimationsModule,
     ReactiveFormsModule,
     DashboardModule,
     ColorServiceModule,
@@ -25,9 +23,9 @@ import {AdminModule} from "../admin/admin.module";
     MatGridListModule,
     PageHeaderModule,
     HomeModule,
-    AdminModule,
     TrackCompetitionsModule,
     ProfileModule,
+    CalendarModule,
 
     //Keep Routing Module at the bottom
     MainRoutingModule

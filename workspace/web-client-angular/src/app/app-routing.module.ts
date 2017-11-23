@@ -1,7 +1,13 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {MainModule} from "./main/main.module";
+import {LandingModule} from "./landing/landing.module";
 
 const appRoutes: Routes = [
+  {
+    path: '', redirectTo: 'main',
+    pathMatch: 'full'
+  },
   {
     path: 'login',
     redirectTo: 'landing/login'
@@ -15,12 +21,16 @@ const appRoutes: Routes = [
     redirectTo: 'landing/resetpassword/:email'
   },
   {
-    path: 'manage',
-    redirectTo: 'main/manage'
+    path: 'landing',
+    loadChildren: () => LandingModule
   },
-  {path: '', redirectTo: '/main/home', pathMatch: 'full'},
-  //{path: '**', redirectTo: '/main/home'}
+  {
+    path: 'main',
+    loadChildren: () => MainModule
+  },
+  {path: '**', redirectTo: 'main'}
 ];
+
 
 @NgModule({
   imports: [

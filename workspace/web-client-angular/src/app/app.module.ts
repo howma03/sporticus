@@ -5,36 +5,30 @@ import {AppComponent} from './app.component';
 import {LoginModule} from "./login/login.module";
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from "./app-routing.module";
-import {MainModule} from "./main/main.module";
-import {LandingModule} from "./landing/landing.module";
 import {RegistrationModule} from "./registration/registration.module";
 import {AuthInterceptor} from "./login/auth.interceptor";
 import {NgxCarouselModule} from "ngx-carousel";
 import 'hammerjs';
-import {AdminModule} from "./admin/admin.module";
 import {LadderModule} from "./ladder/ladder.module";
 import {OrganisationModule} from "./organisation/organisation.module";
 import {NotificationModule} from "./notification/notification.module";
-import {CalendarModule} from "./calendar/calendar.module";
-import {ManageModule} from "./organisation/manage/manage.module";
+import {FooterComponent} from "./footer/footer.component";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    FooterComponent
   ],
   imports: [
-    NgxCarouselModule,
     BrowserModule,
-    CalendarModule,
+    BrowserAnimationsModule,
+    NgxCarouselModule,
     RegistrationModule,
     HttpClientModule,
     LoginModule,
-    MainModule,
-    LandingModule,
-    AdminModule,
     LadderModule,
     OrganisationModule,
-    ManageModule,
     NotificationModule,
     // Keep routing module last!
     AppRoutingModule
