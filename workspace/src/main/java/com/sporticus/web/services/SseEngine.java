@@ -26,6 +26,11 @@ public class SseEngine {
 		return emitters;
 	}
 
+	public SseEmitter getEmitterByUserId(long userId) {
+		SseEmitter sseEmitter = emitters.get(userId);
+		return sseEmitter;
+	}
+
 	public long getTimeout() {
 		return TIMEOUT;
 	}

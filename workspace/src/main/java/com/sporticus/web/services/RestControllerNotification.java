@@ -56,6 +56,7 @@ public class RestControllerNotification extends ControllerAbstract {
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoNotification> create(@RequestBody final DtoNotification notification) {
         LOGGER.debug(() -> "Creating Notification " + notification.getTitle());
+        RestControllerPushImplSse.sendEventToOne(this.getLoggedInUserId(), notification);
         return new ResponseEntity<>(new DtoNotification(serviceNotification.createNotification(notification)), HttpStatus.OK);
     }
 

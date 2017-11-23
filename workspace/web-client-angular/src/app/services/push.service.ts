@@ -22,7 +22,6 @@ export class PushService {
   eventSource;
 
   registerForEvents(): Observable<Object> {
-
     let observable = Observable.create(observer => {
       this.eventSource.onmessage = (data => {
         observer.next(data)
