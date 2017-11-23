@@ -43,4 +43,40 @@ export class CalendarWrapperComponent implements OnInit {
         };
       });
   }
+
+  clickButton(model: any) {
+    alert('clickButton');
+    // this.displayEvent = model;
+  }
+  eventClick(model: any) {
+    alert('eventClick');
+    // model = {
+    //   event: {
+    //     id: model.event.id,
+    //     start: model.event.start,
+    //     end: model.event.end,
+    //     title: model.event.title,
+    //     allDay: model.event.allDay
+    //     // other params
+    //   },
+    //   duration: {}
+    // }
+    // this.displayEvent = model;
+  }
+  updateEvent(model: any) {
+    alert('updateEvent');
+    // model = {
+    //   event: {
+    //     id: model.event.id,
+    //     start: model.event.start,
+    //     end: model.event.end,
+    //     title: model.event.title
+    //     // other params
+    //   },
+    //   duration: {
+    //     _data: model.duration._data
+    //   }
+    // }
+    // this.displayEvent = model;
+  }
 }
