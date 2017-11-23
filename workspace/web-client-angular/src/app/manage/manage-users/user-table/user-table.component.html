@@ -1,24 +1,44 @@
-
-<div class="example-container mat-elevation-z8">
-  <mat-table #table [dataSource]="dataSource">
-
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
-
-    <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
-      <!-- note that "'of' expected" error reported by intellij is due to https://youtrack.jetbrains.com/issue/WEB-26939 -->
-    </ng-container>
-
-    <ng-container matColumnDef="email">
-      <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
-      <!-- note that "'of' expected" error reported by intellij is due to https://youtrack.jetbrains.com/issue/WEB-26939 -->
-    </ng-container>
-
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-
-  </mat-table>
+<br/>
+<div>
+  <button type="button" class="btn button-primary" (click)="openModal()">
+    <span class="hpe-icon hpe-deployment" aria-hidden="true"></span>&nbsp;Add User
+  </button>
 </div>
+
+<br/>
+
+<div class="user__list" *ngIf="!users || !users.length">
+  <p>No Users</p>
+</div>
+
+<div class="user__list" *ngIf="users.length">
+  <table class="table table-hover">
+    <thead>
+    <tr class="table-header-dark">
+      <th>Id</th>
+      <th>Name</th>
+      <th>Is Admin</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="hover-action-container" *ngFor="let item of users" uxHoverActionContainer>
+      <td class="text-black">{{ item.id }}</td>
+      <td class="text-black">{{ item.name }}</td>
+      <td>{{ item.admin }}</td>
+      <td>{{ item.firstName }}</td>
+      <td>{{ item.lastName }}</td>
+      <td>{{ item.email }}</td>
+      <td>
+        <i class="hpe-icon hpe-view hover-action-icon" (click)="view(item.id)" tooltip="View" uxHoverAction></i>
+        <i class="hpe-icon hpe-trash hover-action-icon" (click)="openDeleteDialog(item)" tooltip="Delete"
+           uxHoverAction></i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

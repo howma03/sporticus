@@ -5,32 +5,28 @@
 
   <ux-ebox>
     <ux-ebox-header>
-      <h3>Registration</h3>
+      <h3>Sign-Up</h3>
     </ux-ebox-header>
 
     <ux-ebox-content>
       <form (ngSubmit)="doRegister()" #registerForm="ngForm">
-        Create a new user<br/><br/>
+        Please provide your details below<br/><br/>
 
         <mat-form-field>
-          <input matInput #userName placeholder="Username" name="userName"
-               [(ngModel)]="registrationDetails.userName"/>
-        </mat-form-field>
-          <br/>
-          <mat-form-field>
             <input matInput #name placeholder="First Name" name="firstName"
                    [(ngModel)]="registrationDetails.firstName"/>
-          </mat-form-field>
+        </mat-form-field>
+
         <mat-form-field>
-        <input matInput #name placeholder="Surname" name="surname"
-               [(ngModel)]="registrationDetails.surname"/>
+          <input matInput #name placeholder="Last Name" name="lastName"
+                 [(ngModel)]="registrationDetails.lastName" autocomplete="off"/>
         </mat-form-field>
           <br/>
         <mat-form-field>
           <input matInput #email type="email" placeholder="Email" name="email"
                  ngModel email="true"
                  required
-                 [(ngModel)]="registrationDetails.email"/>
+                 [(ngModel)]="registrationDetails.email" autocomplete="off"/>
         </mat-form-field>
           <br/>
           <mat-form-field>
@@ -47,7 +43,6 @@
           </button>
       </form>
     </ux-ebox-content>
-
   </ux-ebox>
   </div>
 </main>

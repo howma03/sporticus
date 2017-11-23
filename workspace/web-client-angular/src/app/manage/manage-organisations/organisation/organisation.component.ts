@@ -19,13 +19,13 @@ export class OrganisationComponent implements OnInit {
   ngOnInit() {
 
     if(this.data.item !== undefined) {
+
       this.organisationDetails.name = this.data.item.name;
       this.organisationDetails.address = this.data.item.address;
       this.organisationDetails.domain = this.data.item.domain;
       this.organisationDetails.urlFragment = this.data.item.urlFragment;
       this.organisationDetails.postcode = this.data.item.postcode;
       this.organisationDetails.id = this.data.item.id;
-
 
       this.editMode = true;
       this.submitText = "SAVE";

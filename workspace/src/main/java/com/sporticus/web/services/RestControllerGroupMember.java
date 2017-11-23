@@ -1,6 +1,5 @@
 package com.sporticus.web.services;
 
-import com.sporticus.domain.entities.Group;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.domain.interfaces.IUser;
@@ -78,7 +77,7 @@ public class RestControllerGroupMember extends ControllerAbstract {
      *
      * @return ResponseEntity<DtoGroupMembers>
      */
-    @RequestMapping (value = "/user/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoList<DtoGroupMember>> readAllGroupMembershipsForUser () {
         final Long userId = this.getLoggedInUserId ();
         return new ResponseEntity<> (convertToDtoGroupMembers (this.serviceGroup.getGroupMembershipsForUser (userId)), HttpStatus.OK);

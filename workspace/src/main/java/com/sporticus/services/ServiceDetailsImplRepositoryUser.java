@@ -1,6 +1,5 @@
 package com.sporticus.services;
 
-
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryUser;
 import com.sporticus.util.logging.LogFactory;
@@ -21,9 +20,9 @@ import java.util.Set;
 
 @Transactional
 @Service
-public class ServiceDetailsImpRepositoryUser implements org.springframework.security.core.userdetails.UserDetailsService {
+public class ServiceDetailsImplRepositoryUser implements org.springframework.security.core.userdetails.UserDetailsService {
 
-	private static final Logger LOGGER = LogFactory.getLogger(ServiceDetailsImpRepositoryUser.class.getName());
+	private static final Logger LOGGER = LogFactory.getLogger(ServiceDetailsImplRepositoryUser.class.getName());
 
 	@Autowired
 	private IRepositoryUser userRepository;

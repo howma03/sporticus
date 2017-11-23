@@ -1,42 +1,54 @@
-<div *ngIf="loading">Logging in...</div>
-<div *ngIf="!loading">
+<main class='md-padding' layout="row" flex>
 
-  <main class='md-padding' layout="row" flex>
+  <div *ngIf="loading">Logging in...</div>
+  <div *ngIf="!loading">
+
     <ux-ebox>
       <ux-ebox-header>
-        <h3>Login</h3>
+        <h3>Sign-In</h3>
       </ux-ebox-header>
 
       <ux-ebox-content>
         <form (ngSubmit)="doLogin()" #loginForm="ngForm">
           <p>Please provide your login credentials</p>
 
-          <input #email type="email" placeholder="Email" name="email"
-                 required
-                 [(ngModel)]="userDetails.email"
-                 (keyup.enter)="password.focus()"/><br/>
-          <input #password type="password" placeholder="Password" name="password"
-                 required
-                 [(ngModel)]="userDetails.password"
-                 (keyup.enter)="doLogin()"/><br/>
+          <mat-form-field>
+            <input matInput #email type="email" placeholder="Email" name="email"
+                   required
+                   [(ngModel)]="userDetails.email"
+                   (keyup.enter)="password.focus()"/>
+          </mat-form-field>
+
+          <br/>
+
+          <mat-form-field>
+            <input matInput #password type="password" placeholder="Password" name="password"
+                   required
+                   [(ngModel)]="userDetails.password"
+                   (keyup.enter)="doLogin()"/>
+          </mat-form-field>
+
+          <br/>
 
           <p *ngIf="tryAgain">Email or Password was invalid. Please try again.</p>
+
           <br/>
+
           <a (click)='gotoResetPassword(email.value)'>Forgotten your Password?</a><br/>
 
-          <button type="submit" [disabled]="!loginForm.form.valid" class="btn" style="width: 200px">
-            Login
+          <br/>
+
+          <button mat-raised-button type="submit" [disabled]="!loginForm.form.valid">
+            Sign-In
           </button>
 
-          <button class="btn" type="button" style="width: 200px"
+          <button mat-raised-button type="button"
                   (click)='gotoRegister()'>
-            Register
+            Sign-Up
           </button>
         </form>
-
-
       </ux-ebox-content>
     </ux-ebox>
+  </div>
   </main>
-</div>
 

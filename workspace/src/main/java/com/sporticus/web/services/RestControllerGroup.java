@@ -62,7 +62,7 @@ public class RestControllerGroup extends ControllerAbstract {
      *
      * @return ResponseEntity<DtoGroups>
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoList<DtoGroup>> readAll() {
         final DtoList<DtoGroup> list = new DtoList();
         this.serviceGroup.readGroups(gm -> {

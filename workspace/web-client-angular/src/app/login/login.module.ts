@@ -4,7 +4,7 @@ import {LoginComponent} from './login/login.component';
 import {AuthService} from "./auth.service";
 import {AuthGuard} from "./auth.guard";
 import {EboxModule} from "@ux-aspects/ux-aspects";
-import {MatFormFieldModule} from "@angular/material";
+import {MatButtonModule, MatFormFieldModule, MatInputModule, MatSnackBarModule} from "@angular/material";
 import {ResetPasswordComponent} from './reset-password/reset-password.component';
 import {NewPasswordComponent} from './new-password/new-password.component';
 import {FormsModule} from "@angular/forms";
@@ -13,7 +13,10 @@ import {ResetPasswordService} from "./reset-password.service";
 @NgModule({
   imports: [
     CommonModule,
+    MatInputModule,
+    MatButtonModule,
     MatFormFieldModule,
+    MatSnackBarModule,
     EboxModule,
     FormsModule
   ],

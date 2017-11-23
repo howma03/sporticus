@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RegisterUser, RegistrationService} from "../../services/registration.service";
 import {ErrorHandlingService} from "../../services/error-handling.service";
 import {Router} from "@angular/router";
@@ -27,35 +27,34 @@ export class RegisterComponent implements OnInit {
 
   registrationDetails = {
     firstName: '',
-    surname: '',
+    lastName: '',
     userName: '',
     email: '',
     password: ''
   };
 
-
   doRegister() {
-    let testUser: RegisterUser = {
+    let newUser: RegisterUser = {
       userName: this.registrationDetails.userName,
       firstName: this.registrationDetails.firstName,
-      surname: this.registrationDetails.surname,
+      lastName: this.registrationDetails.lastName,
       email: this.registrationDetails.email,
       password: this.registrationDetails.password
     };
     this.loading = true;
     this.tryAgain = false;
-    this.registrationService.createOne(testUser)
+    this.registrationService.createOne(newUser)
       .subscribe(success => {
         this.loading = false;
         if (success) {
-          this.snack("User " + testUser.firstName + " " + testUser.surname +  " successfully created.")
+          this.snack("User '" + newUser.firstName + " " + newUser.lastName + "' (" + newUser.email + ") registered successfully.");
           this.router.navigate(['/landing/login']);
         }
       }, err => {
         this.loading = false;
         if(err instanceof HttpErrorResponse) {
           if(err.status === 400) {
-            this.tryAgainReason = "A user is already registered with the email - " + testUser.email
+            this.tryAgainReason = "A user is already registered with the email - " + newUser.email;
             this.tryAgain = true;
           }
         }

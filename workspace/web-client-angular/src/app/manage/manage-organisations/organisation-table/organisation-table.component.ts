@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Organisation, OrganisationService} from "../../../services/organisation.service";
 import {Subscription} from "rxjs/Subscription";
 import 'rxjs/add/observable/of';
@@ -37,9 +37,29 @@ export class OrganisationTableComponent implements OnInit {
       });
   }
 
+
+  public openModal(itemId): void {
+    let item = this.orgs.find(item => item.id === itemId);
+
+    console.info("Launch dialog");
+    let dialogRef = this.dialog.open(OrganisationComponent, {
+      data: {
+        item: item
+      },
+      height: '900px',
+      width: '1200px',
+    });
+    dialogRef.afterClosed().subscribe((updateRequired) => {
+      debugger;
+      if (updateRequired) {
+        this.updateOrganisationDetails();
+      }
+    });
+  }
+
   openDeleteDialog(item) {
-    let title = 'Confirm delete'
-    let description = "Are you sure you want to delete the organisation - " + item.name
+    let title = 'Confirm delete';
+    let description = "Are you sure you want to delete the organisation - " + item.name;
 
     let dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
@@ -60,24 +80,6 @@ export class OrganisationTableComponent implements OnInit {
     console.info("delete - id="+itemId);
     this.organisationService.deleteOne(itemId).subscribe(() => {
       this.updateOrganisationDetails();
-    });
-  }
-
-  public openModal(itemId) : void {
-    let item = this.orgs.find(item => item.id === itemId);
-
-    console.info("Launch dialog");
-    let dialogRef = this.dialog.open(OrganisationComponent, {
-      data: {
-        item: item
-      },
-      height: '900px',
-      width: '1200px',
-    });
-    dialogRef.afterClosed().subscribe((updateRequired) => {
-      if(updateRequired) {
-        this.updateOrganisationDetails();
-      }
     });
   }
 }
