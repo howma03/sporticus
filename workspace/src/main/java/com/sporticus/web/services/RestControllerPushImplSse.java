@@ -23,8 +23,6 @@ public class RestControllerPushImplSse extends ControllerAbstract {
 	@GetMapping("/api/notification/feed")
 	public ResponseEntity<SseEmitter> getResults() {
 
-		LOGGER.debug(() -> "Client requested feed");
-
 		final Long fLoggedInUserId = getLoggedInUserId();
 		SseEmitter emitter = sseEngine.getEmitters().get(fLoggedInUserId);
 		if (emitter == null) {
@@ -51,21 +49,28 @@ public class RestControllerPushImplSse extends ControllerAbstract {
 	}
 
 	@Autowired
-	private SseEngine sseEngine;
+	private static SseEngine sseEngine;
 
 	public RestControllerPushImplSse() {
 
 	}
 
-	private void send(SseEmitter emitter, INotification notification) {
+	public static void sendEventAll() {
+	}
+
+	public static void sendEventToOne(Long loggedInUserId, INotification notification) {
+		SseEmitter emitterByUserId = sseEngine.getEmitterByUserId(loggedInUserId);
+		if(emitterByUserId != null) {
+			send(emitterByUserId, notification);
+		}
+	}
+
+
+	private static void send(SseEmitter emitter, INotification notification) {
 		new Thread(() -> {
 			try {
 				Thread.sleep(1000 * 10);
-				LOGGER.debug(() -> "Sending SSE Notifications ..");
-				for (int i = 10; i > 0; i--) {
-					LOGGER.debug(() -> "\tSending SSE Notifications");
-					emitter.send("Hello  " + i);
-				}
+					emitter.send("Hello");
 				emitter.complete();
 			} catch (IOException | InterruptedException ex) {
 				LOGGER.warn(() -> "Failed to push notification", ex);

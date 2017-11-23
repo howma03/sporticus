@@ -9,6 +9,7 @@ import {ProfileService} from "./profile.service";
 import {ChallengeService} from "./challenge.service";
 import {AgendaService} from "./agenda.service";
 import {PushService} from "./push.service";
+import {EventService} from './event.service';
 
 @NgModule({
   imports: [
@@ -18,11 +19,12 @@ import {PushService} from "./push.service";
   ],
   providers: [
     ChallengeService,
-    PushService,
     ErrorHandlingService,
+    EventService,
     UsersService,
     RegistrationService,
     OrganisationService,
+    PushService,
     LadderService,
     ProfileService,
     AgendaService

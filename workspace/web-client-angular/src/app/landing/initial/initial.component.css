@@ -27,6 +27,7 @@ carousel{
   height: 50px;
   border-radius: 50%;
   left: 0;
+  border:none;
 }
 
 .rightRs {
@@ -38,4 +39,5 @@ carousel{
   height: 50px;
   border-radius: 50%;
   right: 0;
+  border:none;
 }

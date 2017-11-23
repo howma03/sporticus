@@ -7,6 +7,8 @@ import {AuthGuard} from "../login/auth.guard";
 import {CalendarWrapperComponent} from "../calendar/calendar-wrapper/calendar-wrapper.component";
 import {ManageModule} from "../organisation/manage/manage.module";
 import {AdminModule} from "../admin/admin.module";
+import {NotificationManagementComponent} from "../notification/notification-management/notification-management.component";
+
 
 const mainRoutes: Routes = [
   {
@@ -26,6 +28,7 @@ const mainRoutes: Routes = [
       },
       {path: 'track-competitions', component: TrackCompetitionsComponent},
       {path: 'calendar', component: CalendarWrapperComponent},
+      {path: 'notification', component: NotificationManagementComponent},
       {path: '**', redirectTo: 'home'}
     ]
   }

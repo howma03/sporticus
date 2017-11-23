@@ -11,12 +11,18 @@ export class EventService {
   constructor(private http: HttpClient) {
   }
 
-  public createOne(item: Notification): Observable<Notification> {
-    return this.http.post<Notification>(this.url, item);
+  public createOne(item: Notification): Observable<Event> {
+    return this.http.post<Event>(this.url, item);
   }
 
   public retrieveAll(): Observable<List<Event>> {
     return this.http.get<List<Event>>(this.url);
+  }
+
+  public deleteOne(id): Observable<any> {
+    return this.http.delete(this.url + "/" + id, {
+      responseType: 'text'
+    });
   }
 }
 

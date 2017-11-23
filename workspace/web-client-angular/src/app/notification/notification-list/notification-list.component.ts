@@ -15,8 +15,11 @@ export class NotificationListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.pushService.isEnabled();
     this.updateOrganisationDetails();
+
+    this.pushService.registerForEvents().subscribe((data)=>{
+      this.updateOrganisationDetails();
+    });
   }
 
   notifications = [];

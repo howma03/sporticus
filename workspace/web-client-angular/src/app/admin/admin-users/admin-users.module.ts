@@ -4,8 +4,8 @@ import {UserTableComponent} from './user-table/user-table.component';
 import {MatDialogModule, MatGridListModule, MatTableModule} from '@angular/material';
 import {ServicesModule} from "../../services/services.module";
 import {UserComponent} from './user/user.component';
-import {HoverActionModule} from "@ux-aspects/ux-aspects";
 import {FormsModule} from "@angular/forms";
+import {HoverActionModule} from "@ux-aspects/ux-aspects";
 
 @NgModule({
   imports: [
@@ -13,9 +13,9 @@ import {FormsModule} from "@angular/forms";
     FormsModule,
     MatTableModule,
     MatGridListModule,
-    HoverActionModule,
     ServicesModule,
-    MatDialogModule
+    MatDialogModule,
+    HoverActionModule
   ],
   exports: [
     UserTableComponent

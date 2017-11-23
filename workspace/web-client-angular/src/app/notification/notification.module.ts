@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NotificationListComponent } from './notification-list/notification-list.component';
 import {NotificationService} from "./notification.service";
 import {ServicesModule} from "../services/services.module";
+import { NotificationManagementComponent } from './notification-management/notification-management.component';
 
 @NgModule({
   imports: [
@@ -10,10 +11,12 @@ import {ServicesModule} from "../services/services.module";
     ServicesModule,
   ],
   exports: [
-    NotificationListComponent
+    NotificationListComponent,
+    NotificationManagementComponent
   ],
   declarations: [
-    NotificationListComponent
+    NotificationListComponent,
+    NotificationManagementComponent
   ],
   providers: [
     NotificationService,
