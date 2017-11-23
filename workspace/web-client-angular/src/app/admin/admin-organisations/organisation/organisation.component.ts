@@ -16,10 +16,14 @@ export class OrganisationComponent implements OnInit {
     public dialogRef: MatDialogRef<OrganisationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
+  creationDescription: String = "To create a new organisation, please enter a few details";
+
+  editMode: boolean = false;
+  submitText: string = "CREATE";
+
   ngOnInit() {
 
     if(this.data.item !== undefined) {
-
       this.organisationDetails.name = this.data.item.name;
       this.organisationDetails.address = this.data.item.address;
       this.organisationDetails.domain = this.data.item.domain;
@@ -29,15 +33,9 @@ export class OrganisationComponent implements OnInit {
 
       this.editMode = true;
       this.submitText = "SAVE";
-      this.organisationCreationDescription = "This allows the user admin to modify the details for the organisation"
+      this.creationDescription = "This allows the user admin to modify the details for the organisation"
     }
   }
-
-  editMode: boolean = false;
-
-  submitText: string = "CREATE";
-
-  organisationCreationDescription: String = "To create a new organisation, please enter a few details";
 
   organisationDetails = {
     name: '',
@@ -69,11 +67,11 @@ export class OrganisationComponent implements OnInit {
     this.organisationService.createOne(organisation)
       .subscribe(success => {
         if (success) {
-         alert("The organisation - " + organisation.name +  " successfully created.");
-         this.closeWindow(true);
+          alert("The organisation - " + organisation.name + " successfully created.");
+          this.closeWindow(true);
         }
       }, err => {
-          this.errorHandlingService.handleError(err);
+        this.errorHandlingService.handleError(err);
       });
   }
 

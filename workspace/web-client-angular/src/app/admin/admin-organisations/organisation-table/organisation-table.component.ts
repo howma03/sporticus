@@ -37,11 +37,9 @@ export class OrganisationTableComponent implements OnInit {
       });
   }
 
-
   public openModal(itemId): void {
     let item = this.orgs.find(item => item.id === itemId);
 
-    console.info("Launch dialog");
     let dialogRef = this.dialog.open(OrganisationComponent, {
       data: {
         item: item
@@ -50,7 +48,6 @@ export class OrganisationTableComponent implements OnInit {
       width: '1200px',
     });
     dialogRef.afterClosed().subscribe((updateRequired) => {
-      debugger;
       if (updateRequired) {
         this.updateOrganisationDetails();
       }
@@ -64,8 +61,7 @@ export class OrganisationTableComponent implements OnInit {
     let dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: title,
-        description: description,
-        organisationName: item.name
+        description: description
       }
     });
 
@@ -77,7 +73,6 @@ export class OrganisationTableComponent implements OnInit {
   }
 
   public deleteOrganisation(itemId) {
-    console.info("delete - id="+itemId);
     this.organisationService.deleteOne(itemId).subscribe(() => {
       this.updateOrganisationDetails();
     });

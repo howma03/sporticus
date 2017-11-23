@@ -1,39 +1,25 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs/Observable";
-import {List} from "./list";
+import {BaseCrudService} from "./base-crud.service";
 
 @Injectable()
-export class EventService {
+export class EventService extends BaseCrudService<Event> {
 
   url = '/api/event';
 
-  constructor(private http: HttpClient) {
-  }
-
-  public createOne(item: Notification): Observable<Event> {
-    return this.http.post<Event>(this.url, item);
-  }
-
-  public retrieveAll(): Observable<List<Event>> {
-    return this.http.get<List<Event>>(this.url);
-  }
-
-  public deleteOne(id): Observable<any> {
-    return this.http.delete(this.url + "/" + id, {
-      responseType: 'text'
-    });
+  constructor(http: HttpClient) {
+    super(http);
   }
 }
 
 export interface Event {
-  id: number;
-  created: string;
-  createdString: string;
-  dateTime: string;
-  dateTimeString: string;
-  name?: string;
-  type?: string;
+  id: string;
+  created?: string;
+  createdString?: string;
+  dateTime?: string;
+  dateTimeString?: string;
+  name: string;
+  type: string;
   description?: string;
   status?: string;
 }

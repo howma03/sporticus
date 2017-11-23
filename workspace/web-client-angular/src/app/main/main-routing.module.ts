@@ -4,10 +4,10 @@ import {HomeComponent} from "../home/home/home.component";
 import {TrackCompetitionsComponent} from "../track-competitions/track-competitions/track-competitions.component";
 import {MainComponent} from "./main/main.component";
 import {AuthGuard} from "../login/auth.guard";
-import {CalendarWrapperComponent} from "../calendar/calendar-wrapper/calendar-wrapper.component";
 import {ManageModule} from "../organisation/manage/manage.module";
 import {AdminModule} from "../admin/admin.module";
 import {NotificationManagementComponent} from "../notification/notification-management/notification-management.component";
+import {CalendarMainComponent} from "../calendar/calendar-main/calendar-main.component";
 
 
 const mainRoutes: Routes = [
@@ -27,7 +27,7 @@ const mainRoutes: Routes = [
         loadChildren: () => ManageModule
       },
       {path: 'track-competitions', component: TrackCompetitionsComponent},
-      {path: 'calendar', component: CalendarWrapperComponent},
+      {path: 'calendar', component: CalendarMainComponent},
       {path: 'notification', component: NotificationManagementComponent},
       {path: '**', redirectTo: 'home'}
     ]
