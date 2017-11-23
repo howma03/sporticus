@@ -7,6 +7,7 @@ import {AuthGuard} from "../login/auth.guard";
 import {AdminMainComponent} from "../admin/admin-main/admin-main.component";
 import {ManageMainComponent} from "../organisation/manage/manage-main/manage-main.component";
 import {CalenderMainComponent} from "../calendar/calender-main/calender-main.component";
+import {NotificationManagementComponent} from "../notification/notification-management/notification-management.component";
 
 const mainRoutes: Routes = [
   {
@@ -56,6 +57,7 @@ const mainRoutes: Routes = [
 
       {path: 'track-competitions', component: TrackCompetitionsComponent},
       {path: 'calendar', component: CalenderMainComponent},
+      {path: 'notification', component: NotificationManagementComponent},
       {path: '', redirectTo: '/main/home', pathMatch: 'full'},
       {path: '**', redirectTo: '/main/home', pathMatch: 'full'}
     ]

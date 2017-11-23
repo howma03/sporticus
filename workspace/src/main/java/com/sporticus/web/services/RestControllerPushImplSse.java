@@ -60,8 +60,9 @@ public class RestControllerPushImplSse extends ControllerAbstract {
 
 	public static void sendEventToOne(Long loggedInUserId, INotification notification) {
 		SseEmitter emitterByUserId = sseEngine.getEmitterByUserId(loggedInUserId);
-
-		send(emitterByUserId, notification);
+		if(emitterByUserId != null) {
+			send(emitterByUserId, notification);
+		}
 	}
 
 

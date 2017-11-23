@@ -135,6 +135,14 @@ export class MainComponent implements OnInit {
         icon: 'hpe-cloud',
         title: 'Server Rebooted',
         subtitle: '22 minutes ago'
+      },
+      {
+        icon: 'hpe-notification',
+        title: 'Notifications',
+        subtitle: 'Temporary',
+        select: () => {
+          this.gotoNotification();
+        }
       }
     ];
   }
@@ -145,6 +153,10 @@ export class MainComponent implements OnInit {
 
   goHome() {
     this.router.navigate(['main/home']);
+  }
+
+  gotoNotification() {
+    this.router.navigate(['main/notification']);
   }
 
   doLogout() {
