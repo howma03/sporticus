@@ -13,11 +13,12 @@ import {SharedModule} from "../shared/shared.module";
     EboxModule,
     CommonModule,
     PageHeaderModule,
-    AdminRoutingModule,
     AdminUsersModule,
     AdminOrganisationsModule,
     MatTabsModule,
-    SharedModule
+    SharedModule,
+    //Keep Routing Modules last
+    AdminRoutingModule,
   ],
   exports: [],
   entryComponents: [],

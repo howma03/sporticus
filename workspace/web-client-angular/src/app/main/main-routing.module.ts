@@ -6,6 +6,7 @@ import {MainComponent} from "./main/main.component";
 import {AuthGuard} from "../login/auth.guard";
 import {AdminMainComponent} from "../admin/admin-main/admin-main.component";
 import {CalendarWrapperComponent} from "../calendar/calendar-wrapper/calendar-wrapper.component";
+import {ManageMainComponent} from "../organisation/manage/manage-main/manage-main.component";
 
 const mainRoutes: Routes = [
   {
@@ -29,6 +30,30 @@ const mainRoutes: Routes = [
           selectedIndex: 1
         }
       },
+
+      {path: 'manage', redirectTo: 'manage-organisation'},
+      {
+        path: 'manage-organisation',
+        component: ManageMainComponent,
+        data: {
+          selectedIndex: 0
+        }
+      },
+      {
+        path: 'manage-members',
+        component: ManageMainComponent,
+        data: {
+          selectedIndex: 1
+        }
+      },
+      {
+        path: 'manage-competition',
+        component: ManageMainComponent,
+        data: {
+          selectedIndex: 2
+        }
+      },
+
       {path: 'track-competitions', component: TrackCompetitionsComponent},
       {path: 'calendar', component: CalendarWrapperComponent},
       {path: '', redirectTo: '/main/home', pathMatch: 'full'},

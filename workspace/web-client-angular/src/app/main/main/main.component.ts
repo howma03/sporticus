@@ -43,7 +43,7 @@ export class MainComponent implements OnInit {
   condensed: boolean = true;
 
   crumbs: Breadcrumb[] = [{
-    title: 'Archive',
+    title: 'Sporticus',
     routerLink: 'home',
   }];
 
@@ -65,6 +65,18 @@ export class MainComponent implements OnInit {
       icon: 'hpe-analytics',
       title: 'Manage',
       children: [
+        {
+          title: 'Organisation',
+          select: () => this.router.navigate(['main/manage-organisation'])
+        },
+        {
+          title: 'Members',
+          select: () => this.router.navigate(['main/manage-members'])
+        },
+        {
+          title: 'Competitions',
+          select: () => this.router.navigate(['main/manage-competition'])
+        }
       ]
     }
 

@@ -16,6 +16,7 @@ import {LadderModule} from "./ladder/ladder.module";
 import {OrganisationModule} from "./organisation/organisation.module";
 import {NotificationModule} from "./notification/notification.module";
 import {CalendarModule} from "./calendar/calendar.module";
+import {ManageModule} from "./organisation/manage/manage.module";
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import {CalendarModule} from "./calendar/calendar.module";
     AdminModule,
     LadderModule,
     OrganisationModule,
+    ManageModule,
     NotificationModule,
     // Keep routing module last!
     AppRoutingModule
