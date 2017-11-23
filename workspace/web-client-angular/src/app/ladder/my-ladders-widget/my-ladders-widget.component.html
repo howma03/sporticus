@@ -25,7 +25,7 @@
       <tbody>
       <tr class="hover-action-container" *ngFor="let rung of rungs"
           [attr.cdk-focus-initial]="isMe(rung) ? '' : null" uxHoverActionContainer>
-        <td class="text-black">{{ rung.position }}</td>
+        <td class="text-black">{{ rung.position+1 | appendOrdinal }}</td>
         <td class="text-black">{{ rung.userName }}</td>
       </tr>
       </tbody>
