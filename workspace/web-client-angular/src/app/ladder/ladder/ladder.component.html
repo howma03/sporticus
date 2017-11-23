@@ -15,7 +15,7 @@
     </thead>
     <tbody>
     <tr class="hover-action-container" *ngFor="let rung of ladderUsers" [attr.cdk-focus-initial]="isMe(rung) ? '' : null" uxHoverActionContainer>
-      <td class="text-black">{{ rung.position }}</td>
+      <td class="text-black">{{ rung.position+1 | appendOrdinal }}</td>
       <td class="text-black">{{ rung.userName }}</td>
       <td>
         <i *ngIf="rung.isChallenged" class="hpe-icon hpe-vulnerability hover-action-icon" (click)="cancelChallenge(rung)" [matTooltip]="getTooltip(rung)"></i>

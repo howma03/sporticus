@@ -16,6 +16,7 @@ import {HoverActionModule, SparkModule} from "@ux-aspects/ux-aspects";
 import {ChallengeModule} from "../challenge/challenge.module";
 import {MyLaddersWidgetComponent} from './my-ladders-widget/my-ladders-widget.component';
 import {SharedModule} from '../shared/shared.module';
+import {UtilModule} from "../util/util.module";
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import {SharedModule} from '../shared/shared.module';
     MatFormFieldModule,
     MatTooltipModule,
     MatSelectModule,
+    UtilModule,
     SharedModule,
     SparkModule
   ],

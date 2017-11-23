@@ -1,11 +1,14 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {AppendOrdinalPipe} from './append-ordinal.pipe';
 
 @NgModule({
   imports: [
     CommonModule
   ],
-  declarations: []
+  exports: [AppendOrdinalPipe],
+  declarations: [AppendOrdinalPipe],
+  providers: [AppendOrdinalPipe]
 })
 export class UtilModule {
 }

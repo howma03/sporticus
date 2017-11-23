@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import { DatePipe } from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {Ladder, LadderService, LadderUser} from "../../services/ladder.service";
 import {Subscription} from "rxjs/Subscription";
 import {ChallengeDialogComponent} from "../../challenge/challenge-dialog/challenge-dialog.component";
@@ -20,10 +20,10 @@ export class LadderComponent implements OnInit, OnDestroy {
 
   constructor(
     private ladderService: LadderService,
-    private dialog: MatDialog,
     private challengeService : ChallengeService,
-    private datePipe: DatePipe,
-    private authService : AuthService) {
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private datePipe: DatePipe) {
   }
 
   public ladderUsers: LadderUser[] = [];
@@ -42,9 +42,6 @@ export class LadderComponent implements OnInit, OnDestroy {
   get ladder() {
     return this._ladder;
   }
-
-  dataSource = null;
-  displayedColumns = ['name', 'position', 'challenged', 'actions'];
 
   ngOnInit() {
   }
