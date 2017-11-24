@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Ladder, LadderService, LadderUser} from "../../services/ladder.service";
-import {AuthService} from "../../login/auth.service";
+import {AuthService} from "../../auth/auth.service";
 import {User} from "../../services/users.service";
 
 @Component({

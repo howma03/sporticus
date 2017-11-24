@@ -5,7 +5,7 @@ import {Observable} from "rxjs/Observable";
 import {User} from "./users.service";
 import {List} from "./list";
 import {Challenge} from './challenge.service';
-import {AuthService} from '../login/auth.service';
+import {AuthService} from '../auth/auth.service';
 
 @Injectable()
 export class LadderService extends BaseCrudService<Ladder> {

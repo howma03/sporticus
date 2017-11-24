@@ -3,7 +3,7 @@ import {NgModule} from "@angular/core";
 import {HomeComponent} from "../home/home/home.component";
 import {TrackCompetitionsComponent} from "../track-competitions/track-competitions/track-competitions.component";
 import {MainComponent} from "./main/main.component";
-import {AuthGuard} from "../login/auth.guard";
+import {AuthGuard} from "../auth/auth.guard";
 import {ManageModule} from "../organisation/manage/manage.module";
 import {AdminModule} from "../admin/admin.module";
 import {NotificationManagementComponent} from "../notification/notification-management/notification-management.component";

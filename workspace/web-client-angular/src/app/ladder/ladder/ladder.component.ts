@@ -6,7 +6,7 @@ import {ChallengeDialogComponent} from "../../challenge/challenge-dialog/challen
 import {MatDialog} from "@angular/material";
 import {ChallengeService} from "../../services/challenge.service";
 import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
-import {AuthService} from '../../login/auth.service';
+import {AuthService} from '../../auth/auth.service';
 import {User} from '../../services/users.service';
 
 const dateFormat : string = 'MMM d, y, h:mm a'; // TODO: Using short format does not internationalize well, need to work out why and keep the format in some common place.

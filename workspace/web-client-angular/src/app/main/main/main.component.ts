@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Breadcrumb, PageHeaderIconMenu, PageHeaderNavigationItem} from "@ux-aspects/ux-aspects";
-import {AuthService} from "../../login/auth.service";
+import {AuthService} from "../../auth/auth.service";
 import {ProfileDialogComponent} from "../../profile/profile-dialog/profile-dialog.component";
 import {MatDialog} from "@angular/material";
 

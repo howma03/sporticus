@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Ladder, LadderUser} from "../../services/ladder.service";
 import {Challenge, ChallengeService} from '../../services/challenge.service';
-import {AuthService} from '../../login/auth.service';
+import {AuthService} from '../../auth/auth.service';
 
 @Component({
   selector: 'app-challenge-form',

@@ -6,7 +6,7 @@ import {LoginModule} from "./login/login.module";
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from "./app-routing.module";
 import {RegistrationModule} from "./registration/registration.module";
-import {AuthInterceptor} from "./login/auth.interceptor";
+import {AuthInterceptor} from "./auth/auth.interceptor";
 import {NgxCarouselModule} from "ngx-carousel";
 import 'hammerjs';
 import {LadderModule} from "./ladder/ladder.module";
@@ -14,6 +14,7 @@ import {OrganisationModule} from "./organisation/organisation.module";
 import {NotificationModule} from "./notification/notification.module";
 import {FooterComponent} from "./footer/footer.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {AuthModule} from "./auth/auth.module";
 
 @NgModule({
   declarations: [
@@ -24,8 +25,9 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     BrowserModule,
     BrowserAnimationsModule,
     NgxCarouselModule,
-    RegistrationModule,
     HttpClientModule,
+    AuthModule.forRoot(),
+    RegistrationModule,
     LoginModule,
     LadderModule,
     OrganisationModule,
