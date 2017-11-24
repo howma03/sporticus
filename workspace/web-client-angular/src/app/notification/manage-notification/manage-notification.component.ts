@@ -25,8 +25,11 @@ export class ManageNotificationComponent implements OnInit {
   ngOnInit() {
   }
 
-  addNotification(notification) {
-    debugger;
+  addNotification() {
+    let notification: NotificationInterface = {
+      title: "Broadcast",
+      text: this.details.text
+    };
 
     this.notificationService.createOne(notification)
       .subscribe(success => {

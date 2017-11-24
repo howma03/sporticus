@@ -55,8 +55,14 @@ public class RestControllerNotification extends ControllerAbstract {
      */
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoNotification> create(@RequestBody final DtoNotification notification) {
-        LOGGER.debug(() -> "Creating Notification " + notification.getTitle());
-        RestControllerPushImplSse.sendEventToOne(this.getLoggedInUserId(), notification);
+
+        if(notification.getOwnerId() == null) {
+            LOGGER.warn(() -> "As the notification has no owner, this sets the logged in user to be the owner");
+            notification.setOwnerId(this.getLoggedInUserId());
+        }
+
+        LOGGER.debug(() -> "Creating Notification " + notification.getText());
+        //RestControllerPushImplSse.sendEventToOne(this.getLoggedInUserId(), notification);
         return new ResponseEntity<>(new DtoNotification(serviceNotification.createNotification(notification)), HttpStatus.OK);
     }
 
