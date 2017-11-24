@@ -1,3 +1,6 @@
+<div *ngIf="!calendarOptions" class="center-spinner">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
 <div class="calendar-panel" *ngIf="calendarOptions">
   <ng-fullcalendar #ucCalendar [options]="calendarOptions" (eventClick)="eventClick($event.detail)" (dayClick)="dayClick($event.detail)" (eventDrop)="updateEvent($event.detail)"
                    (eventResize)="updateEvent($event.detail)" (clickButton)="clickButton($event.detail)"></ng-fullcalendar>

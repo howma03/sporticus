@@ -1,3 +1,10 @@
 .calendar-panel {
   margin: 10px 50px 300px 50px;
 }
+
+.center-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -9,8 +9,7 @@ const yearMonth = dateObj.getUTCFullYear() + '-' + (dateObj.getUTCMonth() + 1);
 @Component({
   selector: 'app-calendar-wrapper',
   templateUrl: './calendar-wrapper.component.html',
-  styleUrls: ['./calendar-wrapper.component.css'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./calendar-wrapper.component.css']
 })
 export class CalendarWrapperComponent implements OnInit {
 

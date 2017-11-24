@@ -9,11 +9,13 @@ import {ServicesModule} from "../services/services.module";
 import {HoverActionModule} from "@ux-aspects/ux-aspects";
 import {CalendarEventComponent} from './calendar-event/calendar-event.component';
 import {FormsModule} from "@angular/forms";
+import {MatProgressSpinnerModule} from '@angular/material'
 
 @NgModule({
   imports: [
     CommonModule,
     FullCalendarModule,
+    MatProgressSpinnerModule,
     MatTabsModule,
     ServicesModule,
     HoverActionModule,
