@@ -4,4 +4,13 @@
 <div class="calendar-panel" *ngIf="calendarOptions">
   <ng-fullcalendar #ucCalendar [options]="calendarOptions" (eventClick)="eventClick($event.detail)" (dayClick)="dayClick($event.detail)" (eventDrop)="updateEvent($event.detail)"
                    (eventResize)="updateEvent($event.detail)" (clickButton)="clickButton($event.detail)"></ng-fullcalendar>
+  <div [style.left]="menuLeft" [style.top]="menuTop" class="position-menu" mat-button [matMenuTriggerFor]="menu"></div>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>
+      <span>Mark Unavailable</span>
+    </button>
+    <button mat-menu-item>
+      <span>Schedule Match</span>
+    </button>
+  </mat-menu>
 </div>

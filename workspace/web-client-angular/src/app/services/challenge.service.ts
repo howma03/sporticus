@@ -30,6 +30,7 @@ export interface Challenge {
   created: Date;
   status: string; // PROPOSED, ACCEPTED, REJECTED, CLOSED
   dateTime: Date;
+  dateTimeEnd: Date;
   challengerId: number;
   challengedId: number;
   scoreChallenger: number;

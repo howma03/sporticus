@@ -1,7 +1,8 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {CalendarComponent} from 'ng-fullcalendar';
 import {Options} from 'fullcalendar';
 import {Event, EventService} from '../../services/event.service';
+import {MatMenuTrigger, MatMenu} from '@angular/material';
 
 const dateObj = new Date();
 const yearMonth = dateObj.getUTCFullYear() + '-' + (dateObj.getUTCMonth() + 1);
@@ -17,9 +18,14 @@ export class CalendarWrapperComponent implements OnInit {
 
   public events: Event[] = [];
 
+  menuLeft = "";
+  menuTop = "";
+
   @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
 
-  constructor(private eventService : EventService) {}
+  @ViewChild(MatMenuTrigger) menu: MatMenuTrigger;
+
+  constructor(private eventService : EventService, private ref: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.eventService.retrieveAll()
@@ -39,7 +45,7 @@ export class CalendarWrapperComponent implements OnInit {
             center: 'title',
             right: 'month,agendaWeek,agendaDay,listMonth'
           },
-          dayClick: (moment) => this.dayClick(moment),
+          dayClick: (date, event) => this.dayClick(date, event),
           events: calenderEvents
         };
       });
@@ -50,10 +56,16 @@ export class CalendarWrapperComponent implements OnInit {
     // this.displayEvent = model;
   }
 
-  dayClick(moment: any) {
-    alert('dayClick on ' + moment._d);
-    debugger;
-    // this.displayEvent = model;
+  /**
+   * Trigger the menu to open when a day cell is clicked.
+   * The menu trigger must be moved into the click location.
+   * @param {Date} date
+   * @param jsEvent
+   */
+  dayClick(date: Date, jsEvent) {
+    this.menuTop = jsEvent.clientY + 'px';
+    this.menuLeft = jsEvent.clientX + 'px';
+    this.menu.openMenu();
   }
 
   eventClick(model: any) {

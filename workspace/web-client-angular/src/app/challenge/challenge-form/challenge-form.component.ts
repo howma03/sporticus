@@ -50,12 +50,17 @@ export class ChallengeFormComponent implements OnInit {
       // this is a new challenge from a challenger
       this.isNew = true;
 
+      let newDate =  new Date();
+      let newEndDate =  new Date();
+
+
       this.rung.challenger = {
         id: null,
         name: 'New Challenge',
-        created: new Date(),
+        created: newDate,
         status: 'PROPOSED',
-        dateTime: new Date(),
+        dateTime: newDate,
+        dateTimeEnd: new Date(newDate.getTime() + (60*60*1000)),
         challengerId: this.authService.getCurrentUser().id,
         challengedId: this.rung.userId,
         scoreChallenger: null,
@@ -95,11 +100,15 @@ export class ChallengeFormComponent implements OnInit {
     dateTime.setHours(+splitTime[0]);
     dateTime.setMinutes(+splitTime[1]);
 
+    dateTime.setHours(+splitTime[0]);
+    let dateTimeEnd = new Date(dateTime.getTime() + (60*60*1000));
+
     const toSave: Challenge = {
       id: this.rung.challenger.id,
       name: this.rung.challenger.name,
       created: this.rung.challenger.created,
       dateTime: dateTime,
+      dateTimeEnd: dateTimeEnd,
       status: 'ACCEPTED',
       challengerId: this.rung.challenger.challengerId,
       challengedId: this.rung.challenger.challengedId,
