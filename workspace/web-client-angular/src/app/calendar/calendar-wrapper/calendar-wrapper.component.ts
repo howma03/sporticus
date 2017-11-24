@@ -18,7 +18,16 @@ export class CalendarWrapperComponent implements OnInit {
 
   public events: Event[] = [];
 
+  /**
+   * Set to the x position on a dayClick - the menu is then positioned with this value
+   * @type {string}
+   */
   menuLeft = "";
+
+  /**
+   * Set to the x position on a dayClick - the menu is then positioned with this value
+   * @type {string}
+   */
   menuTop = "";
 
   @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
