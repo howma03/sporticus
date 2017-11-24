@@ -14,20 +14,20 @@ export class NotificationService {
 
   url = '/api/notification';
 
-  public createOne(item: Notification): Observable<Notification> {
-    return this.http.post<Notification>(this.url, item);
+  public createOne(item: NotificationInterface): Observable<NotificationInterface> {
+    return this.http.post<NotificationInterface>(this.url, item);
   }
 
-  public retrieveAll(): Observable<List<Notification>> {
-    return this.http.get<List<Notification>>(this.url);
+  public retrieveAll(): Observable<List<NotificationInterface>> {
+    return this.http.get<List<NotificationInterface>>(this.url);
   }
 }
 
-export interface Notification {
-  id: number;
+export interface NotificationInterface {
+  id?: number;
   severity?: string;
   status?: string;
-  text?: string;
+  text: string;
   title?: string;
   type?: string;
 

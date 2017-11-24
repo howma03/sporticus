@@ -4,19 +4,30 @@ import { NotificationListComponent } from './notification-list/notification-list
 import {NotificationService} from "./notification.service";
 import {ServicesModule} from "../services/services.module";
 import { NotificationManagementComponent } from './notification-management/notification-management.component';
+import { ManageNotificationComponent } from './manage-notification/manage-notification.component';
+import {MatFormFieldModule} from "@angular/material";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [
     CommonModule,
     ServicesModule,
+    MatFormFieldModule,
+    FormsModule
+  ],
+  entryComponents: [
+    ManageNotificationComponent
   ],
   exports: [
     NotificationListComponent,
-    NotificationManagementComponent
+    ManageNotificationComponent,
+    NotificationManagementComponent,
   ],
   declarations: [
     NotificationListComponent,
-    NotificationManagementComponent
+    ManageNotificationComponent,
+    NotificationManagementComponent,
+    ManageNotificationComponent
   ],
   providers: [
     NotificationService,
@@ -24,3 +35,5 @@ import { NotificationManagementComponent } from './notification-management/notif
   ]
 })
 export class NotificationModule { }
+
+
