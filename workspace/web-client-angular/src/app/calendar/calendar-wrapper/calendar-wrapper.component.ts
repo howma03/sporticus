@@ -33,7 +33,7 @@ export class CalendarWrapperComponent implements OnInit {
           }
         });
         this.calendarOptions = {
-          editable: true,
+          editable: false, // true will allow drag/drop - we may support at a later time
           eventLimit: false,
           header: {
             left: 'prev,next today',
