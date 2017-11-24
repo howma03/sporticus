@@ -37,6 +37,12 @@ public interface IEvent {
 
     String getDateTimeString();
 
+    Date getDateTimeEnd();
+
+    IEvent setDateTimeEnd(Date dateTime);
+
+    String getDateTimeEndString();
+
     STATUS getStatus();
 
     IEvent setStatus(STATUS status);

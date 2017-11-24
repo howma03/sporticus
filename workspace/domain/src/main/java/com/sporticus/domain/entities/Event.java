@@ -1,7 +1,6 @@
 package com.sporticus.domain.entities;
 
 import com.sporticus.domain.interfaces.IEvent;
-import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.util.Utility;
 
 import javax.persistence.Column;
@@ -30,6 +29,9 @@ public class Event implements IEvent {
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
     private Date dateTime = new Date();
+
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateTimeEnd = new Date();
 
     @Column(nullable = true)
     private STATUS status = STATUS.PROPOSED;
@@ -134,6 +136,22 @@ public class Event implements IEvent {
     public String getDateTimeString() {
         return Utility.format(dateTime);
     }
+
+	@Override
+	public Date getDateTimeEnd() {
+		return dateTimeEnd;
+	}
+
+	@Override
+	public IEvent setDateTimeEnd(Date dateTimeEnd) {
+		this.dateTimeEnd = dateTimeEnd;
+		return this;
+	}
+
+	@Override
+	public String getDateTimeEndString() {
+		return Utility.format(dateTimeEnd);
+	}
 
     @Override
     public STATUS getStatus() {

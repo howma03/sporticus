@@ -13,6 +13,8 @@ public class DtoEvent implements IEvent {
     private String createdString = "";
     private Date dateTime = new Date();
     private String dateTimeString = "";
+    private Date dateTimeEnd = new Date();
+    private String dateTimeEndString = "";
     private String name;
     private String type;
     private String description;
@@ -79,17 +81,30 @@ public class DtoEvent implements IEvent {
     @Override
     public IEvent setDateTime(Date dateTime) {
         this.dateTime = dateTime;
-        if (dateTime == null) {
-            this.dateTimeString = "";
-        } else {
-            this.dateTimeString = Utility.format(dateTime);
-        }
+        this.dateTimeString = Utility.format(dateTime);
         return this;
     }
 
     @Override
     public String getDateTimeString() {
         return dateTimeString;
+    }
+
+    @Override
+    public Date getDateTimeEnd() {
+        return dateTimeEnd;
+    }
+
+    @Override
+    public IEvent setDateTimeEnd(Date dateTimeEnd) {
+        this.dateTimeEnd = dateTime;
+        this.dateTimeEndString = Utility.format(dateTimeEnd);
+        return this;
+    }
+
+    @Override
+    public String getDateTimeEndString() {
+        return Utility.format(dateTimeEnd);
     }
 
     @Override

@@ -44,7 +44,6 @@ public class Notification implements INotification {
 	@Column(nullable = false)
 	private String text;
 
-
 	@Override
 	public Date getCreated() {
 		return created;
