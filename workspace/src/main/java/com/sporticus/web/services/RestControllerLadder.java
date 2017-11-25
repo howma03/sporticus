@@ -1,7 +1,6 @@
 package com.sporticus.web.services;
 
 import com.sporticus.domain.interfaces.IGroup;
-import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceLadder;
@@ -10,7 +9,6 @@ import com.sporticus.services.dto.DtoGroup;
 import com.sporticus.services.dto.DtoList;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
-import com.sporticus.types.GroupType;
 import com.sporticus.web.controllers.ControllerAbstract;
 import com.sporticus.web.services.test.DemoDataLoader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,14 +46,6 @@ public class RestControllerLadder extends ControllerAbstract {
         this.serviceLadder = serviceLadder;
     }
 
-    @PostConstruct
-    private void init(){
-        // check for groups - if there are none then create one and make all users member of the new group
-        List<IGroup> groupsLadder = serviceLadder.getLaddersForUser(null);
-        if(groupsLadder.size()==0){
-            dataLoader.load();
-        }
-    }
 
     /**
      * Converts a IGroup to DtoGroup

@@ -1,9 +1,9 @@
 package com.sporticus.web.services.test;
 
-import com.sporticus.domain.entities.Group;
 import com.sporticus.domain.entities.GroupMember;
 import com.sporticus.domain.entities.Organisation;
 import com.sporticus.domain.interfaces.IGroup;
+import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.domain.interfaces.IGroupMember.Permission;
 import com.sporticus.domain.interfaces.IGroupMember.Status;
 import com.sporticus.domain.interfaces.IOrganisation;
@@ -13,12 +13,12 @@ import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceLadder;
 import com.sporticus.interfaces.IServiceOrganisation;
 import com.sporticus.interfaces.IServiceUser;
-import com.sporticus.types.GroupType;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
 
@@ -47,51 +47,61 @@ public class DemoDataLoader {
 		this.serviceLadder = serviceLadder;
 	}
 
+	@PostConstruct
+	private void init() {
+		LOGGER.debug(() -> "Checking for demo data");
+		// check for groups - if there are none then create one and make all users member of the new group
+		List<IGroup> groupsLadder = serviceLadder.getLaddersForUser(null);
+		if (groupsLadder.size() == 0) {
+			this.load();
+		}
+	}
+
+
 	public void load() {
+		LOGGER.debug(() -> "Creating demo data");
 		try {
-			IOrganisation org = null;
+			IOrganisation org;
 			List<IUser> users = serviceUser.getAll();
+
 			if (users.size() > 0) {
+
 				List<IOrganisation> orgs = serviceOrganisation.readAllOrganisations();
 				if (orgs.size() == 0) {
-					org = new Organisation();
-					org.setEnabled(true);
-					org.setCreated(new Date());
-					org.setAddress("Somewhere town");
-					org.setName("Test Organisation");
-					org.setOwnerId(users.get(0).getId());
-					org.setDomain("domain.com");
-					org = serviceOrganisation.createOrganisation(org);
-				} else {
-					org = orgs.get(0);
+					org = new Organisation()
+							.setEnabled(true)
+							.setCreated(new Date())
+							.setAddress("Somewhere town")
+							.setName("Test Organisation")
+							.setOwnerId(users.get(0).getId())
+							.setDomain("domain.com");
+					orgs.add(serviceOrganisation.createOrganisation(org));
 				}
+
+				org = orgs.get(0);
 
 				// check for ladder groups
 
-				if(serviceLadder.readLaddersGroups().size()>0){
+				if (serviceLadder.readLaddersGroups().size() > 0) {
 					return;
 				}
 
-				// create a ladder group
+				// Create a ladder group
 
-				IGroup group = new Group();
-				group.setType(GroupType.LADDER.toString());
-				group.setName("Ladder Group");
-				group.setEnabled(true);
-				group.setDescription("A ladder group");
-				group.setOwnerOrganisationId(org.getId());
+				IGroup group = serviceLadder.createLadder(null,
+						"My First Ladder Group",
+						"Example ladder competition",
+						org);
 
-				group = serviceGroup.createGroup(org, group);
 				for (IUser user : users) {
-					GroupMember gm = new GroupMember();
-
-					gm.setCreated(new Date());
-					gm.setEnabled(true);
-					gm.setAcceptedOrRejectedDate(new Date());
-					gm.setGroupId(group.getId());
-					gm.setUserId(user.getId());
-					gm.setPermissions(Permission.WRITE);
-					gm.setStatus(Status.Accepted);
+					IGroupMember gm = new GroupMember()
+							.setCreated(new Date())
+							.setEnabled(true)
+							.setAcceptedOrRejectedDate(new Date())
+							.setGroupId(group.getId())
+							.setUserId(user.getId())
+							.setPermissions(Permission.WRITE)
+							.setStatus(Status.Accepted);
 
 					serviceGroup.createGroupMember(gm, null);
 				}

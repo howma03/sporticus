@@ -221,7 +221,7 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return IGroupMember
      */
     @Override
-    public IGroupMember createGroupMember(final GroupMember groupMember, IUser inviter) throws ServiceGroupException {
+    public IGroupMember createGroupMember(final IGroupMember groupMember, IUser inviter) throws ServiceGroupException {
 
         // Validate the group - does it exist?
 

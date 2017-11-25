@@ -139,9 +139,10 @@ public class Organisation implements IOrganisation {
         return this;
     }
 
-    public void setEnabled(final boolean enabled) {
-        this.enabled = enabled;
-    }
+	public IOrganisation setEnabled(final boolean enabled) {
+		this.enabled = enabled;
+		return this;
+	}
 
     @Override
     public IOrganisation setUrlFragment(String urlFragment) {

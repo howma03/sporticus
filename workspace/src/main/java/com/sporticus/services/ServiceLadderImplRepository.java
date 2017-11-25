@@ -1,11 +1,13 @@
 package com.sporticus.services;
 
 import com.sporticus.domain.entities.Event;
+import com.sporticus.domain.entities.Group;
 import com.sporticus.domain.entities.Relationship;
 import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IEvent.STATUS;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
+import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IRelationship;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.interfaces.IServiceEvent;
@@ -64,7 +66,14 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 	// Ladder functions (CRUD)
 
-	public IGroup createLadder() {
+	@Override
+	public IGroup createLadder(IUser actor, String name, String description, IOrganisation ownerOrganisation) {
+		IGroup group = new Group();
+		group.setType(GroupType.LADDER.toString());
+		group.setName("Ladder Group");
+		group.setEnabled(true);
+		group.setDescription("A ladder group");
+		group.setOwnerOrganisationId(ownerOrganisation.getId());
 		return null;
 	}
 

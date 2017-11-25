@@ -3,6 +3,7 @@ package com.sporticus.interfaces;
 import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
+import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.services.dto.DtoEventLadder;
 
@@ -29,6 +30,17 @@ public interface IServiceLadder {
 			super(message, ex);
 		}
 	}
+
+	/**
+	 * Function to create a ladder group
+	 *
+	 * @param actor
+	 * @param name
+	 * @param description
+	 * @param ownerOrganisation
+	 * @return
+	 */
+	IGroup createLadder(IUser actor, String name, String description, IOrganisation ownerOrganisation);
 
 	/**
 	 * Function returns a list of all ladders

@@ -1,6 +1,5 @@
 package com.sporticus.interfaces;
 
-import com.sporticus.domain.entities.Group;
 import com.sporticus.domain.entities.GroupMember;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
@@ -59,7 +58,7 @@ public interface IServiceGroup {
      * Group Membership functions
      */
 
-    IGroupMember createGroupMember(GroupMember groupMember, IUser inviter) throws ServiceGroupException;
+    IGroupMember createGroupMember(IGroupMember groupMember, IUser inviter) throws ServiceGroupException;
 
     IGroupMember createGroupMember(IGroup Group, IUser newUser,
                                    Permission permissions,
