@@ -3,10 +3,12 @@ package com.sporticus.services;
 import com.sporticus.domain.entities.Event;
 import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IEvent.STATUS;
+import com.sporticus.domain.interfaces.INotification.OPERATION;
 import com.sporticus.domain.interfaces.IRelationship;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryEvent;
 import com.sporticus.interfaces.IServiceEvent;
+import com.sporticus.interfaces.IServiceNotification;
 import com.sporticus.interfaces.IServiceNotification.ServiceNotificationExceptionNotAllowed;
 import com.sporticus.interfaces.IServiceRelationship;
 import com.sporticus.interfaces.IServiceUser;
@@ -34,34 +36,22 @@ public class ServiceEventImplRepository implements IServiceEvent {
 	@Autowired
 	private IRepositoryEvent repositoryEvent;
 
+	@Autowired
+	private IServiceNotification serviceNotification;
+
 	public ServiceEventImplRepository() {
 		LOGGER.debug(()->"Default CTOR");
 	}
 
 	@Override
 	public IEvent create(IEvent event, IUser actor) {
-		return repositoryEvent.save((Event)event);
+		IEvent newEvent = repositoryEvent.save((Event) event);
+		serviceNotification.createNotifications(actor, newEvent, OPERATION.CREATE);
+		return newEvent;
 	}
-
 
 	public List<IEvent> findByOwnerId(Long userId) {
 		return repositoryEvent.findByOwnerId(userId);
-	}
-
-	@Override
-	public void delete(Long eventId, IUser actor) {
-		if (eventId != null) {
-			this.delete(repositoryEvent.findOne(eventId), actor);
-		}
-	}
-
-	@Override
-	public void delete(IEvent event, IUser actor) {
-		serviceRelationship.findBySourceTypeAndSourceId("Event", event.getId())
-				.stream().forEach(r -> serviceRelationship.delete(r.getId()));
-		serviceRelationship.findByDestinationTypeAndDestinationId("Event", event.getId())
-				.stream().forEach(r -> serviceRelationship.delete(r.getId()));
-		repositoryEvent.delete(event.getId());
 	}
 
 	@Override
@@ -134,5 +124,21 @@ public class ServiceEventImplRepository implements IServiceEvent {
 		final IEvent updated = this.update(event, actor);
 		LOGGER.info(() -> "Updated Event with id " + event.getId());
 		return repositoryEvent.save((Event)event);
+	}
+
+	@Override
+	public void delete(Long eventId, IUser actor) {
+		if (eventId != null) {
+			this.delete(repositoryEvent.findOne(eventId), actor);
+		}
+	}
+
+	@Override
+	public void delete(IEvent event, IUser actor) {
+		serviceRelationship.findBySourceTypeAndSourceId("Event", event.getId())
+				.stream().forEach(r -> serviceRelationship.delete(r.getId()));
+		serviceRelationship.findByDestinationTypeAndDestinationId("Event", event.getId())
+				.stream().forEach(r -> serviceRelationship.delete(r.getId()));
+		repositoryEvent.delete(event.getId());
 	}
 }

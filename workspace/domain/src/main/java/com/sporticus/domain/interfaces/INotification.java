@@ -22,6 +22,8 @@ public interface INotification {
 		CRITICAL
 	}
 
+	Long getEventId();
+
 	static INotification COPY(final INotification from, final INotification to) {
 		if(from == null) {
 			return null;
@@ -35,6 +37,14 @@ public interface INotification {
 
 	default Long getId() {
 		return null;
+	}
+
+	INotification setEventId(Long eventId);
+
+	enum OPERATION {
+		CREATE,
+		UPDATE,
+		DELETE
 	}
 
 	Date getCreated();

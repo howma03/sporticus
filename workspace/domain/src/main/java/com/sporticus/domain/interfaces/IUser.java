@@ -32,8 +32,12 @@ public interface IUser {
         return to;
     }
 
-    default Long getId() {
-        return null;
+	default String getFormattedName() {
+		return this.getFormattedFirstName() + " " + this.getFormattedLastName();
+	}
+
+	default Long getId() {
+		return null;
     }
 
     default IUser setId(final Long id) {

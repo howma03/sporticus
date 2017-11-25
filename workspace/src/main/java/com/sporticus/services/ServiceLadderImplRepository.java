@@ -11,8 +11,11 @@ import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.interfaces.IServiceEvent;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceLadder;
+import com.sporticus.interfaces.IServiceNotification;
 import com.sporticus.interfaces.IServiceRelationship;
 import com.sporticus.interfaces.IServiceUser;
+import com.sporticus.services.Transaction.Step;
+import com.sporticus.services.Transaction.Transaction;
 import com.sporticus.services.dto.DtoEventLadder;
 import com.sporticus.services.dto.DtoGroupMember;
 import com.sporticus.services.dto.DtoGroupMemberOrdered;
@@ -44,15 +47,19 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 	private final IServiceRelationship serviceRelationship;
 
+	private final IServiceNotification serviceNotification;
+
 	@Autowired
 	public ServiceLadderImplRepository(final IServiceGroup serviceGroup,
 	                                   final IServiceUser serviceUser,
 	                                   final IServiceEvent serviceEvent,
-	                                   final IServiceRelationship serviceRelationship) {
+	                                   final IServiceRelationship serviceRelationship,
+	                                   final IServiceNotification serviceNotification) {
 		this.serviceGroup = serviceGroup;
 		this.serviceUser = serviceUser;
 		this.serviceEvent = serviceEvent;
 		this.serviceRelationship = serviceRelationship;
+		this.serviceNotification = serviceNotification;
 	}
 
 	// Ladder functions (CRUD)
@@ -165,7 +172,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 
 	@Override
-	public IEvent createLadderChallenge(Long ladderId, DtoEventLadder event)
+	public IEvent createLadderChallenge(Long ladderId, final DtoEventLadder event)
 			throws ServiceLadderExceptionNotAllowed,
 			ServiceLadderExceptionNotFound {
 
@@ -225,6 +232,43 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			// We set the initial date/time for the challenge a week in the future
 			// this can be modified by either challenger/challenged
 
+			if (false) {
+				Transaction transaction = new Transaction();
+				transaction.add(new Step() {
+					@Override
+					public Object execute() throws RuntimeException {
+						IEvent newEvent = new Event(event);
+
+						newEvent.setDescription(String.format("Ladder challenge - challenger (%s) challenged (%s)",
+								challenger.getFormattedFirstName() + " " + challenger.getFormattedLastName(),
+								challenged.getFormattedFirstName() + " " + challenged.getFormattedLastName()));
+						newEvent.setName("Ladder challenge");
+						newEvent.setOwnerId(challengerId);
+						newEvent.setType(EventType.CHALLENGE.toString());
+
+						return new DtoEventLadder(serviceEvent.create(newEvent, null));
+					}
+
+					@Override
+					public Object rollback() throws RuntimeException {
+						return null;
+					}
+				});
+
+				transaction.setCallback(new Transaction.ICallback() {
+					@Override
+					public void onError() {
+
+					}
+
+					@Override
+					public void onComplete() {
+
+					}
+				});
+				transaction.execute();
+			}
+
 			IEvent newEvent = new Event(event);
 
 			newEvent.setDescription(String.format("Ladder challenge - challenger (%s) challenged (%s)",
@@ -234,7 +278,8 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			newEvent.setOwnerId(challengerId);
 			newEvent.setType(EventType.CHALLENGE.toString());
 
-			event = new DtoEventLadder(serviceEvent.create(newEvent, null));
+			newEvent = serviceEvent.create(newEvent, null);
+
 
 			// We now create the relationship - users & event
 			// link the two players to the event using relationships
@@ -249,7 +294,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 				rLadder.setSourceType("Ladder");
 				rLadder.setSourceId(ladderId);
 				rLadder.setDestinationType("Event");
-				rLadder.setDestinationId(event.getId());
+				rLadder.setDestinationId(newEvent.getId());
 			}
 
 			r1 = new Relationship();
@@ -259,7 +304,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 				r1.setSourceType("User");
 				r1.setSourceId(challengerId);
 				r1.setDestinationType("Event");
-				r1.setDestinationId(event.getId());
+				r1.setDestinationId(newEvent.getId());
 			}
 
 			r2 = new Relationship();
@@ -267,7 +312,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 				r2.setBiDirectional(false);
 				r2.setType(RelationshipType.CHALLENGE.toString());
 				r2.setSourceType("Event");
-				r2.setSourceId(event.getId());
+				r2.setSourceId(newEvent.getId());
 				r2.setDestinationType("User");
 				r2.setDestinationId(challengedId);
 			}

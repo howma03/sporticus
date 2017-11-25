@@ -44,30 +44,7 @@ public class RestControllerEvent extends ControllerAbstract {
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody final DtoEvent event) {
         LOGGER.debug(() -> "Creating Event " + event.getName());
-        try {
-            return new ResponseEntity<>(new DtoEvent(serviceEvent.create(event, getLoggedInUser())), HttpStatus.OK);
-        } catch (ServiceEventExceptionNotAllowed ex) {
-            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
-        }
-    }
-
-    /**
-     * Function to delete an event
-     * @param id
-     * @return ResponseEntity<?>
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@PathVariable("id") final long id) {
-        try {
-            serviceEvent.delete(id, getLoggedInUser());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (ServiceEventExceptionNotAllowed ex) {
-            LOGGER.warn(() -> "Delete not allowed - id=" + id);
-            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
-        } catch (ServiceEventExceptionNotFound ex) {
-            LOGGER.warn(() -> "Event not found - id=" + id);
-            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(new DtoEvent(serviceEvent.create(event, getLoggedInUser())), HttpStatus.OK);
     }
 
     /**
@@ -129,6 +106,26 @@ public class RestControllerEvent extends ControllerAbstract {
             final IEvent updated = serviceEvent.update(event, getLoggedInUser());
             LOGGER.info(() -> "Updated Event with id " + id);
             return new ResponseEntity<>(new DtoEvent(updated), HttpStatus.OK);
+        } catch (ServiceEventExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Delete not allowed - id=" + id);
+            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+        } catch (ServiceEventExceptionNotFound ex) {
+            LOGGER.warn(() -> "Event not found - id=" + id);
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Function to delete an event
+     *
+     * @param id
+     * @return ResponseEntity<?>
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> delete(@PathVariable("id") final long id) {
+        try {
+            serviceEvent.delete(id, getLoggedInUser());
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (ServiceEventExceptionNotAllowed ex) {
             LOGGER.warn(() -> "Delete not allowed - id=" + id);
             return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);

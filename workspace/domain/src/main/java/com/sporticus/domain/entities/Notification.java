@@ -1,5 +1,6 @@
 package com.sporticus.domain.entities;
 
+import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.INotification;
 import com.sporticus.util.Utility;
 
@@ -30,6 +31,9 @@ public class Notification implements INotification {
 	private Long ownerId; // userId
 
 	@Column(nullable = true)
+	private Long eventId;
+
+	@Column(nullable = true)
 	private TYPE type;
 
 	@Column(nullable = true)
@@ -43,6 +47,24 @@ public class Notification implements INotification {
 
 	@Column(nullable = false)
 	private String text;
+
+	public Notification() {
+	}
+
+	public Notification(IEvent event) {
+		this.setEventId(event.getId());
+	}
+
+	@Override
+	public Long getEventId() {
+		return eventId;
+	}
+
+	@Override
+	public INotification setEventId(Long eventId) {
+		this.eventId = eventId;
+		return this;
+	}
 
 	@Override
 	public Date getCreated() {

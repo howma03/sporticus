@@ -1,7 +1,7 @@
 package com.sporticus.services.dto;
 
+import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.INotification;
-import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.util.Utility;
 
 import java.util.Date;
@@ -14,17 +14,23 @@ public class DtoNotification implements INotification {
     private final Date created = new Date();
     private Long id;
     private Long ownerId;
-    private String createdString = "";
+	private Long eventId; // optional
+	private String createdString = "";
 
-    private String title;
-    private String text;
-    private STATUS status;
-    private SEVERITY severity;
-    private TYPE type;
+	private String title = "";
+	private String text = "";
+	private STATUS status = STATUS.UNREAD;
+	private SEVERITY severity = SEVERITY.NORMAL;
+	private TYPE type = TYPE.SYSTEM;
 
     public DtoNotification() {
 
     }
+
+	public DtoNotification(IEvent event) {
+		this.eventId = event.getId();
+	}
+
 
     public DtoNotification(final INotification from) {
         INotification.COPY(from, this);
@@ -34,6 +40,17 @@ public class DtoNotification implements INotification {
     public Long getId() {
         return id;
     }
+
+	@Override
+	public Long getEventId() {
+		return eventId;
+	}
+
+	@Override
+	public INotification setEventId(Long eventId) {
+		this.eventId = eventId;
+		return this;
+	}
 
     public DtoNotification setId(final Long id) {
         this.id = id;
