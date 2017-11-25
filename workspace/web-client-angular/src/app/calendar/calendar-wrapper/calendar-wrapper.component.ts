@@ -1,11 +1,12 @@
-import {ChangeDetectorRef, Component, EventEmitter, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectorRef, Component, EventEmitter, OnInit, QueryList, ViewChild, ViewChildren,
+  ViewEncapsulation
+} from '@angular/core';
 import {CalendarComponent} from 'ng-fullcalendar';
 import {Options} from 'fullcalendar';
 import {Event, EventService} from '../../services/event.service';
-import {MatMenuTrigger, MatMenu} from '@angular/material';
-
-const dateObj = new Date();
-const yearMonth = dateObj.getUTCFullYear() + '-' + (dateObj.getUTCMonth() + 1);
+import {MatMenuTrigger} from '@angular/material';
+import {NavItem} from '../nav-item';
 
 @Component({
   selector: 'app-calendar-wrapper',
@@ -32,7 +33,12 @@ export class CalendarWrapperComponent implements OnInit {
 
   @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
 
-  @ViewChild(MatMenuTrigger) menu: MatMenuTrigger;
+  @ViewChildren(MatMenuTrigger) menuTriggers: QueryList<MatMenuTrigger>;
+
+
+  @ViewChild('dayMenuTrigger') dayMenu: MatMenuTrigger;
+
+  @ViewChild('dynamicMenuTrigger') dynamicMenu: MatMenuTrigger;
 
   constructor(private eventService : EventService, private ref: ChangeDetectorRef) {}
 
@@ -62,7 +68,6 @@ export class CalendarWrapperComponent implements OnInit {
 
   clickButton(model: any) {
     console.log('clickButton');
-    // this.displayEvent = model;
   }
 
   /**
@@ -74,7 +79,17 @@ export class CalendarWrapperComponent implements OnInit {
   dayClick(date: Date, jsEvent) {
     this.menuTop = jsEvent.clientY + 'px';
     this.menuLeft = jsEvent.clientX + 'px';
-    this.menu.openMenu();
+    let mt = this.menuTriggers;
+    mt.last.openMenu();
+  }
+
+  unavailableClicked() {
+    alert('set unavailable times');
+  }
+
+  scheduleMatchClicked() {
+    let mt = this.menuTriggers;
+    mt.first.openMenu();
   }
 
   eventClick(model: any) {
@@ -108,4 +123,61 @@ export class CalendarWrapperComponent implements OnInit {
     // }
     // this.displayEvent = model;
   }
+
+  navItems: NavItem[] = [
+    {
+      displayName: 'Ladder1',
+      iconName: 'group',
+      children: [
+        {
+          displayName: 'Bob Tarling (2 above)',
+          iconName: 'person',
+          route: null
+        },
+        {
+          displayName: 'Thomas Hardwick (1 above)',
+          iconName: 'person',
+          route: null
+        },
+        {
+          displayName: 'James nurse (1 below)',
+          iconName: 'person',
+          route: 'mike-brocchi',
+        }
+      ]
+    },
+    {
+      displayName: 'Ladder2',
+      iconName: 'group',
+      children: [
+        {
+          displayName: 'Bob Tarling (2 above)',
+          iconName: 'person',
+          route: null
+        },
+        {
+          displayName: 'Thomas Hardwick (1 above)',
+          iconName: 'person',
+          route: null
+        },
+        {
+          displayName: 'James nurse (1 below)',
+          iconName: 'person',
+          route: 'mike-brocchi',
+        }
+      ]
+    }
+  ];
+
+  navItems2: NavItem[] = [
+    {
+      displayName: 'Register Unavailable Times',
+      iconName: 'group',
+    },
+    {
+      displayName: 'Schedule Match',
+      iconName: 'games',
+      children: this.navItems
+    }
+  ];
 }
