@@ -237,7 +237,6 @@ public class ServiceGroupImplRepository implements IServiceGroup {
         if(user == null) {
             LOGGER.warn(() -> "User is not known - id="+groupMember.getUserId());
             throw new ServiceGroupException("User is not known - id="+groupMember.getUserId());
-
         }
 
         // Check to see if the user already has a membership for the group - only 1 per user is allowed
@@ -347,7 +346,6 @@ public class ServiceGroupImplRepository implements IServiceGroup {
             throw ex;
         }
     }
-
 
     /**
      * Function returns a list of all of the groups a user is a member of

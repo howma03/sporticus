@@ -2,6 +2,7 @@ package com.sporticus.web.services.test;
 
 import com.sporticus.domain.entities.GroupMember;
 import com.sporticus.domain.entities.Organisation;
+import com.sporticus.domain.entities.User;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.domain.interfaces.IGroupMember.Permission;
@@ -16,6 +17,7 @@ import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -36,6 +38,9 @@ public class DemoDataLoader {
 	private final IServiceLadder serviceLadder;
 
 	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
 	public DemoDataLoader(final IServiceUser serviceUser,
                             final IServiceGroup serviceGroup,
                             final IRepositoryGroupMember repositoryGroupMember,
@@ -50,13 +55,12 @@ public class DemoDataLoader {
 	@PostConstruct
 	private void init() {
 		LOGGER.debug(() -> "Checking for demo data");
-		// check for groups - if there are none then create one and make all users member of the new group
+		// check for groups - if there are less than 2 then create some and make all users member of the new group
 		List<IGroup> groupsLadder = serviceLadder.getLaddersForUser(null);
-		if (groupsLadder.size() == 0) {
+		if (groupsLadder.size() < 2) {
 			this.load();
 		}
 	}
-
 
 	public void load() {
 		LOGGER.debug(() -> "Creating demo data");
@@ -65,6 +69,41 @@ public class DemoDataLoader {
 			List<IUser> users = serviceUser.getAll();
 
 			if (users.size() > 0) {
+				if(users.size() == 1){
+
+					users.add(serviceUser.addUser(new User()
+							.setAdmin(false)
+							.setFirstName("Angela")
+							.setLastName("Alright")
+							.setEmail("angela@sporticus.com")
+							.setPassword(passwordEncoder.encode("S0uthern"))
+							.setVerified(true)
+							.setEnabled(true)));
+					users.add(serviceUser.addUser(new User()
+							.setAdmin(false)
+							.setFirstName("Ben")
+							.setLastName("Boring")
+							.setEmail("ben@sporticus.com")
+							.setPassword(passwordEncoder.encode("S0uthern"))
+							.setVerified(true)
+							.setEnabled(true)));
+					users.add(serviceUser.addUser(new User()
+							.setAdmin(false)
+							.setFirstName("Colin")
+							.setLastName("Cool")
+							.setEmail("colin@sporticus.com")
+							.setPassword(passwordEncoder.encode("S0uthern"))
+							.setVerified(true)
+							.setEnabled(true)));
+					users.add(serviceUser.addUser(new User()
+							.setAdmin(false)
+							.setFirstName("Martin")
+							.setLastName("Manchester")
+							.setEmail("martin@sporticus.com")
+							.setPassword(passwordEncoder.encode("S0uthern"))
+							.setVerified(true)
+							.setEnabled(true)));
+				}
 
 				List<IOrganisation> orgs = serviceOrganisation.readAllOrganisations();
 				if (orgs.size() == 0) {
@@ -82,28 +121,30 @@ public class DemoDataLoader {
 
 				// check for ladder groups
 
-				if (serviceLadder.readLaddersGroups().size() > 0) {
+				if (serviceLadder.readLaddersGroups().size() > 1) {
 					return;
 				}
 
 				// Create a ladder group
 
-				IGroup group = serviceLadder.createLadder(null,
-						"My First Ladder Group",
-						"Example ladder competition",
-						org);
+				for(int i=0;i<2;i++) {
+					IGroup group = serviceLadder.createLadder(null,
+							"My Ladder Group "+i,
+							"Example ladder competition",
+							org);
 
-				for (IUser user : users) {
-					IGroupMember gm = new GroupMember()
-							.setCreated(new Date())
-							.setEnabled(true)
-							.setAcceptedOrRejectedDate(new Date())
-							.setGroupId(group.getId())
-							.setUserId(user.getId())
-							.setPermissions(Permission.WRITE)
-							.setStatus(Status.Accepted);
+					for(IUser user : users) {
+						IGroupMember gm = new GroupMember()
+								.setCreated(new Date())
+								.setEnabled(true)
+								.setAcceptedOrRejectedDate(new Date())
+								.setGroupId(group.getId())
+								.setUserId(user.getId())
+								.setPermissions(Permission.WRITE)
+								.setStatus(Status.Accepted);
 
-					serviceGroup.createGroupMember(gm, null);
+						serviceGroup.createGroupMember(gm, null);
+					}
 				}
 			}
 

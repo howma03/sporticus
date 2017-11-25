@@ -45,9 +45,7 @@ public class ServiceEventImplRepository implements IServiceEvent {
 
 	@Override
 	public IEvent create(IEvent event, IUser actor) {
-		IEvent newEvent = repositoryEvent.save((Event) event);
-		serviceNotification.createNotifications(actor, newEvent, OPERATION.CREATE);
-		return newEvent;
+		return repositoryEvent.save((Event) event);
 	}
 
 	public List<IEvent> findByOwnerId(Long userId) {

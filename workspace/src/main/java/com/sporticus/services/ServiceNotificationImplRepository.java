@@ -71,7 +71,7 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 
 		for (Relationships relationship : relationships) {
 			List<IRelationship> src = relationship.getSources().stream().filter(r -> r.getSourceType().equalsIgnoreCase("user")).collect(Collectors.toList());
-			List<IRelationship> dest = relationship.getDestinations().stream().filter(r -> r.getSourceType().equalsIgnoreCase("user")).collect(Collectors.toList());
+			List<IRelationship> dest = relationship.getDestinations().stream().filter(r -> r.getDestinationType().equalsIgnoreCase("user")).collect(Collectors.toList());
 
 			if (event.getType().equalsIgnoreCase(EventType.CHALLENGE.toString())) {
 				/// we can assume ladder (at the moment)
@@ -110,6 +110,8 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 							break;
 						}
 					}
+
+					list.add(repositoryNotification.save((Notification)newNotification));
 				});
 			}
 		}

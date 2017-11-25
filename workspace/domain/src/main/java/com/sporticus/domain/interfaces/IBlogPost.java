@@ -4,9 +4,9 @@ import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
 
-public interface IPost {
+public interface IBlogPost {
 
-	static IPost COPY(final IPost from, final IPost to) {
+	static IBlogPost COPY(final IBlogPost from, final IBlogPost to) {
 		if(from == null)  return null;
 		if(to == null)  return null;
 
@@ -20,21 +20,21 @@ public interface IPost {
 
 	Date getCreated();
 
-	IPost setCreated(Date created);
+	IBlogPost setCreated(Date created);
 
 	String getCreatedString();
 
 	Date getDateTime();
 
-	IPost setDateTime(Date dateTime);
+	IBlogPost setDateTime(Date dateTime);
 
 	String getDateTimeString();
 
 	String getTitle();
 
-	IPost setTitle(String title);
+	IBlogPost setTitle(String title);
 
 	String getContent();
 
-	IPost setContent(String content);
+	IBlogPost setContent(String content);
 }

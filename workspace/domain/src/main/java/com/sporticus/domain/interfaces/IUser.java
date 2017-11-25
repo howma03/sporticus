@@ -92,6 +92,9 @@ public interface IUser {
 
     default String getFormattedFirstName() {
         final String firstName = getFirstName();
+        if(firstName==null) {
+            return "";
+        }
         if(firstName.length() > 0) {
             return firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
         }
@@ -100,7 +103,10 @@ public interface IUser {
 
     default String getFormattedLastName() {
         final String lastName = getLastName();
-        if(lastName.length() > 0) {
+        if(lastName==null) {
+            return "";
+        }
+         if(lastName.length() > 0) {
             return lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
         }
         return lastName;

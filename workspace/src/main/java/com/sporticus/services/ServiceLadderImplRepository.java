@@ -3,13 +3,8 @@ package com.sporticus.services;
 import com.sporticus.domain.entities.Event;
 import com.sporticus.domain.entities.Group;
 import com.sporticus.domain.entities.Relationship;
-import com.sporticus.domain.interfaces.IEvent;
+import com.sporticus.domain.interfaces.*;
 import com.sporticus.domain.interfaces.IEvent.STATUS;
-import com.sporticus.domain.interfaces.IGroup;
-import com.sporticus.domain.interfaces.IGroupMember;
-import com.sporticus.domain.interfaces.IOrganisation;
-import com.sporticus.domain.interfaces.IRelationship;
-import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.interfaces.IServiceEvent;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceLadder;
@@ -70,11 +65,11 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 	public IGroup createLadder(IUser actor, String name, String description, IOrganisation ownerOrganisation) {
 		IGroup group = new Group();
 		group.setType(GroupType.LADDER.toString());
-		group.setName("Ladder Group");
+		group.setName(name);
 		group.setEnabled(true);
-		group.setDescription("A ladder group");
+		group.setDescription(description);
 		group.setOwnerOrganisationId(ownerOrganisation.getId());
-		return null;
+		return this.serviceGroup.createGroup(ownerOrganisation, group);
 	}
 
 	@Override
@@ -101,7 +96,8 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 	public void updateLadder() {
 	}
 
-	public void deleteLadder() {
+	public void deleteLadder(long ladderId) {
+		// TODO: Ensure we delete all relationships to the ladder
 	}
 
 	// Ladder Member functions
@@ -281,8 +277,8 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			IEvent newEvent = new Event(event);
 
 			newEvent.setDescription(String.format("Ladder challenge - challenger (%s) challenged (%s)",
-					challenger.getFormattedFirstName() + " " + challenger.getFormattedLastName(),
-					challenged.getFormattedFirstName() + " " + challenged.getFormattedLastName()));
+					challenger.getFormattedName(),
+					challenged.getFormattedName()));
 			newEvent.setName("Ladder challenge");
 			newEvent.setOwnerId(challengerId);
 			newEvent.setType(EventType.CHALLENGE.toString());
@@ -331,6 +327,8 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			serviceRelationship.create(rLadder);
 			serviceRelationship.create(r1);
 			serviceRelationship.create(r2);
+
+			serviceNotification.createNotifications(null, newEvent, INotification.OPERATION.CREATE);
 
 		} catch (Exception ex) {
 
