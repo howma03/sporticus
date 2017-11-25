@@ -4,12 +4,34 @@
 <div class="calendar-panel" *ngIf="calendarOptions">
   <ng-fullcalendar #ucCalendar [options]="calendarOptions" (eventClick)="eventClick($event.detail)" (dayClick)="dayClick($event.detail)" (eventDrop)="updateEvent($event.detail)"
                    (eventResize)="updateEvent($event.detail)" (clickButton)="clickButton($event.detail)"></ng-fullcalendar>
-  <div [style.left]="menuLeft" [style.top]="menuTop" class="position-menu" mat-button [matMenuTriggerFor]="menu"></div>
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item>
+
+  <div #dynamicMenuTrigger [style.left]="menuLeft" [style.top]="menuTop" class="position-menu" mat-button [matMenuTriggerFor]="dynamicMenu"></div>
+  <div class="basic-container">
+    <mat-menu #dynamicMenu>
+      <span *ngFor="let item of navItems">
+        <!-- Handle branch node buttons here -->
+        <span *ngIf="item.children && item.children.length > 0">
+          <button mat-menu-item color="primary" [matMenuTriggerFor]="menu.childMenu">
+            {{item.displayName}}
+          </button>
+          <app-menu-item #menu [items]="item.children"></app-menu-item>
+        </span>
+        <!-- Leaf node buttons here -->
+        <span *ngIf="!item.children || item.children.length === 0">
+          <button mat-menu-item color="primary">
+            {{item.displayName}}
+          </button>
+        </span>
+      </span>
+    </mat-menu>
+  </div>
+
+  <div #dayMenuTrigger [style.left]="menuLeft" [style.top]="menuTop" class="position-menu" mat-button [matMenuTriggerFor]="dayMenu"></div>
+  <mat-menu #dayMenu>
+    <button mat-menu-item (click)="unavailableClicked()">
       <span>Mark Unavailable</span>
     </button>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="scheduleMatchClicked()">
       <span>Schedule Match</span>
     </button>
   </mat-menu>
