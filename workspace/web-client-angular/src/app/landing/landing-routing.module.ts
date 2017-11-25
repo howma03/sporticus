@@ -12,13 +12,15 @@ import {RegisterComponent} from "../registration/register/register.component";
 import {InitialComponent} from "./initial/initial.component";
 import {ResetPasswordComponent} from "../login/reset-password/reset-password.component";
 import {PricesComponent} from "./prices/prices.component";
+import {DevelopmentTeamComponent} from "./development-team/development-team.component";
+import {Initial2Component} from "./initial-2/initial-2.component";
 
 const landingRoutes: Routes = [
   {
     path: '',
     component: LandingComponent,
     children: [
-      {path: '', component: InitialComponent},
+      {path: '', component: Initial2Component},
       {path: 'login', component: LoginComponent},
       {path: 'resetpassword/:email', component: ResetPasswordComponent},
       {path: 'register', component: RegisterComponent},
@@ -27,6 +29,7 @@ const landingRoutes: Routes = [
       {path: 'help/**', component: HelpComponent},
       {path: 'clubs', component: ClubsComponent},
       {path: 'prices', component: PricesComponent},
+      {path: 'development-team', component: DevelopmentTeamComponent},
       {path: 'legal', component: LegalComponent},
       {path: 'legal/disclosure_policy', component: LegalDisclosurePolicyComponent},
       {path: 'contact', component: ContactComponent},

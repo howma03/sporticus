@@ -16,6 +16,9 @@ import {NgxCarouselModule} from "ngx-carousel";
 import {PricesComponent} from './prices/prices.component';
 import {LoginModule} from "../login/login.module";
 import {RegistrationModule} from "../registration/registration.module";
+import { DevelopmentTeamComponent } from './development-team/development-team.component';
+import { Initial2Component } from './initial-2/initial-2.component';
+import {AngularFontAwesomeModule} from "angular-font-awesome";
 
 @NgModule({
   imports: [
@@ -28,9 +31,12 @@ import {RegistrationModule} from "../registration/registration.module";
     DashboardModule,
     PageHeaderModule,
     SparkModule,
-    LandingRoutingModule
+    LandingRoutingModule,
+    AngularFontAwesomeModule
   ],
   exports: [],
-  declarations: [LandingComponent, HeaderComponent, AboutComponent, LegalComponent, ContactComponent, ClubsComponent, HelpComponent, OverviewComponent, LegalDisclosurePolicyComponent, InitialComponent, PricesComponent]
+  declarations: [LandingComponent, HeaderComponent, AboutComponent, LegalComponent, ContactComponent,
+    ClubsComponent, HelpComponent, OverviewComponent, LegalDisclosurePolicyComponent, InitialComponent,
+    PricesComponent, DevelopmentTeamComponent, Initial2Component]
 })
 export class LandingModule { }

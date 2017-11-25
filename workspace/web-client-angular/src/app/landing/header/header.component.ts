@@ -24,6 +24,10 @@ export class HeaderComponent implements OnInit {
   items: PageHeaderNavigationItem[] = [
     {
       icon: 'hpe-help',
+      title: 'Sporticus',
+      select: () => this.goLanding()
+    },    {
+      icon: 'hpe-help',
       title: 'About',
       select: () => this.goAbout()
     },
@@ -53,6 +57,10 @@ export class HeaderComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private router: Router) {
+  }
+
+  goLanding() {
+    this.router.navigate(['landing']);
   }
 
   goAbout() {
