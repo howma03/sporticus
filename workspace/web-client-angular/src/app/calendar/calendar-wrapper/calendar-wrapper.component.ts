@@ -168,4 +168,16 @@ export class CalendarWrapperComponent implements OnInit {
       ]
     }
   ];
+
+  navItems2: NavItem[] = [
+    {
+      displayName: 'Register Unavailable Times',
+      iconName: 'group',
+    },
+    {
+      displayName: 'Schedule Match',
+      iconName: 'games',
+      children: this.navItems
+    }
+  ];
 }
