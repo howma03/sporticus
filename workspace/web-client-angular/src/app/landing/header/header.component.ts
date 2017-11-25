@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
 
   items: PageHeaderNavigationItem[] = [
     {
-      icon: 'hpe-help',
+      icon: 'hpe-bookmark',
       title: 'Sporticus',
       select: () => this.goLanding()
     },    {
