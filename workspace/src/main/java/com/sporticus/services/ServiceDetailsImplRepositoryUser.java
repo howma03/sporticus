@@ -24,8 +24,13 @@ public class ServiceDetailsImplRepositoryUser implements org.springframework.sec
 
 	private static final Logger LOGGER = LogFactory.getLogger(ServiceDetailsImplRepositoryUser.class.getName());
 
-	@Autowired
 	private IRepositoryUser userRepository;
+
+	@Autowired
+	public ServiceDetailsImplRepositoryUser(IRepositoryUser userRepository) {
+		LOGGER.debug(() -> "Default CTOR");
+		this.userRepository = userRepository;
+	}
 
 	private List<GrantedAuthority> buildUserAuthority(final List<String> roles) {
 		final Set<GrantedAuthority> setAuthorities = new HashSet<>();
