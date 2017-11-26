@@ -52,8 +52,8 @@ export class UserTableComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((updateRequired) => {
       if (updateRequired) {
-        this.messageService.add({severity:'success', summary:'User updated', detail:'User details updated'});
         this.updateUserDetails();
+        this.messageService.add({severity: 'success', summary: 'User updated', detail: 'User details updated'});
       }
     });
   }
@@ -79,8 +79,8 @@ export class UserTableComponent implements OnInit {
 
   public deleteUser(itemId) {
     this.usersService.deleteOne(itemId).subscribe(() => {
-      this.messageService.add({severity:'warn', summary:'User deleted', detail:'User deleted successfully'});
       this.updateUserDetails();
+      this.messageService.add({severity: 'warn', summary: 'User deleted', detail: 'User deleted successfully'});
     });
   }
 }

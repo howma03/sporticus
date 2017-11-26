@@ -6,7 +6,6 @@ import {ServicesModule} from "../../services/services.module";
 import {UserComponent} from './user/user.component';
 import {FormsModule} from "@angular/forms";
 import {HoverActionModule} from "@ux-aspects/ux-aspects";
-import {GrowlModule} from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -16,8 +15,7 @@ import {GrowlModule} from 'primeng/primeng';
     MatGridListModule,
     ServicesModule,
     MatDialogModule,
-    HoverActionModule,
-    GrowlModule
+    HoverActionModule
   ],
   exports: [
     UserTableComponent

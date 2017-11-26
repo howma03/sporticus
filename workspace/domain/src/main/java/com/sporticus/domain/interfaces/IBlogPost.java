@@ -37,4 +37,12 @@ public interface IBlogPost {
 	String getContent();
 
 	IBlogPost setContent(String content);
+
+	String getKeywords();
+
+	IBlogPost setKeywords(String keywords);
+
+	String getTags();
+
+	IBlogPost setTags(String tags);
 }

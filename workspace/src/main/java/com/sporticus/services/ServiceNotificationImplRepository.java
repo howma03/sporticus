@@ -55,7 +55,7 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 		INotification.COPY(notification, newNotification);
 		// If the actor is not an admin then they should own the notification
 		if (actor != null) {
-			if (!actor.isAdmin()) {
+			if (newNotification.getOwnerId() == null) {
 				newNotification.setOwnerId(actor.getId());
 			}
 		}

@@ -16,6 +16,7 @@ import {FooterComponent} from "./footer/footer.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {AuthModule} from "./auth/auth.module";
 import {MessageService} from 'primeng/components/common/messageservice';
+import {GrowlModule} from 'primeng/primeng';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {MessageService} from 'primeng/components/common/messageservice';
     OrganisationModule,
     NotificationModule,
     // Keep routing module last!
-    AppRoutingModule
+    AppRoutingModule,
+    GrowlModule
   ],
   providers: [MessageService,
     {
@@ -42,6 +44,7 @@ import {MessageService} from 'primeng/components/common/messageservice';
     useClass: AuthInterceptor,
     multi: true,
   }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [GrowlModule]
 })
 export class AppModule { }

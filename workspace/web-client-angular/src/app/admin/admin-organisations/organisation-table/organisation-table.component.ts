@@ -78,8 +78,12 @@ export class OrganisationTableComponent implements OnInit {
 
   public deleteOrganisation(itemId) {
     this.organisationService.deleteOne(itemId).subscribe(() => {
-      this.messageService.add({severity:'warn', summary:'Organisation deleted', detail:'Organisation deleted successfully'});
       this.updateOrganisationDetails();
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Organisation deleted',
+        detail: 'Organisation deleted successfully'
+      });
     });
   }
 }
