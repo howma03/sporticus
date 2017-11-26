@@ -79,6 +79,7 @@ export class UserTableComponent implements OnInit {
 
   public deleteUser(itemId) {
     this.usersService.deleteOne(itemId).subscribe(() => {
+      this.messageService.add({severity:'warn', summary:'User deleted', detail:'User deleted successfully'});
       this.updateUserDetails();
     });
   }

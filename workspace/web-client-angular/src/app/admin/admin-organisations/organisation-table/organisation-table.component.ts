@@ -5,6 +5,8 @@ import 'rxjs/add/observable/of';
 import {OrganisationComponent} from "../organisation/organisation.component";
 import {MatDialog} from "@angular/material";
 import {ConfirmDialogComponent} from "../../../shared/confirm-dialog/confirm-dialog.component";
+import {Message} from "primeng/primeng";
+import {MessageService} from "primeng/components/common/messageservice";
 
 @Component({
   selector: 'organisation-table',
@@ -15,9 +17,11 @@ export class OrganisationTableComponent implements OnInit {
 
   public orgs: Organisation[] = [];
   private subscription: Subscription;
+  protected msgs: Message[] = [];
 
   constructor(private organisationService: OrganisationService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private messageService: MessageService) {
   }
 
   ngOnInit() {
@@ -25,7 +29,6 @@ export class OrganisationTableComponent implements OnInit {
   }
 
   public view(itemId) {
-    console.info("view - id="+itemId);
     this.openModal(itemId);
   }
 
@@ -50,6 +53,7 @@ export class OrganisationTableComponent implements OnInit {
     dialogRef.afterClosed().subscribe((updateRequired) => {
       if (updateRequired) {
         this.updateOrganisationDetails();
+        this.messageService.add({severity:'success', summary:'Organisation updated', detail:'Organisation details updated'});
       }
     });
   }
@@ -74,6 +78,7 @@ export class OrganisationTableComponent implements OnInit {
 
   public deleteOrganisation(itemId) {
     this.organisationService.deleteOne(itemId).subscribe(() => {
+      this.messageService.add({severity:'warn', summary:'Organisation deleted', detail:'Organisation deleted successfully'});
       this.updateOrganisationDetails();
     });
   }

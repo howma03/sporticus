@@ -7,6 +7,7 @@ import {ServicesModule} from "../../services/services.module";
 import {HoverActionModule, SparkModule} from "@ux-aspects/ux-aspects";
 import {OrganisationComponent} from './organisation/organisation.component';
 import {FormsModule} from "@angular/forms";
+import {GrowlModule} from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import {FormsModule} from "@angular/forms";
     ServicesModule,
     SparkModule,
     MatDialogModule,
-    HoverActionModule
+    HoverActionModule,
+    GrowlModule
   ],
   exports: [
     OrganisationTableComponent
