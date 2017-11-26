@@ -55,14 +55,14 @@ public class DemoDataLoader {
 	@PostConstruct
 	private void init() {
 		LOGGER.debug(() -> "Checking for demo data");
-		// check for groups - if there are less than 2 then create some and make all users member of the new group
-		List<IGroup> groupsLadder = serviceLadder.getLaddersForUser(null);
+		// check for groups - if there are none then create one and make all users member of the new group
+		List<IGroup> groupsLadder = serviceLadder.readLaddersGroups();
 		if (groupsLadder.size() < 2) {
-			this.load();
+			this.generateLadders();
 		}
 	}
 
-	public void load() {
+	public void generateLadders() {
 		LOGGER.debug(() -> "Creating demo data");
 		try {
 			IOrganisation org;
@@ -119,12 +119,6 @@ public class DemoDataLoader {
 
 				org = orgs.get(0);
 
-				// check for ladder groups
-
-				if (serviceLadder.readLaddersGroups().size() > 1) {
-					return;
-				}
-
 				// Create a ladder group
 
 				for(int i=0;i<2;i++) {
@@ -149,7 +143,7 @@ public class DemoDataLoader {
 			}
 
 		} catch (Exception ex) {
-			LOGGER.error(() -> "Failed to load demo data", ex);
+			LOGGER.error(() -> "Failed to generateLadders demo data", ex);
 		}
 	}
 }
