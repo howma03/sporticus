@@ -6,6 +6,7 @@ import {ServicesModule} from "../../services/services.module";
 import {UserComponent} from './user/user.component';
 import {FormsModule} from "@angular/forms";
 import {HoverActionModule} from "@ux-aspects/ux-aspects";
+import {GrowlModule} from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import {HoverActionModule} from "@ux-aspects/ux-aspects";
     MatGridListModule,
     ServicesModule,
     MatDialogModule,
-    HoverActionModule
+    HoverActionModule,
+    GrowlModule
   ],
   exports: [
     UserTableComponent
@@ -23,8 +25,7 @@ import {HoverActionModule} from "@ux-aspects/ux-aspects";
   entryComponents: [
     UserComponent
   ],
-  declarations: [UserTableComponent, UserComponent],
-  providers: []
+  declarations: [UserTableComponent, UserComponent]
 })
 export class AdminUsersModule {
 }

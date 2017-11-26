@@ -15,6 +15,7 @@ import {NotificationModule} from "./notification/notification.module";
 import {FooterComponent} from "./footer/footer.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {AuthModule} from "./auth/auth.module";
+import {MessageService} from 'primeng/components/common/messageservice';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import {AuthModule} from "./auth/auth.module";
     // Keep routing module last!
     AppRoutingModule
   ],
-  providers: [{
+  providers: [MessageService,
+    {
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true,

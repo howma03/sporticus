@@ -11,17 +11,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 
-@Controller
+@RestController
 public class RestControllerPushImplSse extends ControllerAbstract {
 
 	private final static Logger LOGGER = LogFactory.getLogger(RestControllerPushImplSse.class.getName());
 
+	@Autowired
+	private static SseEngine sseEngine;
+
 	@GetMapping("/api/notification/feed")
 	public ResponseEntity<SseEmitter> getResults() {
+
+		if(sseEngine==null){
+			LOGGER.warn(()->"No SSE Engine available");
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
 		final Long fLoggedInUserId = getLoggedInUserId();
 		SseEmitter emitter = sseEngine.getEmitters().get(fLoggedInUserId);
@@ -48,8 +57,6 @@ public class RestControllerPushImplSse extends ControllerAbstract {
 		return new ResponseEntity<>(emitter, HttpStatus.OK);
 	}
 
-	@Autowired
-	private static SseEngine sseEngine;
 
 	public RestControllerPushImplSse() {
 

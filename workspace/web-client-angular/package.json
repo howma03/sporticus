@@ -27,6 +27,7 @@
     "angular-animate": "^1.6.7",
     "angular-font-awesome": "^3.0.3",
     "angular2-moment": "^1.7.0",
+    "angular2-toaster": "^4.0.1",
     "animate.css": "^3.5.2",
     "animate.css-js": "0.0.9",
     "bootstrap": "^4.0.0-beta.2",
@@ -40,6 +41,7 @@
     "ng-fullcalendar": "^1.1.0",
     "ngx-carousel": "^1.3.2",
     "popper.js": "^1.12.6",
+    "primeng": "^5.0.2",
     "rxjs": "^5.4.2",
     "web-animations-js": "^2.3.1",
     "zone.js": "^0.8.14"

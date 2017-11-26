@@ -36,7 +36,9 @@ export class AgendaComponent implements OnInit {
       .map(list => list.data)
       .subscribe((events: CalenderEvent[]) => {
         this.loading = false;
-        this.events = events.sort((eventa, eventb) => eventb.dateTime.getTime() - eventa.dateTime.getTime());
+        this.events = events.sort((eventa, eventb) => {
+          return new Date(eventb.dateTime).getTime() - new Date(eventa.dateTime).getTime();
+        });
       });
   }
 

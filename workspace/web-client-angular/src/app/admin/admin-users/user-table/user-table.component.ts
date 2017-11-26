@@ -4,6 +4,8 @@ import {MatDialog} from "@angular/material";
 import {User, UsersService} from "../../../services/users.service";
 import {UserComponent} from "../user/user.component";
 import {ConfirmDialogComponent} from "../../../shared/confirm-dialog/confirm-dialog.component";
+import {Message} from "primeng/primeng";
+import {MessageService} from "primeng/components/common/messageservice";
 
 @Component({
   selector: 'user-table',
@@ -13,9 +15,11 @@ import {ConfirmDialogComponent} from "../../../shared/confirm-dialog/confirm-dia
 export class UserTableComponent implements OnInit {
 
   public users: User[] = [];
+  protected msgs: Message[] = [];
 
   constructor(private usersService: UsersService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private messageService: MessageService) {
   }
 
   ngOnInit() {
@@ -48,6 +52,7 @@ export class UserTableComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((updateRequired) => {
       if (updateRequired) {
+        this.messageService.add({severity:'success', summary:'User updated', detail:'User details updated'});
         this.updateUserDetails();
       }
     });
@@ -73,7 +78,6 @@ export class UserTableComponent implements OnInit {
   }
 
   public deleteUser(itemId) {
-    console.info("delete - id=" + itemId);
     this.usersService.deleteOne(itemId).subscribe(() => {
       this.updateUserDetails();
     });

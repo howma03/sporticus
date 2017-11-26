@@ -22,7 +22,7 @@ import {SharedModule} from "../shared/shared.module";
   ],
   exports: [],
   entryComponents: [],
-  declarations: [AdminMainComponent]
+  declarations: [AdminMainComponent],
 })
 export class AdminModule {
 }

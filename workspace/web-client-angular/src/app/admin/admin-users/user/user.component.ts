@@ -54,7 +54,6 @@ export class UserComponent implements OnInit {
     this.usersService.createOne(user)
       .subscribe(success => {
         if (success) {
-          alert("The user - " + user.email + " successfully created.");
           this.closeWindow(true);
         }
       }, err => {
@@ -66,7 +65,6 @@ export class UserComponent implements OnInit {
     this.usersService.updateOne(user.id, user)
       .subscribe(success => {
         if (success) {
-          alert("The organisation - " + user.email + " successfully edited.");
           this.closeWindow(true);
         }
       }, err => {
