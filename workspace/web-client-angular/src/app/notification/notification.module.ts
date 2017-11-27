@@ -5,7 +5,7 @@ import {NotificationService} from "./notification.service";
 import {ServicesModule} from "../services/services.module";
 import { NotificationManagementComponent } from './notification-management/notification-management.component';
 import { ManageNotificationComponent } from './manage-notification/manage-notification.component';
-import {MatFormFieldModule} from "@angular/material";
+import {MatFormFieldModule, MatTooltipModule} from "@angular/material";
 import {FormsModule} from "@angular/forms";
 
 @NgModule({
@@ -13,7 +13,8 @@ import {FormsModule} from "@angular/forms";
     CommonModule,
     ServicesModule,
     MatFormFieldModule,
-    FormsModule
+    FormsModule,
+    MatTooltipModule
   ],
   entryComponents: [
     ManageNotificationComponent

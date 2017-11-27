@@ -2,7 +2,7 @@
 
   <div>
     <button type="button" class="btn button-primary" (click)="openModal()">
-      <span class="hpe-icon hpe-notification" aria-hidden="true"></span>&nbsp;Add Notification
+      <span class="hpe-icon hpe-notification" aria-hidden="true"></span>&nbsp;Broadcast Message
     </button>
   </div>
 
@@ -10,15 +10,27 @@
     <thead>
     <tr class="table-header-dark">
       <th>Severity (Icon)</th>
+      <th>Type</th>
       <th>Title</th>
       <th>Text</th>
+      <th>Status</th>
+      <th>Date Created</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
-    <tr class="hover-action-container" *ngFor="let item of notifications" uxHoverActionContainer>
-      <td class="text-black">{{ item.severity }}</td>
-      <td class="text-black">{{ item.title }}</td>
-      <td class="text-black">{{ item.text }}</td>
+    <tr class= "{{item.status === 'UNREAD' ? 'one' : 'two'}}" *ngFor="let item of notifications" uxHoverActionContainer>
+        <td>{{ item.severity }}</td>
+        <td>{{ item.type }}</td>
+        <td>{{ item.title }}</td>
+        <td>{{ item.text }}</td>
+        <td>{{ item.status }}</td>
+        <td>{{ item.createdString }}</td>
+        <td>
+          <i *ngIf="item.status === 'UNREAD'" class="hpe-icon hpe-vulnerability hover-action-icon" (click)="markRead(rung)" [matTooltip]="getTooltip(rung)"></i>
+          <i *ngIf="item.status !== 'UNREAD'" class="hpe-icon hpe-target hover-action-icon" (click)="markUnread(rung)" [matTooltip]="getTooltip(rung)"></i>
+        </td>
+
     </tr>
     </tbody>
   </table>

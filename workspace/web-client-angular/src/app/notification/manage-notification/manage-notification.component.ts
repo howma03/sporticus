@@ -12,7 +12,7 @@ import {MessageService} from 'primeng/components/common/messageservice';
 export class ManageNotificationComponent implements OnInit {
 
   protected submitText = 'SEND';
-  protected creationDescription: String = 'To send a new notification please enter it below';
+  protected creationDescription: String = 'To create a new notification please enter it below';
   protected details: NotificationInterface = <NotificationInterface>{};
 
   constructor(

@@ -36,6 +36,19 @@ export class NotificationListComponent implements OnInit {
       });
   }
 
+  markRead() {}
+
+  markUnread() {}
+
+  /**
+   * Return a tooltip customized for the item being hovered over
+   * @param {LadderUser} rung
+   * @returns {string}
+   */
+  getTooltip(rung ) {
+    return 'doh';
+  }
+
   public openModal(itemId): void {
     const item = this.notifications.find(item => item.id === itemId);
 
