@@ -49,6 +49,9 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 		this.serviceUser = serviceUser;
 	}
 
+	@Autowired
+	private SseEngine engine;
+
 	@Override
 	public INotification createNotification(IUser actor, INotification notification) {
 		LOGGER.info(() -> "Creating an notification - " + notification);
@@ -60,11 +63,15 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 				newNotification.setOwnerId(actor.getId());
 			}
 		}
+
+		try {
+			engine.getEmitterByUserId(newNotification.getOwnerId()).send(newNotification);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		return repositoryNotification.save((Notification)newNotification);
 	}
-
-	@Autowired
-	private SseEngine engine;
 
 	@Override
 	public List<INotification> createNotifications(IUser actor, IEvent event, OPERATION operation) throws ServiceNotificationExceptionNotAllowed {

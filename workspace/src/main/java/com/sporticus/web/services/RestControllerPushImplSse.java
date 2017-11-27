@@ -16,13 +16,13 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 
-@RestController
+@Controller
 public class RestControllerPushImplSse extends ControllerAbstract {
 
 	private final static Logger LOGGER = LogFactory.getLogger(RestControllerPushImplSse.class.getName());
 
 	@Autowired
-	private static SseEngine sseEngine;
+	private SseEngine sseEngine;
 
 	@GetMapping("/api/notification/feed")
 	public ResponseEntity<SseEmitter> getResults() {
@@ -47,12 +47,6 @@ public class RestControllerPushImplSse extends ControllerAbstract {
 			});
 
 			sseEngine.getEmitters().put(fLoggedInUserId, emitter);
-
-			this.send(emitter, new Notification()
-					.setOwnerId(this.getLoggedInUserId())
-					.setTitle("Test")
-					.setType(TYPE.APPLICATION)
-					.setText("Something happened"));
 		}
 		return new ResponseEntity<>(emitter, HttpStatus.OK);
 	}
@@ -62,25 +56,14 @@ public class RestControllerPushImplSse extends ControllerAbstract {
 
 	}
 
-	public static void sendEventAll() {
-	}
-
-	public static void sendEventToOne(Long loggedInUserId, INotification notification) {
-		SseEmitter emitterByUserId = sseEngine.getEmitterByUserId(loggedInUserId);
-		if(emitterByUserId != null) {
-			send(emitterByUserId, notification);
-		}
-	}
-
-
-	private static void send(SseEmitter emitter, INotification notification) {
+	private  void send(SseEmitter emitter, INotification notification) {
 		new Thread(() -> {
 			try {
-				Thread.sleep(1000 * 10);
-					emitter.send("Hello");
+				//TODO - Convert to JSON.
+				emitter.send(notification);
 				emitter.complete();
-			} catch (IOException | InterruptedException ex) {
-				LOGGER.warn(() -> "Failed to push notification", ex);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}).start();
 	}

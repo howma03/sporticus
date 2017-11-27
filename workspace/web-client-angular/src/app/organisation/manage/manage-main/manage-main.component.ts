@@ -53,7 +53,6 @@ export class ManageMainComponent implements OnInit {
 
   updateRouter() {
     if (this.organisationId != null && this.subComponent != null) {
-      debugger;
       this.router.navigate(['./', this.organisationId, this.subComponent], {relativeTo: this.route.parent});
 
     }
