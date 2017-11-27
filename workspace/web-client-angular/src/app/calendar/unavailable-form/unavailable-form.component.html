@@ -1,0 +1,32 @@
+<h2>Register Unavailable</h2>
+<form (ngSubmit)="onSave()" [formGroup]="unavailableForm">
+  <div formGroupName="fromDate">
+    <mat-form-field>
+      <input matInput placeholder="Date of event" name="fromEventDate" formControlName="fromEventDate" type="date"/>
+      <mat-error *ngIf="fromEventDate.hasError('required')">A date is required</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Time of event" name="fromEventTime" formControlName="fromEventTime" type="time" min="00:00" max="23:59" step="60"/>
+      <mat-error *ngIf="fromEventTime.hasError('required')">A time is required</mat-error>
+    </mat-form-field>
+  </div>
+  <br/>
+  <div formGroupName="toDate">
+    <mat-form-field>
+      <input matInput placeholder="Date of event" name="toEventDate" formControlName="toEventDate" type="date"/>
+      <mat-error *ngIf="toEventDate.hasError('required')">A date is required</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Time of event" name="fromEventTime" formControlName="fromEventTime" type="time" min="00:00" max="23:59" step="60"/>
+      <mat-error *ngIf="toEventTime.hasError('required')">A time is required</mat-error>
+    </mat-form-field>
+  </div>
+  <br/>
+  <br/>
+  <button type="submit" [disabled]="unavailableForm.pristine || !unavailableForm.valid" mat-raised-button>
+    Save
+  </button>
+  <button type="button" mat-raised-button (click)="onCancel()">
+    Cancel
+  </button>
+</form>
