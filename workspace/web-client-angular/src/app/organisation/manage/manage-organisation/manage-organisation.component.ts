@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-manage-organisation',
@@ -9,6 +9,9 @@ export class ManageOrganisationComponent implements OnInit {
 
   constructor() {
   }
+
+  @Input()
+  organisationId: number;
 
   ngOnInit() {
   }

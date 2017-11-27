@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-manage-competitions',
@@ -11,5 +11,8 @@ export class ManageCompetitionsComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  @Input()
+  organisationId: number;
 
 }

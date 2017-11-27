@@ -43,7 +43,7 @@ export class OrganisationComponent implements OnInit {
     domain: '',
     urlFragment: '',
     postcode: '',
-    id: ''
+    id: -1
   };
 
   makeOrganisationChange() {
