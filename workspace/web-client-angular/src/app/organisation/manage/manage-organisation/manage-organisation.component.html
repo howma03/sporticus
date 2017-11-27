@@ -1,3 +1,24 @@
-<p>
-  Change Organisation details here!
-</p>
+<h2> Your Organisation </h2>
+<form (ngSubmit)="onSave()" [formGroup]="organisationForm">
+  <mat-form-field>
+    <input matInput placeholder="Name" name="name" formControlName="name" title="Name"/>
+    <mat-error *ngIf="name.hasError('required')">Please enter a value</mat-error>
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput placeholder="Page Link" name="urlFragment" formControlName="urlFragment" title="Page Link"/>
+    <mat-error *ngIf="urlFragment.hasError('required')">Please enter a value</mat-error>
+  </mat-form-field>
+  <p> Your organisation will be visible at https://sporticus.url.here/organisation/{{urlFragment.value}}</p>
+  <br/>
+  <mat-form-field>
+    <textarea matInput placeholder="Address" name="address" formControlName="address" title="Address"></textarea>
+  </mat-form-field>
+  <br/>
+  <button type="submit" [disabled]="organisationForm.pristine || !organisationForm.valid" mat-raised-button>
+    Save
+  </button>
+  <button type="button" mat-raised-button (click)="onCancel()">
+    Reset
+  </button>
+</form>

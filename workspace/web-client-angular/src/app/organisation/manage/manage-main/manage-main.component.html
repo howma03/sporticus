@@ -5,18 +5,29 @@
     </mat-option>
   </mat-select>
 </mat-form-field>
+<a mat-button target="_blank" href="/organisation/{{organisation?.urlFragment}}">Open home page</a>
 <mat-tab-group [(selectedIndex)]="selectedIndex">
+
   <mat-tab label="Organisation">
-    <app-manage-organisation [organisationId]="organisationId">
-    </app-manage-organisation>
+    <div class="inner">
+      <app-manage-organisation class="inner" [organisationId]="organisationId" (done)="updateOrganisation($event)">
+      </app-manage-organisation>
+    </div>
+
   </mat-tab>
   <mat-tab label="Members">
-    <app-manage-memberships [organisationId]="organisationId">
-    </app-manage-memberships>
+    <div class="inner">
+      <app-manage-memberships class="inner" [organisationId]="organisationId">
+      </app-manage-memberships>
+    </div>
+
   </mat-tab>
   <mat-tab label="Competitions">
-    <app-manage-competitions [organisationId]="organisationId">
-    </app-manage-competitions>
+    <div class="inner">
+      <app-manage-competitions class="inner" [organisationId]="organisationId">
+      </app-manage-competitions>
+    </div>
+
   </mat-tab>
 </mat-tab-group>
 

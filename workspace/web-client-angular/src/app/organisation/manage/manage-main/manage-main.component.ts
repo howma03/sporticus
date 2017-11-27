@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {Organisation, OrganisationService} from "../../../services/organisation.service";
-import {ActivatedRoute, ParamMap, Router} from "@angular/router";
-import {isNumeric} from "rxjs/util/isNumeric"
+import {Organisation, OrganisationService} from '../../../services/organisation.service';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {isNumeric} from 'rxjs/util/isNumeric';
 
 @Component({
   selector: 'app-manage-main',
@@ -13,10 +13,16 @@ export class ManageMainComponent implements OnInit {
   constructor(private organisationService: OrganisationService, private router: Router, private route: ActivatedRoute) {
   }
 
+
   organisations: Organisation[] = [];
   private organisationId: number = null;
-  subComponent: string = "organisation";
-  tabs: string[] = ["organisation", "members", "competitions"];
+
+  get organisation(): Organisation {
+    return this.organisations.find(org => org.id === this.organisationId);
+  }
+
+  subComponent = 'organisation';
+  tabs: string[] = ['organisation', 'members', 'competitions'];
 
   get selectedIndex(): number {
     return this.tabs.indexOf(this.subComponent);
@@ -38,7 +44,7 @@ export class ManageMainComponent implements OnInit {
     });
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.subComponent = params.get('tab') || this.subComponent;
-      let id = params.get('id');
+      const id = params.get('id');
       if (isNumeric(id)) {
         this.organisationId = parseInt(id, 10);
       } else {
@@ -53,9 +59,12 @@ export class ManageMainComponent implements OnInit {
 
   updateRouter() {
     if (this.organisationId != null && this.subComponent != null) {
-      debugger;
       this.router.navigate(['./', this.organisationId, this.subComponent], {relativeTo: this.route.parent});
 
     }
+  }
+
+  updateOrganisation(organisation: Organisation) {
+    this.organisations[this.organisations.findIndex(org => organisation.id === org.id)] = organisation;
   }
 }

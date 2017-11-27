@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {ProfileService} from "../../services/profile.service";
-import {User} from "../../services/users.service";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {ProfileService} from '../../services/profile.service';
+import {User} from '../../services/users.service';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
@@ -23,15 +23,15 @@ export class ProfileComponent implements OnInit, OnChanges {
   profileForm: FormGroup;
 
   get firstName() {
-    return this.profileForm.get('firstName')
+    return this.profileForm.get('firstName');
   }
 
   get lastName() {
-    return this.profileForm.get('lastName')
+    return this.profileForm.get('lastName');
   }
 
   get password() {
-    return this.profileForm.get('password')
+    return this.profileForm.get('password');
   }
 
   get confirmPassword() {
@@ -51,10 +51,10 @@ export class ProfileComponent implements OnInit, OnChanges {
   }
 
   createForm() {
-    let firstName = new FormControl('', Validators.required);
-    let lastName = new FormControl('', Validators.required);
-    let password = new FormControl('');
-    let confirmPassword = new FormControl('', me => password.value === me.value ? null : {mismatch: true});
+    const firstName = new FormControl('', Validators.required);
+    const lastName = new FormControl('', Validators.required);
+    const password = new FormControl('');
+    const confirmPassword = new FormControl('', me => password.value === me.value ? null : {mismatch: true});
 
     password.valueChanges.subscribe(() => confirmPassword.updateValueAndValidity());
 
@@ -83,7 +83,7 @@ export class ProfileComponent implements OnInit, OnChanges {
       .subscribe(user => {
         this.user = user;
         this.onDone();
-      })
+      });
   }
 
   onCancel() {
