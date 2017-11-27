@@ -14,7 +14,7 @@ export class CalendarEventComponent implements OnInit {
   submitText: string = "CREATE";
   creationDescription: String = "To create a new event, please enter a few details";
   eventDetails = {
-    id: '',
+    id: null,
     name: '',
     type: '',
     description: '',

@@ -13,7 +13,7 @@ import {ReactiveFormsModule} from "@angular/forms";
     MatInputModule,
     MatButtonModule
   ],
-  exports: [ChallengeDialogComponent],
+  exports: [ChallengeDialogComponent, ReactiveFormsModule],
   declarations: [ChallengeDialogComponent, ChallengeFormComponent],
   entryComponents: [ChallengeDialogComponent]
 })

@@ -13,11 +13,13 @@ export class EventService extends BaseCrudService<Event> {
 }
 
 export interface Event {
-  id: string;
-  created?: string;
+  id: number;
+  created?: Date;
   createdString?: string;
-  dateTime?: string;
+  dateTime?: Date;
   dateTimeString?: string;
+  dateTimeEnd?: Date;
+  dateTimeEndString?: string;
   name: string;
   type: string;
   description?: string;

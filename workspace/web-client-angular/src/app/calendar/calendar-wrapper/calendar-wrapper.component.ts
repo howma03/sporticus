@@ -5,8 +5,9 @@ import {
 import {CalendarComponent} from 'ng-fullcalendar';
 import {Options} from 'fullcalendar';
 import {Event, EventService} from '../../services/event.service';
-import {MatMenuTrigger} from '@angular/material';
+import {MatDialog, MatMenuTrigger} from '@angular/material';
 import {NavItem} from '../nav-item';
+import {UnavailableDialogComponent} from '../unavailable-dialog/unavailable-dialog.component';
 
 @Component({
   selector: 'app-calendar-wrapper',
@@ -16,6 +17,11 @@ import {NavItem} from '../nav-item';
 export class CalendarWrapperComponent implements OnInit {
 
   calendarOptions: Options;
+
+  /**
+   * The current selected date - set by dateClicked
+   */
+  private dateSelected : Date;
 
   public events: Event[] = [];
 
@@ -40,7 +46,11 @@ export class CalendarWrapperComponent implements OnInit {
 
   @ViewChild('dynamicMenuTrigger') dynamicMenu: MatMenuTrigger;
 
-  constructor(private eventService : EventService, private ref: ChangeDetectorRef) {}
+  constructor(
+    private eventService : EventService,
+    private dialog: MatDialog,
+    private ref: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.eventService.retrieveAll()
@@ -70,6 +80,20 @@ export class CalendarWrapperComponent implements OnInit {
     console.log('clickButton');
   }
 
+
+  registerUnavailable() {
+    let dialogRef = this.dialog.open(UnavailableDialogComponent, {
+      disableClose: true,
+      data: {
+        date: this.dateSelected
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(challenge => {
+//      this.reload();
+    });
+  }
+
   /**
    * Trigger the menu to open when a day cell is clicked.
    * The menu trigger must be moved into the click location.
@@ -77,10 +101,12 @@ export class CalendarWrapperComponent implements OnInit {
    * @param jsEvent
    */
   dayClick(date: Date, jsEvent) {
+    this.dateSelected = date;
     this.menuTop = jsEvent.clientY + 'px';
     this.menuLeft = jsEvent.clientX + 'px';
     let mt = this.menuTriggers;
-    mt.last.openMenu();
+    mt.first.openMenu();
+//    mt.last.openMenu();
   }
 
   unavailableClicked() {
@@ -153,6 +179,9 @@ export class CalendarWrapperComponent implements OnInit {
         {
           displayName: 'Bob Tarling (2 above)',
           iconName: 'person',
+          command: () => {
+            alert("Bob Clicked");
+          },
           route: null
         },
         {
@@ -173,6 +202,7 @@ export class CalendarWrapperComponent implements OnInit {
     {
       displayName: 'Register Unavailable Times',
       iconName: 'group',
+      command: () => this.registerUnavailable()
     },
     {
       displayName: 'Schedule Match',

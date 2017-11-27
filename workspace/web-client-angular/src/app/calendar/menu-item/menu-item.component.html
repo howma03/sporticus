@@ -11,7 +11,7 @@
     <!-- Handle leaf node menu items -->
     <span *ngIf="!child.children || child.children.length === 0">
       <!--button mat-menu-item [routerLink]="child.route"-->
-      <button mat-menu-item>
+      <button mat-menu-item (click)="child.command()">
         <mat-icon>{{child.iconName}}</mat-icon>
         <span>{{child.displayName}}</span>
       </button>
