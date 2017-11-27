@@ -42,10 +42,10 @@ public class DemoDataLoader {
 
 	@Autowired
 	public DemoDataLoader(final IServiceUser serviceUser,
-                            final IServiceGroup serviceGroup,
-                            final IRepositoryGroupMember repositoryGroupMember,
-                            final IServiceOrganisation serviceOrganisation,
-	                        final IServiceLadder serviceLadder) {
+	                      final IServiceGroup serviceGroup,
+	                      final IRepositoryGroupMember repositoryGroupMember,
+	                      final IServiceOrganisation serviceOrganisation,
+	                      final IServiceLadder serviceLadder) {
 		this.serviceUser = serviceUser;
 		this.serviceGroup = serviceGroup;
 		this.serviceOrganisation = serviceOrganisation;
@@ -55,11 +55,58 @@ public class DemoDataLoader {
 	@PostConstruct
 	private void init() {
 		LOGGER.debug(() -> "Checking for demo data");
-		// check for groups - if there are none then create one and make all users member of the new group
+
+		LOGGER.debug(() -> "Checking users");
+		if (serviceUser.getUserCount() == 1) {
+			generateUsers();
+		}
+
+		LOGGER.debug(() -> "Check for (ladder) groups - if there are none then create one and make each user a member of the new group");
 		List<IGroup> groupsLadder = serviceLadder.readLaddersGroups();
 		if (groupsLadder.size() < 2) {
 			this.generateLadders();
 		}
+	}
+
+	public List<IUser> generateUsers() {
+		List<IUser> users = serviceUser.getAll();
+		LOGGER.debug(() -> "Adding some users");
+
+
+		addUser(users, new User()
+				.setAdmin(false)
+				.setFirstName("Angela")
+				.setLastName("Alright")
+				.setEmail("angela@sporticus.com")
+				.setPassword(passwordEncoder.encode("S0uthern"))
+				.setVerified(true)
+				.setEnabled(true));
+		addUser(users, new User()
+				.setAdmin(false)
+				.setFirstName("Ben")
+				.setLastName("Boring")
+				.setEmail("ben@sporticus.com")
+				.setPassword(passwordEncoder.encode("S0uthern"))
+				.setVerified(true)
+				.setEnabled(true));
+		addUser(users, new User()
+				.setAdmin(false)
+				.setFirstName("Colin")
+				.setLastName("Cool")
+				.setEmail("colin@sporticus.com")
+				.setPassword(passwordEncoder.encode("S0uthern"))
+				.setVerified(true)
+				.setEnabled(true));
+		addUser(users, new User()
+				.setAdmin(false)
+				.setFirstName("Martin")
+				.setLastName("Manchester")
+				.setEmail("martin@sporticus.com")
+				.setPassword(passwordEncoder.encode("S0uthern"))
+				.setVerified(true)
+				.setEnabled(true));
+
+		return users;
 	}
 
 	public void generateLadders() {
@@ -69,42 +116,6 @@ public class DemoDataLoader {
 			List<IUser> users = serviceUser.getAll();
 
 			if (users.size() > 0) {
-				if(users.size() == 1){
-
-					users.add(serviceUser.addUser(new User()
-							.setAdmin(false)
-							.setFirstName("Angela")
-							.setLastName("Alright")
-							.setEmail("angela@sporticus.com")
-							.setPassword(passwordEncoder.encode("S0uthern"))
-							.setVerified(true)
-							.setEnabled(true)));
-					users.add(serviceUser.addUser(new User()
-							.setAdmin(false)
-							.setFirstName("Ben")
-							.setLastName("Boring")
-							.setEmail("ben@sporticus.com")
-							.setPassword(passwordEncoder.encode("S0uthern"))
-							.setVerified(true)
-							.setEnabled(true)));
-					users.add(serviceUser.addUser(new User()
-							.setAdmin(false)
-							.setFirstName("Colin")
-							.setLastName("Cool")
-							.setEmail("colin@sporticus.com")
-							.setPassword(passwordEncoder.encode("S0uthern"))
-							.setVerified(true)
-							.setEnabled(true)));
-					users.add(serviceUser.addUser(new User()
-							.setAdmin(false)
-							.setFirstName("Martin")
-							.setLastName("Manchester")
-							.setEmail("martin@sporticus.com")
-							.setPassword(passwordEncoder.encode("S0uthern"))
-							.setVerified(true)
-							.setEnabled(true)));
-				}
-
 				List<IOrganisation> orgs = serviceOrganisation.readAllOrganisations();
 				if (orgs.size() == 0) {
 					org = new Organisation()
@@ -121,13 +132,13 @@ public class DemoDataLoader {
 
 				// Create a ladder group
 
-				for(int i=0;i<2;i++) {
+				for (int i = 0; i < 2; i++) {
 					IGroup group = serviceLadder.createLadder(null,
-							"My Ladder Group "+i,
+							"My Ladder Group " + i,
 							"Example ladder competition",
 							org);
 
-					for(IUser user : users) {
+					for (IUser user : users) {
 						IGroupMember gm = new GroupMember()
 								.setCreated(new Date())
 								.setEnabled(true)
@@ -144,6 +155,15 @@ public class DemoDataLoader {
 
 		} catch (Exception ex) {
 			LOGGER.error(() -> "Failed to generateLadders demo data", ex);
+		}
+	}
+
+	private void addUser(List<IUser> list, IUser user) {
+		try {
+			IUser newUser = serviceUser.addUser(user);
+			list.add(newUser);
+		} catch (RuntimeException ex) {
+			// Ignore
 		}
 	}
 }

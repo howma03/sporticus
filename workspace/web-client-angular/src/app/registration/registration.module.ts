@@ -1,9 +1,10 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RegisterComponent } from './register/register.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RegisterComponent} from './register/register.component';
 import {EboxModule, WizardModule} from "@ux-aspects/ux-aspects";
 import {MatButtonModule, MatInputModule, MatSnackBarModule} from "@angular/material";
 import {FormsModule} from "@angular/forms";
+import {CaptchaModule} from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import {FormsModule} from "@angular/forms";
     FormsModule,
     EboxModule,
     WizardModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    CaptchaModule
   ],
   declarations: [RegisterComponent]
 })

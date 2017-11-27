@@ -17,7 +17,7 @@ import java.util.Properties;
  * Created by mark on 17/02/2017.
  */
 @Service(value = "serviceMailJava")
-@Qualifier("production")
+@Qualifier("test")
 public class ServiceMailImplJavaMail extends ServiceMailAbstract {
 
     private static final Logger LOGGER = LogFactory.getLogger(ServiceMailImplJavaMail.class.getName());

@@ -9,8 +9,10 @@
     </ux-ebox-header>
 
     <ux-ebox-content>
+
       <form (ngSubmit)="doRegister()" #registerForm="ngForm">
         Please provide your details below<br/><br/>
+
 
         <mat-form-field>
             <input matInput #name placeholder="First Name" name="firstName"
@@ -28,14 +30,21 @@
                  required
                  [(ngModel)]="registrationDetails.email" autocomplete="off"/>
         </mat-form-field>
-          <br/>
-          <mat-form-field>
-            <input matInput #password type="password" placeholder="Password" name="password"
-                   required
-                   [(ngModel)]="registrationDetails.password"/>
-          </mat-form-field>
-          <br/>
-          <button mat-raised-button type="submit">
+
+        <br/>
+        <mat-form-field>
+          <input matInput #password type="password" placeholder="Password" name="password"
+                 required
+                 [(ngModel)]="registrationDetails.password"/>
+        </mat-form-field>
+
+        <br/>
+
+        <p-captcha siteKey="6Lc5gzoUAAAAAEfcIq1z8GiMxAVkQW1BS4FYMyQf" (onResponse)="showResponse($event)"></p-captcha>
+
+        <br/>
+
+        <button mat-raised-button type="submit">
               Sign-Up
           </button>
           <button mat-raised-button type="button" (click)="cancelRegister()">
@@ -45,4 +54,7 @@
     </ux-ebox-content>
   </ux-ebox>
   </div>
+
+
 </main>
+

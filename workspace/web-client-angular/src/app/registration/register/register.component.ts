@@ -4,6 +4,7 @@ import {ErrorHandlingService} from "../../services/error-handling.service";
 import {Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MatSnackBar} from "@angular/material";
+import {Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-register',
@@ -32,6 +33,13 @@ export class RegisterComponent implements OnInit {
     email: '',
     password: ''
   };
+
+  msgs: Message[] = [];
+
+  showResponse(event) {
+    this.msgs = [];
+    this.msgs.push({severity: 'info', summary: 'Succees', detail: 'User Responded'});
+  }
 
   doRegister() {
     let newUser: RegisterUser = {

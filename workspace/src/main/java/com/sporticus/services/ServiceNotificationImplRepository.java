@@ -47,7 +47,6 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 		this.serviceUser = serviceUser;
 	}
 
-
 	@Override
 	public INotification createNotification(IUser actor, INotification notification) {
 		LOGGER.info(() -> "Creating an notification - " + notification);

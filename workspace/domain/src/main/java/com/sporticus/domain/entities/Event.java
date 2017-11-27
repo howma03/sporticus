@@ -82,7 +82,6 @@ public class Event implements IEvent {
         return this;
     }
 
-
     @Override
     public String getName() {
         return name;
@@ -199,7 +198,7 @@ public class Event implements IEvent {
 
     @Override
     public String toString() {
-        return String.format("ID [%d] Event Name [%s] Type [%s] Owner Id [%d] DateTime [%s]",
-                id, name, type, ownerId, getDateTimeString());
+	    return String.format("Event - ID [%d] Event Name [%s] Type [%s] Owner Id [%d] DateTime [%s]",
+			    id, name, type, ownerId, getDateTimeString());
     }
 }
