@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {Breadcrumb, PageHeaderIconMenu, PageHeaderNavigationItem} from "@ux-aspects/ux-aspects";
-import {AuthService} from "../../auth/auth.service";
-import {ProfileDialogComponent} from "../../profile/profile-dialog/profile-dialog.component";
-import {MatDialog} from "@angular/material";
+import {ActivatedRoute, Router} from '@angular/router';
+import {Breadcrumb, PageHeaderIconMenu, PageHeaderNavigationItem} from '@ux-aspects/ux-aspects';
+import {AuthService} from '../../auth/auth.service';
+import {ProfileDialogComponent} from '../../profile/profile-dialog/profile-dialog.component';
+import {MatDialog} from '@angular/material';
+import {PushService} from "../../services/push.service";
 
 @Component({
   selector: 'app-main',
@@ -12,40 +13,42 @@ import {MatDialog} from "@angular/material";
 })
 export class MainComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              private authService: AuthService,
-              private dialog: MatDialog) {
-  }
+  headerMenu;
 
-  ngOnInit() {
-
-    if(this.authService.currentUser.admin){
-      this.items.push({
-        icon: 'hpe-support',
-        title: 'Administration',
-        children: [
-          {
-            title: 'Users',
-            select: () => this.router.navigate(['main/admin/users'])
-          },
-          {
-            title: 'Organisations',
-            select: () => this.router.navigate(['main/admin/organisations'])
-          }
-        ]
-      });
+  iconMenus: PageHeaderIconMenu[] = [
+    {
+      icon: 'hpe-notification',
+      badge: 3,
+      select: (menu) => this.createNotificationsMenu(menu)
+    },
+    {
+      icon: 'hpe-actions',
+      dropdown: [
+        {
+          header: true,
+          title: this.getUserName(),
+          divider: true
+        },
+        {
+          icon: 'hpe-user-settings',
+          title: 'Edit Profile',
+          select: () => this.openProfile()
+        },
+        {
+          icon: 'hpe-logout',
+          title: 'Log Out',
+          select: () => this.doLogout()
+        },
+        {
+          title: 'Show Tips'
+        }
+      ]
     }
-  }
+  ];
 
   title = 'Sporticus';
 
-  condensed: boolean = true;
-
-  crumbs: Breadcrumb[] = [{
-    title: 'Sporticus',
-    routerLink: 'home',
-  }];
+  condensed = true;
 
   items: PageHeaderNavigationItem[] = [
     {
@@ -80,45 +83,53 @@ export class MainComponent implements OnInit {
 
       ]
     }
-
   ];
 
-  iconMenus: PageHeaderIconMenu[] = [
-    {
-      icon: 'hpe-notification',
-      badge: 3,
-      select: (menu) => this.createNotificationsMenu(menu)
-    },
-    {
-      icon: 'hpe-actions',
-      dropdown: [
-        {
-          header: true,
-          title: this.getUserName(),
-          divider: true
-        },
-        {
-          icon: 'hpe-user-settings',
-          title: 'Edit Profile',
-          select: () => this.openProfile()
-        },
-        {
-          icon: 'hpe-logout',
-          title: 'Log Out',
-          select: () => this.doLogout()
-        },
-        {
-          title: 'Show Tips'
-        }
-      ]
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private pushService: PushService
+  ) {
+  }
+
+  ngOnInit() {
+
+    if (this.authService.currentUser.admin) {
+      this.items.push({
+        icon: 'hpe-support',
+        title: 'Administration',
+        children: [
+          {
+            title: 'Users',
+            select: () => this.router.navigate(['main/admin/users'])
+          },
+          {
+            title: 'Organisations',
+            select: () => this.router.navigate(['main/admin/organisations'])
+          }
+        ]
+      });
     }
-  ];
+
+    // Subscribe for notification changes.
+    this.updateNotificationsMenu();
+  }
+
+
+  private updateNotificationsMenu() {
+    this.pushService.registerForEvents().subscribe((data) => {
+      debugger;
+    });
+  }
 
   /**
    * Create a menu showing notifications received but not yet looked at.
    * @param {PageHeaderIconMenu} menu The parent menu to attach to
    */
-  createNotificationsMenu(menu : PageHeaderIconMenu) {
+  createNotificationsMenu(menu: PageHeaderIconMenu) {
+    this.headerMenu = menu;
+
     menu.dropdown = [
       {
         icon: 'hpe-chat',
@@ -148,7 +159,7 @@ export class MainComponent implements OnInit {
     ];
   }
 
-  getUserName() : string {
+  getUserName(): string {
     return this.authService.currentUser.email;
   }
 
@@ -165,7 +176,7 @@ export class MainComponent implements OnInit {
   }
 
   openProfile() {
-    let dialogRef = this.dialog.open(ProfileDialogComponent, {
+    const dialogRef = this.dialog.open(ProfileDialogComponent, {
       disableClose: true,
       data: {
         user: this.authService.currentUser
@@ -174,7 +185,7 @@ export class MainComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(user => {
       if (user) {
-        this.authService.currentUser = user
+        this.authService.currentUser = user;
       }
     });
   }

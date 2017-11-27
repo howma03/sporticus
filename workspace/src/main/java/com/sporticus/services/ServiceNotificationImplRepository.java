@@ -17,10 +17,12 @@ import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.types.EventType;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
+import com.sporticus.web.services.SseEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,6 +49,9 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 		this.serviceUser = serviceUser;
 	}
 
+	@Autowired
+	private SseEngine engine;
+
 	@Override
 	public INotification createNotification(IUser actor, INotification notification) {
 		LOGGER.info(() -> "Creating an notification - " + notification);
@@ -58,6 +63,13 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 				newNotification.setOwnerId(actor.getId());
 			}
 		}
+
+		try {
+			engine.getEmitterByUserId(newNotification.getOwnerId()).send(newNotification);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		return repositoryNotification.save((Notification)newNotification);
 	}
 
@@ -111,6 +123,12 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 					}
 
 					list.add(repositoryNotification.save((Notification)newNotification));
+
+					try {
+						engine.getEmitterByUserId(newNotification.getOwnerId()).send(newNotification);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				});
 			}
 		}

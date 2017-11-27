@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {NotificationInterface, NotificationService} from "../notification.service";
-import {ErrorHandlingService} from "../../services/error-handling.service";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {MessageService} from "primeng/components/common/messageservice";
+import {NotificationInterface, NotificationService} from '../notification.service';
+import {ErrorHandlingService} from '../../services/error-handling.service';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {MessageService} from 'primeng/components/common/messageservice';
 
 @Component({
   selector: 'app-manage-notification',
@@ -11,8 +11,8 @@ import {MessageService} from "primeng/components/common/messageservice";
 })
 export class ManageNotificationComponent implements OnInit {
 
-  protected submitText: string = "SEND";
-  protected creationDescription: String = "To send a new notification please enter it below";
+  protected submitText = 'SEND';
+  protected creationDescription: String = 'To send a new notification please enter it below';
   protected details: NotificationInterface = <NotificationInterface>{};
 
   constructor(
@@ -27,8 +27,8 @@ export class ManageNotificationComponent implements OnInit {
   }
 
   addNotification() {
-    let notification: NotificationInterface = {
-      title: "Broadcast",
+    const notification: NotificationInterface = {
+      title: 'Broadcast',
       text: this.details.text
     };
 
@@ -48,7 +48,7 @@ export class ManageNotificationComponent implements OnInit {
   }
 
   cancel() {
-    this.closeWindow(false)
+    this.closeWindow(false);
   }
 
   closeWindow(requiresUpdate: boolean) {

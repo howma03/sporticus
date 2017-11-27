@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {EventSourcePolyfill} from "ng-event-source";
-import {Observable} from "rxjs/Observable";
+import {EventSourcePolyfill} from 'ng-event-source';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class PushService {
@@ -10,21 +10,21 @@ export class PushService {
 
     this.eventSource.onopen = (a) => {
       // Do stuff here
-      console.log("onOpen " + a);
+      console.log('onOpen ' + a);
     };
 
     this.eventSource.onerror = (e) => {
       // Do stuff here
-      console.log("onerror " + e);
-    }
+      console.log('onerror ' + e);
+    };
   }
 
   eventSource;
 
   registerForEvents(): Observable<Object> {
-    let observable = Observable.create(observer => {
+    const observable = Observable.create(observer => {
       this.eventSource.onmessage = (data => {
-        observer.next(data)
+        observer.next(data);
       });
     });
 

@@ -19,6 +19,7 @@ import {RegistrationModule} from "../registration/registration.module";
 import { DevelopmentTeamComponent } from './development-team/development-team.component';
 import { Initial2Component } from './initial-2/initial-2.component';
 import {AngularFontAwesomeModule} from "angular-font-awesome";
+import { PricesDisplayComponent } from './prices-display/prices-display.component';
 
 @NgModule({
   imports: [
@@ -37,6 +38,6 @@ import {AngularFontAwesomeModule} from "angular-font-awesome";
   exports: [],
   declarations: [LandingComponent, HeaderComponent, AboutComponent, LegalComponent, ContactComponent,
     ClubsComponent, HelpComponent, OverviewComponent, LegalDisclosurePolicyComponent, InitialComponent,
-    PricesComponent, DevelopmentTeamComponent, Initial2Component]
+    PricesComponent, DevelopmentTeamComponent, Initial2Component, PricesDisplayComponent]
 })
 export class LandingModule { }
