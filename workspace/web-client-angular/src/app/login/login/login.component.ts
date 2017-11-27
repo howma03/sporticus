@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
-import {AuthService} from "../../auth/auth.service";
+import {Router} from '@angular/router';
+import {AuthService} from '../../auth/auth.service';
 
 @Component({
   selector: 'app-login-overlay',
@@ -10,6 +10,14 @@ import {AuthService} from "../../auth/auth.service";
 
 export class LoginComponent implements OnInit {
 
+  loading = false;
+  tryAgain = false;
+
+  userDetails = {
+    email: '',
+    password: ''
+  };
+
   constructor(private router: Router,
               private authService: AuthService) {
   }
@@ -17,14 +25,6 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.authService.logout();
   }
-
-  loading: boolean = false;
-  tryAgain: boolean = false;
-
-  userDetails = {
-    email: '',
-    password: ''
-  };
 
   doLogin() {
     this.loading = true;
