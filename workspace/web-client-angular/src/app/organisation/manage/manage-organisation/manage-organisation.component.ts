@@ -71,11 +71,6 @@ export class ManageOrganisationComponent implements OnInit, OnChanges {
 
   }
 
-  saveOrganisation() {
-    this.organisationService.updateOne(this._organisationId, this.organisation);
-  }
-
-
   onSave() {
     const formModel = this.organisationForm.value;
     const toSave: Organisation = {

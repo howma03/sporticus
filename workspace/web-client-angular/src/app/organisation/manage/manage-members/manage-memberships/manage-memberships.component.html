@@ -1,7 +1,8 @@
-<p>
-  Manage the membership of your organisation here. You will be able to
-</p>
-<ul>
-  <li>Invite new members</li>
-  <li>Check attendance and dues</li>
-</ul>
+<mat-menu #addMenu="matMenu">
+  <button mat-menu-item (click)="openInviteDialog()"> Send Invites</button>
+  <button mat-menu-item> View Applications</button>
+</mat-menu>
+
+<button mat-fab color="primary" [matMenuTriggerFor]="addMenu">
+  <mat-icon aria-label="Add Member">add</mat-icon>
+</button>

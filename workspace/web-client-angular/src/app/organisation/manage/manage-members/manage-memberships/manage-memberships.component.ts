@@ -1,4 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {SendInviteDialogComponent} from '../send-invite-dialog/send-invite-dialog.component';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-manage-memberships',
@@ -7,12 +9,21 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class ManageMembershipsComponent implements OnInit {
 
-  constructor() {
+
+  @Input()
+  organisationId: number;
+
+  constructor(private dialog: MatDialog) {
   }
 
   ngOnInit() {
   }
 
-  @Input()
-  organisationId: number;
+  openInviteDialog() {
+    const dialogRef = this.dialog.open(SendInviteDialogComponent, {
+      data: {
+        organisationId: this.organisationId
+      }
+    });
+  }
 }

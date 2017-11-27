@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {User} from "../../services/users.service";
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {User} from '../../services/users.service';
 
 @Component({
   selector: 'app-profile-dialog',
