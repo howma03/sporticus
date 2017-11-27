@@ -17,10 +17,12 @@ import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.types.EventType;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
+import com.sporticus.web.services.SseEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,6 +62,9 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 		}
 		return repositoryNotification.save((Notification)newNotification);
 	}
+
+	@Autowired
+	private SseEngine engine;
 
 	@Override
 	public List<INotification> createNotifications(IUser actor, IEvent event, OPERATION operation) throws ServiceNotificationExceptionNotAllowed {
@@ -111,6 +116,12 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 					}
 
 					list.add(repositoryNotification.save((Notification)newNotification));
+
+					try {
+						engine.getEmitterByUserId(newNotification.getOwnerId()).send(newNotification);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				});
 			}
 		}
