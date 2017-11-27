@@ -7,18 +7,17 @@ import com.sporticus.domain.interfaces.IMessage.STATUS;
 import com.sporticus.domain.interfaces.IMessage.TYPE;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryMessage;
+import com.sporticus.interfaces.IServiceMail;
 import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 
-@Service("serviceMail")
-@Qualifier("production")
-public class ServiceMailImplRepository extends ServiceMailAbstract {
+@Service("serviceMailImplRepository")
+public class ServiceMailImplRepository extends ServiceMailAbstract implements IServiceMail {
 
 	private static final Logger LOGGER = LogFactory.getLogger(ServiceMailImplRepository.class.getName());
 
@@ -29,10 +28,9 @@ public class ServiceMailImplRepository extends ServiceMailAbstract {
 	private IServiceUser serviceUser;
 
 	public ServiceMailImplRepository() {
-
+		LOGGER.debug(() -> "Default CTOR");
 	}
 
-	@Override
 	@PostConstruct
 	public void init() {
 

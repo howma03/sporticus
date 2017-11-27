@@ -62,7 +62,7 @@ public class ServiceGroupImplRepository implements IServiceGroup {
     private IServicePasswordGenerator passwordGenerator;
 
     @Autowired
-    @Qualifier("serviceMailJava")
+    @Qualifier("serviceMailImplRepository")
     private IServiceMail mailService;
 
     /**

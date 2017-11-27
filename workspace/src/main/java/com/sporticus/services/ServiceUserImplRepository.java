@@ -3,7 +3,6 @@ package com.sporticus.services;
 import com.sporticus.domain.entities.User;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryUser;
-import com.sporticus.interfaces.IServiceMail;
 import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
@@ -34,19 +33,15 @@ public class ServiceUserImplRepository implements IServiceUser {
 
     private static final Logger LOGGER = LogFactory.getLogger(ServiceUserImplRepository.class.getName());
 
-    private final IRepositoryUser repositoryUser;
-    private final IServiceMail serviceMail;
+    @Autowired
+    private IRepositoryUser repositoryUser;
 
     public static void main(String[] args){
        final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
        System.out.println("Password="+ENCODER.encode("S0uthern"));
     }
 
-    @Autowired
-    public ServiceUserImplRepository(final IServiceMail serviceMail,
-                                     final IRepositoryUser userRepository) {
-        this.serviceMail = serviceMail;
-        this.repositoryUser = userRepository;
+    public ServiceUserImplRepository() {
     }
 
     private static <T> Stream<T> toStream(final Iterable<T> iterable) {

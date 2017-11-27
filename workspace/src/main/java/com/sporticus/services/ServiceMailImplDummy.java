@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-@Service("serviceMail")
+@Service(value = "ServiceMailImplDummy")
 @Qualifier("test")
 public class ServiceMailImplDummy implements IServiceMail {
 	@Override

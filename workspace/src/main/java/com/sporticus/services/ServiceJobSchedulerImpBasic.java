@@ -31,7 +31,7 @@ public class ServiceJobSchedulerImpBasic implements IServiceJobScheduler {
     private final IServiceUser serviceUser;
 
     @Autowired
-    public ServiceJobSchedulerImpBasic(@Qualifier("serviceMail") final IServiceMail serviceMail,
+    public ServiceJobSchedulerImpBasic(@Qualifier("serviceMailImplRepository") final IServiceMail serviceMail,
                                        @Qualifier("production") final IServiceUser serviceUser) {
         this.serviceMail = serviceMail;
         this.serviceUser = serviceUser;

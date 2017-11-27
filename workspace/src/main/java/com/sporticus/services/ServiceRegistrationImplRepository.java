@@ -33,7 +33,7 @@ public class ServiceRegistrationImplRepository implements IServiceRegistration {
     private IRepositoryUser userRepository;
 
     @Autowired
-    @Qualifier("serviceMailJava")
+    @Qualifier("serviceMailImplRepository")
     private IServiceMail mailService;
 
     @Autowired

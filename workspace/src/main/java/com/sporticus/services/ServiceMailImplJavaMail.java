@@ -16,7 +16,7 @@ import java.util.Properties;
 /**
  * Created by mark on 17/02/2017.
  */
-@Service(value = "serviceMailJava")
+@Service(value = "ServiceMailImplJavaMail")
 @Qualifier("test")
 public class ServiceMailImplJavaMail extends ServiceMailAbstract {
 

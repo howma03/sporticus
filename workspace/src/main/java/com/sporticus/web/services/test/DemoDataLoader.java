@@ -72,7 +72,6 @@ public class DemoDataLoader {
 		List<IUser> users = serviceUser.getAll();
 		LOGGER.debug(() -> "Adding some users");
 
-
 		addUser(users, new User()
 				.setAdmin(false)
 				.setFirstName("Angela")
