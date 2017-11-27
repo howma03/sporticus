@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from '../../auth/auth.service';
 import {Event, EventService} from '../../services/event.service';
 
@@ -22,22 +22,27 @@ export class UnavailableFormComponent implements OnInit {
 
   unavailableForm: FormGroup;
 
-  isNew: boolean = false;
+  isNew: boolean = true;
+
+
+  get showTime() {
+    return this.unavailableForm.get('showTime');
+  }
 
   get fromEventDate() {
-   return this.unavailableForm.get('fromDate').get('fromEventDate')
+   return this.unavailableForm.get('fromDate').get('fromEventDate');
   }
 
   get fromEventTime() {
-   return this.unavailableForm.get('fromDate').get('fromEventTime')
+   return this.unavailableForm.get('fromDate').get('fromEventTime');
   }
 
   get toEventDate() {
-    return this.unavailableForm.get('toDate').get('toEventDate')
+    return this.unavailableForm.get('toDate').get('toEventDate');
   }
 
   get toEventTime() {
-   return this.unavailableForm.get('toDate').get('toEventTime')
+   return this.unavailableForm.get('toDate').get('toEventTime');
   }
 
   ngOnInit() {
@@ -77,6 +82,7 @@ export class UnavailableFormComponent implements OnInit {
     // }
 
     this.unavailableForm = this.fb.group({
+      showTime: false,
       fromDate: this.fb.group({
         fromEventDate: [fromDateOnly, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
         fromEventTime: [fromTimeOnly, [Validators.required]], // to enter date and time as a single field,
@@ -106,20 +112,18 @@ export class UnavailableFormComponent implements OnInit {
       created: new Date(),
       dateTime: dateTime,
       dateTimeEnd: dateTimeEnd,
-      type: 'UNAVAILABLE',
+      type: 'BUSY',
       status: 'ACCEPTED'
     };
 
     if (this.isNew) {
       this.eventService.createOne(toSave)
         .subscribe(challenge => {
-//          this.rung.challenger = challenge;
           this.onDone();
         })
     } else {
       this.eventService.updateOne(toSave.id, toSave)
         .subscribe(challenge => {
-//          this.rung.challenger = challenge;
           this.onDone();
         })
     }
