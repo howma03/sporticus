@@ -16,10 +16,12 @@ export class MainComponent implements OnInit {
 
   notifications = [];
 
+  notificationCount = 32
+
   iconMenus: PageHeaderIconMenu[] = [
     {
       icon: 'hpe-notification',
-      badge: 3,
+      badge: this.notificationCount,
       select: (menu) => this.createNotificationsMenu(menu)
     },
     {
@@ -128,6 +130,7 @@ export class MainComponent implements OnInit {
       .map(list => list.data)
       .subscribe((data) => {
         this.notifications = data;
+        this.notificationCount = this.notifications.length;
       });
   }
 
@@ -142,7 +145,6 @@ export class MainComponent implements OnInit {
         {
           icon: 'hpe-chat',
           title: 'Loading...',
-          subtitle: '100 minutes ago',
           divider: true,
           select: () => {
             this.gotoNotification();

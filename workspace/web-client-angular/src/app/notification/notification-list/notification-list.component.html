@@ -2,23 +2,36 @@
 
   <div>
     <button type="button" class="btn button-primary" (click)="openModal()">
-      <span class="hpe-icon hpe-notification" aria-hidden="true"></span>&nbsp;Add Notification
+      <span class="hpe-icon hpe-notification" aria-hidden="true"></span>&nbsp;Broadcast Message
     </button>
   </div>
 
   <table class="table table-hover">
     <thead>
     <tr class="table-header-dark">
-      <th>Severity (Icon)</th>
-      <th>Title</th>
+      <th>Type</th>
       <th>Text</th>
+      <th>Severity</th>
+      <th>Date</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
-    <tr class="hover-action-container" *ngFor="let item of notifications" uxHoverActionContainer>
-      <td class="text-black">{{ item.severity }}</td>
-      <td class="text-black">{{ item.title }}</td>
-      <td class="text-black">{{ item.text }}</td>
+    <tr class= "{{item.status === 'UNREAD' ? 'unread' : 'read'}}" *ngFor="let item of notifications" uxHoverActionContainer>
+
+        <td>
+          <i *ngIf="item.title === 'Broadcast'" class="fa fa-bullhorn hover-action-icon" (click)="markRead(item)" [matTooltip]="getTooltip(item)"></i>
+          <i *ngIf="item.title === 'Ladder Challenge'" class="hpe-icon hpe-target hover-action-icon" (click)="markUnread(item)" [matTooltip]="getTooltip(item)"></i>
+          {{ item.title }}
+        </td>
+        <td>{{ item.severity }}</td>
+        <td>{{ item.text }}</td>
+        <td>{{ item.createdString }}</td>
+        <td>
+          <i *ngIf="item.status === 'UNREAD'" class="fa fa-envelope-o hover-action-icon" (click)="markRead(item)" [matTooltip]="getTooltip(item)"></i>
+          <i *ngIf="item.status !== 'UNREAD'" class="fa fa-envelope-open-o hover-action-icon" (click)="markUnread(item)" [matTooltip]="getTooltip(item)"></i>
+        </td>
+
     </tr>
     </tbody>
   </table>

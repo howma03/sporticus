@@ -25,11 +25,11 @@ export class UnavailableFormComponent implements OnInit {
   isNew: boolean = false;
 
   get fromEventDate() {
-    return this.unavailableForm.get('fromDate').get('fromEventDate')
+   return this.unavailableForm.get('fromDate').get('fromEventDate')
   }
 
   get fromEventTime() {
-    return this.unavailableForm.get('fromDate').get('fromEventTime')
+   return this.unavailableForm.get('fromDate').get('fromEventTime')
   }
 
   get toEventDate() {
@@ -37,7 +37,7 @@ export class UnavailableFormComponent implements OnInit {
   }
 
   get toEventTime() {
-    return this.unavailableForm.get('toDate').get('toEventTime')
+   return this.unavailableForm.get('toDate').get('toEventTime')
   }
 
   ngOnInit() {
@@ -64,8 +64,12 @@ export class UnavailableFormComponent implements OnInit {
     //   }
     // }
 
-    let dateOnly : string = null;
-    let timeOnly : string = null;
+    let toDateOnly : string = null;
+    let toTimeOnly : string = null;
+
+    let fromDateOnly : string = null;
+    let fromTimeOnly : string = null;
+
     // if (this.rung.challenger.dateTime) {
     //   let datetime : Date = new Date(this.rung.challenger.dateTime);
     //   dateOnly = datetime.toISOString().substring(0, 10);
@@ -74,19 +78,19 @@ export class UnavailableFormComponent implements OnInit {
 
     this.unavailableForm = this.fb.group({
       fromDate: this.fb.group({
-        eventDate: [dateOnly, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
-        eventTime: [timeOnly, [Validators.required]], // to enter date and time as a single field,
+        fromEventDate: [fromDateOnly, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
+        fromEventTime: [fromTimeOnly, [Validators.required]], // to enter date and time as a single field,
       }),
       toDate: this.fb.group({
-        eventDate: [dateOnly, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
-        eventTime: [timeOnly, [Validators.required]], // to enter date and time as a single field,
+        toEventDate: [toDateOnly, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
+        toEventTime: [toTimeOnly, [Validators.required]], // to enter date and time as a single field,
       }),
     });
   }
 
   onSave() {
-    let dateOnly = this.unavailableForm.get('date').get('eventDate').value;
-    let timeOnly = this.unavailableForm.get('date').get('eventTime').value;
+    let dateOnly = this.unavailableForm.get('fromDate').get('fromEventDate').value;
+    let timeOnly = this.unavailableForm.get('fromDate').get('fromEventTime').value;
 
     let dateTime = new Date(dateOnly);
     let splitTime = timeOnly.split(":");

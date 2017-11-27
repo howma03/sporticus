@@ -36,6 +36,20 @@ export class NotificationListComponent implements OnInit {
       });
   }
 
+  markRead() {}
+
+  markUnread() {}
+
+
+  getTooltip(item ) {
+    const status = item.status;
+    if (status === 'UNREAD') {
+      return 'Mark as read';
+    } else {
+      return 'Mark as un-read';
+    }
+  }
+
   public openModal(itemId): void {
     const item = this.notifications.find(item => item.id === itemId);
 
@@ -43,8 +57,8 @@ export class NotificationListComponent implements OnInit {
       data: {
         item: item
       },
-      height: '900px',
-      width: '1200px',
+      height: '400px',
+      width: '600px',
     });
 
     dialogRef.afterClosed().subscribe((updateRequired) => {

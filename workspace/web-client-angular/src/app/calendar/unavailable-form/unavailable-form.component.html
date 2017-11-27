@@ -17,7 +17,7 @@
       <mat-error *ngIf="toEventDate.hasError('required')">A date is required</mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="Time of event" name="fromEventTime" formControlName="fromEventTime" type="time" min="00:00" max="23:59" step="60"/>
+      <input matInput placeholder="Time of event" name="toEventTime" formControlName="toEventTime" type="time" min="00:00" max="23:59" step="60"/>
       <mat-error *ngIf="toEventTime.hasError('required')">A time is required</mat-error>
     </mat-form-field>
   </div>
