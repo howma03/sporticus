@@ -25,23 +25,19 @@ export class UnavailableFormComponent implements OnInit {
   isNew: boolean = false;
 
   get fromEventDate() {
-    return this.unavailableForm.get('fromEventDate')
-//    return this.unavailableForm.get('fromDate').get('fromEventDate')
+   return this.unavailableForm.get('fromDate').get('fromEventDate')
   }
 
   get fromEventTime() {
-    return this.unavailableForm.get('fromEventTime')
-//    return this.unavailableForm.get('fromDate').get('fromEventTime')
+   return this.unavailableForm.get('fromDate').get('fromEventTime')
   }
 
   get toEventDate() {
-//    return this.unavailableForm.get('toDate').get('toEventDate')
-    return this.unavailableForm.get('toEventDate')
+    return this.unavailableForm.get('toDate').get('toEventDate')
   }
 
   get toEventTime() {
-//    return this.unavailableForm.get('toDate').get('toEventTime')
-    return this.unavailableForm.get('toEventTime')
+   return this.unavailableForm.get('toDate').get('toEventTime')
   }
 
   ngOnInit() {
@@ -81,22 +77,20 @@ export class UnavailableFormComponent implements OnInit {
     // }
 
     this.unavailableForm = this.fb.group({
-//      fromDate: this.fb.group({
+      fromDate: this.fb.group({
         fromEventDate: [fromDateOnly, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
         fromEventTime: [fromTimeOnly, [Validators.required]], // to enter date and time as a single field,
-//      }),
-//      toDate: this.fb.group({
+      }),
+      toDate: this.fb.group({
         toEventDate: [toDateOnly, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
         toEventTime: [toTimeOnly, [Validators.required]], // to enter date and time as a single field,
-//      }),
+      }),
     });
   }
 
   onSave() {
-    // let dateOnly = this.unavailableForm.get('fromDate').get('fromEventDate').value;
-    // let timeOnly = this.unavailableForm.get('fromDate').get('fromEventTime').value;
-    let dateOnly = this.unavailableForm.get('fromEventDate').value;
-    let timeOnly = this.unavailableForm.get('fromEventTime').value;
+    let dateOnly = this.unavailableForm.get('fromDate').get('fromEventDate').value;
+    let timeOnly = this.unavailableForm.get('fromDate').get('fromEventTime').value;
 
     let dateTime = new Date(dateOnly);
     let splitTime = timeOnly.split(":");
