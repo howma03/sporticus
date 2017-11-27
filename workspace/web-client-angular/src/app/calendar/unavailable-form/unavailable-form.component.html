@@ -1,13 +1,14 @@
 <h2>Register Unavailable</h2>
 <form (ngSubmit)="onSave()" [formGroup]="unavailableForm">
 
-  <mat-checkbox formControlName="showTime" >Entire days</mat-checkbox>
+  <mat-checkbox formControlName="entireDays" >Entire days</mat-checkbox>
+
   <div formGroupName="fromDate">
     <mat-form-field>
       <input matInput placeholder="Start Date" name="fromEventDate" formControlName="fromEventDate" type="date"/>
       <mat-error *ngIf="fromEventDate.hasError('required')">A date is required</mat-error>
     </mat-form-field>
-    <mat-form-field *ngIf="!showTime.value">
+    <mat-form-field *ngIf="!entireDays.value">
       <input matInput placeholder="Start Time" name="fromEventTime" formControlName="fromEventTime" type="time" min="00:00" max="23:59" step="60"/>
       <mat-error *ngIf="fromEventTime.hasError('required')">A time is required</mat-error>
     </mat-form-field>
@@ -18,13 +19,14 @@
       <input matInput placeholder="End Date" name="toEventDate" formControlName="toEventDate" type="date"/>
       <mat-error *ngIf="toEventDate.hasError('required')">A date is required</mat-error>
     </mat-form-field>
-    <mat-form-field *ngIf="!showTime.value">
+    <mat-form-field *ngIf="!entireDays.value">
       <input matInput placeholder="End Time" name="toEventTime" formControlName="toEventTime" type="time" min="00:00" max="23:59" step="60"/>
       <mat-error *ngIf="toEventTime.hasError('required')">A time is required</mat-error>
     </mat-form-field>
   </div>
   <br/>
   <br/>
+
   <button type="submit" [disabled]="unavailableForm.pristine || !unavailableForm.valid" mat-raised-button>
     Save
   </button>
