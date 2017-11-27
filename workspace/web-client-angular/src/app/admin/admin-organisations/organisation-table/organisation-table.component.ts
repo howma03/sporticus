@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {Organisation, OrganisationService} from "../../../services/organisation.service";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/of';
-import {OrganisationComponent} from "../organisation/organisation.component";
-import {MatDialog} from "@angular/material";
-import {ConfirmDialogComponent} from "../../../shared/confirm-dialog/confirm-dialog.component";
-import {Message} from "primeng/primeng";
-import {MessageService} from "primeng/components/common/messageservice";
+import {OrganisationComponent} from '../organisation/organisation.component';
+import {MatDialog} from '@angular/material';
+import {ConfirmDialogComponent} from '../../../shared/confirm-dialog/confirm-dialog.component';
+import {Message} from 'primeng/primeng';
+import {MessageService} from 'primeng/components/common/messageservice';
+import {Organisation, OrganisationService} from '../../../services/organisation.service';
 
 @Component({
   selector: 'organisation-table',
@@ -25,7 +25,7 @@ export class OrganisationTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.updateOrganisationDetails()
+    this.updateOrganisationDetails();
   }
 
   public view(itemId) {
@@ -34,16 +34,16 @@ export class OrganisationTableComponent implements OnInit {
 
   updateOrganisationDetails() {
     this.organisationService.retrieveAll()
-      .map(list=>list.data)
-      .subscribe((orgs: Organisation[])=>{
+      .map(list => list.data)
+      .subscribe((orgs: Organisation[]) => {
         this.orgs = orgs;
       });
   }
 
   public openModal(itemId): void {
-    let item = this.orgs.find(item => item.id === itemId);
+    const item = this.orgs.find(i => i.id === itemId);
 
-    let dialogRef = this.dialog.open(OrganisationComponent, {
+    const dialogRef = this.dialog.open(OrganisationComponent, {
       data: {
         item: item
       },
@@ -53,16 +53,19 @@ export class OrganisationTableComponent implements OnInit {
     dialogRef.afterClosed().subscribe((updateRequired) => {
       if (updateRequired) {
         this.updateOrganisationDetails();
-        this.messageService.add({severity:'success', summary:'Organisation updated', detail:'Organisation details updated'});
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Organisation updated',
+          detail: 'Organisation details updated'
+        });
       }
     });
   }
 
   openDeleteDialog(item) {
-    let title = 'Confirm delete';
-    let description = "Are you sure you want to delete the organisation - " + item.name;
-
-    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    const title = 'Confirm delete';
+    const description = 'Are you sure you want to delete the organisation - ' + item.name;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: title,
         description: description
@@ -70,7 +73,7 @@ export class OrganisationTableComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result === true) {
+      if (result === true) {
         this.deleteOrganisation(item.id);
       }
     });

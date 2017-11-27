@@ -40,39 +40,8 @@ public interface IServiceLadder {
 	 * @param ownerOrganisation
 	 * @return
 	 */
-	IGroup createLadder(IUser actor, String name, String description, IOrganisation ownerOrganisation);
-
-	/**
-	 * Function returns a list of all ladders
-	 * @return
-	 * @throws ServiceLadderExceptionNotFound
-	 */
-	List<IGroup> readLaddersGroups() throws ServiceLadderExceptionNotFound;
-
-	/**
-	 * Retrieves a group - must be of type ladder
-	 *
-	 * @param groupId
-	 * @return IGroup
-	 */
-	IGroup readLadderGroup(Long groupId) throws ServiceLadderExceptionNotFound;
-
-	/**
-	 * Function returns a list of the ladders that the user is a member of
-	 *
-	 * @param userId
-	 * @return
-	 * @throws ServiceLadderExceptionNotFound
-	 */
-	List<IGroup> getLaddersForUser(Long userId) throws ServiceLadderExceptionNotFound;
-
-	/**
-	 * Function returns the ladder for with decorators for the given user
-	 * @param ladderId
-	 * @param userId
-	 * @return List<IGroupMember>
-	 */
-	List<IGroupMember> readLadderMembers(long ladderId, long userId);
+	IGroup createLadder(IUser actor, String name, String description, IOrganisation ownerOrganisation) throws ServiceLadderExceptionNotFound,
+			ServiceLadderExceptionNotAllowed;
 
 	/**
 	 * Function records a challenge for a ladder between two ladder members (one the challenger, one the challenged)
@@ -83,9 +52,36 @@ public interface IServiceLadder {
 	 * @throws ServiceLadderExceptionNotAllowed
 	 * @throws ServiceLadderExceptionNotFound
 	 */
-	IEvent createLadderChallenge(Long ladderId, DtoEventLadder event)
+	IEvent createLadderChallenge(IUser actor, Long ladderId, DtoEventLadder event)
 			throws ServiceLadderExceptionNotAllowed,
 			ServiceLadderExceptionNotFound;
+
+	/**
+	 * Function to delete a ladder challenge event
+	 *
+	 * @param event
+	 */
+	void deleteLadderChallenge(IUser actor, long event) throws ServiceLadderExceptionNotFound,
+			ServiceLadderExceptionNotAllowed;
+
+	/**
+	 * Function returns a list of the ladders that the user is a member of
+	 *
+	 * @param userId
+	 * @return
+	 * @throws ServiceLadderExceptionNotFound
+	 */
+	List<IGroup> getLaddersForUser(IUser actor, Long userId) throws ServiceLadderExceptionNotFound,
+			ServiceLadderExceptionNotAllowed;
+
+	/**
+	 * Retrieves a group - must be of type ladder
+	 *
+	 * @param groupId
+	 * @return IGroup
+	 */
+	IGroup readLadderGroup(IUser actor, Long groupId) throws ServiceLadderExceptionNotFound,
+			ServiceLadderExceptionNotAllowed;
 
 	/**
 	 * Returns a list of all members of the ladder
@@ -93,7 +89,27 @@ public interface IServiceLadder {
 	 * @return List<IGroupMember>
 	 *
 	 */
-	List<IGroupMember> readLadderMembers(long ladderId);
+	List<IGroupMember> readLadderMembers(IUser actor, long ladderId) throws ServiceLadderExceptionNotFound,
+			ServiceLadderExceptionNotAllowed;
+
+	/**
+	 * Function returns the ladder with decorators for the given user
+	 *
+	 * @param ladderId
+	 * @param userId
+	 * @return List<IGroupMember>
+	 */
+	List<IGroupMember> readLadderMembers(IUser actor, long ladderId, long userId) throws ServiceLadderExceptionNotFound,
+			ServiceLadderExceptionNotAllowed;
+
+	/**
+	 * Function returns a list of all ladders
+	 *
+	 * @return
+	 * @throws ServiceLadderExceptionNotFound
+	 */
+	List<IGroup> readLaddersGroups(IUser actor) throws ServiceLadderExceptionNotFound,
+			ServiceLadderExceptionNotAllowed;
 
 	/**
 	 * Function to allow the ladder challenge event to be updated
@@ -101,12 +117,7 @@ public interface IServiceLadder {
 	 * @param event
 	 * @return IEvent
 	 */
-	IEvent updateLadderChallenge(IUser actor, DtoEventLadder event);
-
-	/**
-	 * Function to delete a ladder challenge event
-	 * @param event
-	 */
-	void deleteLadderChallenge(long event);
+	IEvent updateLadderChallenge(IUser actor, DtoEventLadder event)throws ServiceLadderExceptionNotFound,
+			ServiceLadderExceptionNotAllowed;
 
 }

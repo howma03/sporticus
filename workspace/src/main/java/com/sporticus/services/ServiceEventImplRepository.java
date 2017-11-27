@@ -3,7 +3,6 @@ package com.sporticus.services;
 import com.sporticus.domain.entities.Event;
 import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IEvent.STATUS;
-import com.sporticus.domain.interfaces.INotification.OPERATION;
 import com.sporticus.domain.interfaces.IRelationship;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryEvent;
@@ -44,7 +43,7 @@ public class ServiceEventImplRepository implements IServiceEvent {
 	}
 
 	@Override
-	public IEvent create(IEvent event, IUser actor) {
+	public IEvent create(IUser actor, IEvent event) {
 		return repositoryEvent.save((Event) event);
 	}
 
@@ -53,9 +52,25 @@ public class ServiceEventImplRepository implements IServiceEvent {
 	}
 
 	@Override
-	public List<IEvent> getAgenda(Long userId, IUser actor) {
+	public void delete(IUser actor, Long eventId) {
+		if (eventId != null) {
+			this.delete(actor, repositoryEvent.findOne(eventId));
+		}
+	}
 
-		List<IEvent> events = this.readAll(userId, null);
+	@Override
+	public void delete(IUser actor, IEvent event) {
+		serviceRelationship.findBySourceTypeAndSourceId("Event", event.getId())
+				.stream().forEach(r -> serviceRelationship.delete(r.getId()));
+		serviceRelationship.findByDestinationTypeAndDestinationId("Event", event.getId())
+				.stream().forEach(r -> serviceRelationship.delete(r.getId()));
+		repositoryEvent.delete(event.getId());
+	}
+
+	@Override
+	public List<IEvent> getAgenda(IUser actor, Long userId) {
+
+		List<IEvent> events = this.readAll(actor, userId);
 
 		Date now = new Date();
 		return events.stream()
@@ -67,17 +82,17 @@ public class ServiceEventImplRepository implements IServiceEvent {
 	}
 
 	@Override
-	public List<IEvent> readAll(Long userId, IUser actor) {
+	public List<IEvent> readAll(IUser actor, Long userId) {
 		List<IEvent> events = new ArrayList<>();
 		{
 			List<IRelationship> relationshipsSource = serviceRelationship.findBySourceTypeAndSourceIdAndDestinationType("User", userId, "Event");
 
-			events.addAll(relationshipsSource.stream().map(r -> readEvent(r.getDestinationId(), actor)).collect(Collectors.toList()));
+			events.addAll(relationshipsSource.stream().map(r -> readEvent(actor, r.getDestinationId())).collect(Collectors.toList()));
 		}
 		{
 			List<IRelationship> relationshipsDestination = serviceRelationship.findBySourceTypeAndDestinationTypeAndDestinationId("Event", "User", userId);
 
-			events.addAll(relationshipsDestination.stream().map(r -> readEvent(r.getSourceId(), actor)).collect(Collectors.toList()));
+			events.addAll(relationshipsDestination.stream().map(r -> readEvent(actor, r.getSourceId())).collect(Collectors.toList()));
 		}
 
 		return events.stream()
@@ -87,26 +102,20 @@ public class ServiceEventImplRepository implements IServiceEvent {
 	}
 
 	@Override
-	public IEvent readEvent(long id, IUser actorUser) throws ServiceEventExceptionNotFound,
+	public IEvent readEvent(IUser actorUser, long id) throws ServiceEventExceptionNotFound,
 			ServiceNotificationExceptionNotAllowed {
 		// TODO: limit the response - only if the user owns the event or is related to it
 		IEvent found = repositoryEvent.findOne(id);
-		if (found != null) {
-			return found;
+		if (found == null) {
+			throw new ServiceEventExceptionNotFound("Event not found - id=" + id);
 		}
-		throw new ServiceEventExceptionNotFound("Event not found - id=" + id);
+		return found;
 	}
 
 	@Override
-	public IEvent update(IEvent event, IUser actor) throws ServiceEventExceptionNotFound,
+	public IEvent update(IUser actor, IEvent event) throws ServiceEventExceptionNotFound,
 			ServiceNotificationExceptionNotAllowed {
-		final IEvent found = this.readEvent(event.getId(), actor);
-		if (found == null) {
-			String message = "Event with id " + event.getId() + " not found";
-			LOGGER.warn(() -> message);
-			throw new ServiceEventExceptionNotFound(message);
-		}
-
+		final IEvent found = this.readEvent(actor, event.getId());
 		if (actor != null) {
 			if (!actor.isAdmin() && !found.getOwnerId().equals(actor.getId())) {
 				String message = "Events can only be updated by owner or system admins";
@@ -119,24 +128,8 @@ public class ServiceEventImplRepository implements IServiceEvent {
 		}
 
 		IEvent.COPY(event, found);
-		final IEvent updated = this.update(event, actor);
+		final IEvent updated = repositoryEvent.save((Event) event);
 		LOGGER.info(() -> "Updated Event with id " + event.getId());
-		return repositoryEvent.save((Event)event);
-	}
-
-	@Override
-	public void delete(Long eventId, IUser actor) {
-		if (eventId != null) {
-			this.delete(repositoryEvent.findOne(eventId), actor);
-		}
-	}
-
-	@Override
-	public void delete(IEvent event, IUser actor) {
-		serviceRelationship.findBySourceTypeAndSourceId("Event", event.getId())
-				.stream().forEach(r -> serviceRelationship.delete(r.getId()));
-		serviceRelationship.findByDestinationTypeAndDestinationId("Event", event.getId())
-				.stream().forEach(r -> serviceRelationship.delete(r.getId()));
-		repositoryEvent.delete(event.getId());
+		return updated;
 	}
 }

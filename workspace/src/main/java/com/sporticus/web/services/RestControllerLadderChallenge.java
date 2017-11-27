@@ -58,7 +58,7 @@ public class RestControllerLadderChallenge extends ControllerAbstract {
                     ladderId, event.getChallengerId(), event.getChallengedId()));
 
             // TODO: Only a member of the ladder can challenger another member of the ladder
-            IEvent result = new DtoEventLadder(serviceLadder.createLadderChallenge(ladderId, event));
+	        IEvent result = new DtoEventLadder(serviceLadder.createLadderChallenge(getLoggedInUser(), ladderId, event));
 
             return new ResponseEntity<>(result, HttpStatus.OK);
 
@@ -109,8 +109,8 @@ public class RestControllerLadderChallenge extends ControllerAbstract {
     public ResponseEntity<?> delete(@PathVariable("ladderId") final long ladderId,
                                     @PathVariable("eventId") final long eventId) {
         try{
-            serviceLadder.deleteLadderChallenge(eventId);
-            return new ResponseEntity<>(HttpStatus.OK);
+	        serviceLadder.deleteLadderChallenge(getLoggedInUser(), eventId);
+	        return new ResponseEntity<>(HttpStatus.OK);
         } catch (ServiceLadderExceptionNotFound ex) {
             LOGGER.warn(() -> "Failed to delete challenge", ex);
             return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);

@@ -2,31 +2,30 @@ package com.sporticus.interfaces;
 
 import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IUser;
-import com.sporticus.interfaces.IServiceNotification.ServiceNotificationExceptionNotAllowed;
 
 import java.util.List;
 
 public interface IServiceEvent {
 
-	IEvent create(IEvent event, IUser actor);
+	IEvent create(IUser actor, IEvent event);
 
-	void delete(Long eventId, IUser actor) throws ServiceEventExceptionNotFound,
-			ServiceNotificationExceptionNotAllowed;
+	void delete(IUser actor, Long eventId) throws ServiceEventExceptionNotFound,
+			ServiceEventExceptionNotAllowed;
 
-	void delete(IEvent event, IUser actor) throws ServiceEventExceptionNotFound,
-			ServiceNotificationExceptionNotAllowed;
+	void delete(IUser actor, IEvent event) throws ServiceEventExceptionNotFound,
+			ServiceEventExceptionNotAllowed;
 
-	List<IEvent> getAgenda(Long userId, IUser actor) throws ServiceEventExceptionNotFound,
-			ServiceNotificationExceptionNotAllowed;
+	List<IEvent> getAgenda(IUser actor, Long userId) throws ServiceEventExceptionNotFound,
+			ServiceEventExceptionNotAllowed;
 
-	List<IEvent> readAll(Long userId, IUser actor) throws ServiceEventExceptionNotFound,
-			ServiceNotificationExceptionNotAllowed;
+	List<IEvent> readAll(IUser actor, Long userId) throws ServiceEventExceptionNotFound,
+			ServiceEventExceptionNotAllowed;
 
-	IEvent readEvent(long id, IUser actor) throws ServiceEventExceptionNotFound,
-			ServiceNotificationExceptionNotAllowed;
+	IEvent readEvent(IUser actor, long id) throws ServiceEventExceptionNotFound,
+			ServiceEventExceptionNotAllowed;
 
-	IEvent update(IEvent event, IUser actor) throws ServiceEventExceptionNotFound,
-			ServiceNotificationExceptionNotAllowed;
+	IEvent update(IUser actor, IEvent event) throws ServiceEventExceptionNotFound,
+			ServiceEventExceptionNotAllowed;
 
 	final class ServiceEventExceptionNotAllowed extends RuntimeException {
 		public ServiceEventExceptionNotAllowed(String message) {

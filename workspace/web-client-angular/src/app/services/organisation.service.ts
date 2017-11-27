@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {BaseCrudService} from "./base-crud.service";
-import {Observable} from "rxjs/Observable";
+import {HttpClient} from '@angular/common/http';
+import {BaseCrudService} from './base-crud.service';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class OrganisationService extends BaseCrudService<Organisation> {
@@ -12,24 +12,24 @@ export class OrganisationService extends BaseCrudService<Organisation> {
 
   url = '/api/organisation';
 
-  public getOrganisationByUrlFragment(urlFragment: string): Observable<organisationFromFragment> {
-    return this.http.get<organisationFromFragment>(this.url + "/findByUrlFragment/" + urlFragment, {
+  public getOrganisationByUrlFragment(urlFragment: string): Observable<OrganisationFromFragment> {
+    return this.http.get<OrganisationFromFragment>(this.url + '/findByUrlFragment/' + urlFragment, {
     });
   }
 }
 
-export interface organisationFromFragment {
+export interface OrganisationFromFragment {
   name: string;
   urlFragment: string;
 
   domain?: string;
   id?: number;
-  created?: Date,
+  created?: Date;
   ownerId?: number;
   isEnabled?: boolean;
   ownerEmail?: string;
   address?: string;
-  postcode?: string
+  postcode?: string;
 }
 
 export interface Organisation {
@@ -38,12 +38,12 @@ export interface Organisation {
 
   domain?: string;
   id?: number;
-  created?: Date,
+  created?: Date;
   createdString?: string;
   ownerId?: number;
   isEnabled?: boolean;
   ownerEmail?: string;
   address?: string;
-  postcode?: string
+  postcode?: string;
 
 }

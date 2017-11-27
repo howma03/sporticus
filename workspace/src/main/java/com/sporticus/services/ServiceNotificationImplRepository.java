@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -125,9 +124,13 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 					list.add(repositoryNotification.save((Notification)newNotification));
 
 					try {
-						engine.getEmitterByUserId(newNotification.getOwnerId()).send(newNotification);
-					} catch (IOException e) {
-						e.printStackTrace();
+						if (engine == null) {
+							LOGGER.warn(() -> "Unable to send notification - no SSE Engine available");
+						} else {
+							engine.send(newNotification.getOwnerId(), newNotification);
+						}
+					} catch (Exception ex) {
+						LOGGER.warn(() -> "Failed to send notification", ex);
 					}
 				});
 			}

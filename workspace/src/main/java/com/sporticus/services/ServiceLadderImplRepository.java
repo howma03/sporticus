@@ -3,10 +3,18 @@ package com.sporticus.services;
 import com.sporticus.domain.entities.Event;
 import com.sporticus.domain.entities.Group;
 import com.sporticus.domain.entities.Relationship;
-import com.sporticus.domain.interfaces.*;
+import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IEvent.STATUS;
+import com.sporticus.domain.interfaces.IGroup;
+import com.sporticus.domain.interfaces.IGroupMember;
+import com.sporticus.domain.interfaces.INotification;
+import com.sporticus.domain.interfaces.IOrganisation;
+import com.sporticus.domain.interfaces.IRelationship;
+import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.interfaces.IServiceEvent;
 import com.sporticus.interfaces.IServiceGroup;
+import com.sporticus.interfaces.IServiceGroup.ServiceGroupExceptionNotAllowed;
+import com.sporticus.interfaces.IServiceGroup.ServiceGroupExceptionNotFound;
 import com.sporticus.interfaces.IServiceLadder;
 import com.sporticus.interfaces.IServiceNotification;
 import com.sporticus.interfaces.IServiceRelationship;
@@ -28,7 +36,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,28 +76,30 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 		group.setEnabled(true);
 		group.setDescription(description);
 		group.setOwnerOrganisationId(ownerOrganisation.getId());
-		return this.serviceGroup.createGroup(ownerOrganisation, group);
+		return this.serviceGroup.createGroup(actor, ownerOrganisation, group);
 	}
 
 	@Override
-	public List<IGroup> readLaddersGroups() throws ServiceLadderExceptionNotFound {
-		return this.serviceGroup.readAllGroups()
+	public List<IGroup> readLaddersGroups(IUser actor) throws ServiceLadderExceptionNotFound {
+		return this.serviceGroup.readAllGroups(actor)
 				.stream()
 				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public IGroup readLadderGroup(Long groupId) throws ServiceLadderExceptionNotFound {
-		Optional<IGroup> found = this.serviceGroup.readGroup(groupId);
-		if (!found.isPresent()) {
+	public IGroup readLadderGroup(IUser actor, Long groupId) throws ServiceLadderExceptionNotFound {
+		try {
+			IGroup found = this.serviceGroup.readGroup(actor, groupId);
+			if (!found.getType().equalsIgnoreCase(GroupType.LADDER.toString())) {
+				throw new ServiceLadderExceptionNotFound("Group not found - group with id=" + groupId + " is not of type " + GroupType.LADDER);
+			}
+			return found;
+		} catch (ServiceGroupExceptionNotAllowed ex) {
+			throw new ServiceLadderExceptionNotAllowed(ex.getMessage(), ex);
+		} catch (ServiceGroupExceptionNotFound ex) {
 			throw new ServiceLadderExceptionNotFound("Group not found - id=" + groupId);
 		}
-		IGroup group = found.get();
-		if (!group.getType().equalsIgnoreCase(GroupType.LADDER.toString())) {
-			throw new ServiceLadderExceptionNotFound("Group not found - group with id=" + groupId + " is not of type " + GroupType.LADDER);
-		}
-		return group;
 	}
 
 	public void updateLadder() {
@@ -102,23 +111,64 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 	// Ladder Member functions
 
-	private boolean isLadderMemberActive(Long ladderId, Long userId) {
-		return this.serviceGroup.readGroups(gm -> (ladderId.equals(gm.getGroupId()) || gm.getUserId().equals(userId)) &&
-				gm.getStatus().equals(IGroupMember.Status.Accepted) &&
-				gm.isEnabled())
-				.stream()
-				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
-				.collect(Collectors.toList()).size() > 0;
-	}
-
 	@Override
-	public List<IGroup> getLaddersForUser(Long userId) {
-		return this.serviceGroup.readGroups(gm -> (userId == null || gm.getUserId().equals(userId)) &&
+	public List<IGroup> getLaddersForUser(IUser actor, Long userId) {
+		return this.serviceGroup.readGroups(actor, gm -> (userId == null || gm.getUserId().equals(userId)) &&
 				gm.getStatus().equals(IGroupMember.Status.Accepted) &&
 				gm.isEnabled())
 				.stream()
 				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<IGroupMember> readLadderMembers(IUser actor, long ladderId, long userId) {
+
+		// find all events for the ladder
+
+		Events events = this.getEvents(actor, ladderId);
+
+		// for each each locate the players (users) relationships - once will be the challenger, one will be the challenged
+		// filter the events - only those relating to the user should be included
+
+		// finally step through group member's decorating them with meta data where necessary
+		// - simply append the event to the groupMember and the player data to the event data
+
+		Events challengesMadeByUser = events.findWhereChallengerIs(userId);
+
+		// we want to use META-DATA to pass data to the client so we will convert to DtoGroupMemberLadder objects
+
+		final List<IGroupMember> members = serviceGroup.getGroupMembershipsForGroup(actor, ladderId);
+
+		return members.stream().map(gm -> {
+
+			DtoGroupMemberEx gmx = new DtoGroupMemberEx(gm);
+
+			// TODO: should only ever be a single "open" event
+			// check to see if there is a ladder challenge between the logged-in user and the group member
+			// find an event of type "CHALLENGE" between them
+			// TODO: implement a position property of the group (use the group meta data)
+			gmx.setPosition(members.indexOf(gm));
+
+			Events challengesMadeByUserToMember = challengesMadeByUser.findWhereChallengedIs(gm.getUserId());
+			if (challengesMadeByUserToMember.size() > 0) {
+				// the user has challenged the ladder member
+				gmx.setChallenged(challengesMadeByUserToMember.get(0));
+			}
+
+			Events challengesMadeByMember = events.findWhereChallengerIs(gm.getUserId());
+			Events challengesMadeByMemberToUser = challengesMadeByMember.findWhereChallengedIs(userId);
+			if (challengesMadeByMemberToUser.size() > 0) {
+				// the ladder member has challenged the user
+				gmx.setChallenger(challengesMadeByMemberToUser.get(0));
+			}
+
+			// populate additional data items
+
+			addDetails(actor, gmx);
+
+			return gmx;
+		}).collect(Collectors.toList());
 	}
 
 	// Ladder member functions (CRUD)
@@ -169,17 +219,8 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 	}
 
 	@Override
-	public List<IGroupMember> readLadderMembers(long ladderId) {
-		// TODO: Extend the data returned to include challenge details
-		// we will include all events for each member (i.e. those where the member ie challenger and/or challenged)
-		return serviceGroup.getGroupMembershipsForGroup(ladderId);
-	}
-
-
-	@Override
-	public IEvent createLadderChallenge(Long ladderId, final DtoEventLadder event)
-			throws ServiceLadderExceptionNotAllowed,
-			ServiceLadderExceptionNotFound {
+	public IEvent createLadderChallenge(IUser actor, Long ladderId, final DtoEventLadder event)
+			throws ServiceLadderExceptionNotAllowed, ServiceLadderExceptionNotFound {
 
 		if (event.getDateTime() == null) {
 			Calendar cal = Calendar.getInstance();
@@ -202,14 +243,14 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 		Long challengerId = event.getChallengerId();
 		Long challengedId = event.getChallengedId();
 
-		Events events = this.getEvents(ladderId).findActiveChallengesBetween(challengerId, challengedId);
+		Events events = this.getEvents(actor, ladderId).findActiveChallengesBetween(challengerId, challengedId);
 		if (events.size() > 0) {
 			throw new ServiceLadderExceptionNotAllowed("There is an open challenge between those players for the ladder");
 		}
 
-		IGroup ladder = readLadderGroup(ladderId);
+		IGroup ladder = readLadderGroup(actor, ladderId);
 
-		if (!isLadderMemberActive(ladderId, challengedId)) {
+		if (!isLadderMemberActive(actor, ladderId, challengedId)) {
 			String message = "Challenged player is not an active member of the ladder - ladderId=" + ladderId;
 			LOGGER.warn(() -> message);
 			throw new ServiceLadderExceptionNotAllowed(message);
@@ -251,7 +292,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 						newEvent.setOwnerId(challengerId);
 						newEvent.setType(EventType.CHALLENGE.toString());
 
-						return new DtoEventLadder(serviceEvent.create(newEvent, null));
+						return new DtoEventLadder(serviceEvent.create(actor, newEvent));
 					}
 
 					@Override
@@ -283,7 +324,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			newEvent.setOwnerId(challengerId);
 			newEvent.setType(EventType.CHALLENGE.toString());
 
-			newEvent = serviceEvent.create(newEvent, null);
+			newEvent = serviceEvent.create(actor, newEvent);
 
 
 			// We now create the relationship - users & event
@@ -344,10 +385,17 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 				serviceRelationship.delete(rLadder.getId());
 			}
 			if (event != null) {
-				serviceEvent.delete(event.getId(), null);
+				serviceEvent.delete(actor, event.getId());
 			}
 		}
 		return event;
+	}
+
+	@Override
+	public List<IGroupMember> readLadderMembers(IUser actor, long ladderId) {
+		// TODO: Extend the data returned to include challenge details
+		// we will include all events for each member (i.e. those where the member ie challenger and/or challenged)
+		return serviceGroup.getGroupMembershipsForGroup(actor, ladderId);
 	}
 
 	/**
@@ -420,124 +468,10 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 		}
 	}
 
-	/**
-	 * Function construct the DtoGroupMemberOrdered
-	 *
-	 * @param gm
-	 * @return DtoGroupMemberOrdered
-	 */
-	private void addDetails(final DtoGroupMember gm) {
-		final IUser user = serviceUser.findOne(gm.getUserId());
-		if (user != null) {
-			gm.setEmail(user.getEmail());
-			gm.setFirstName(user.getFirstName());
-			gm.setLastName(user.getLastName());
-			gm.setUserName(user.getFirstName() + " " + user.getLastName());
-		}
-		final Optional<IGroup> found = serviceGroup.readGroup(gm.getGroupId());
-		if (found.isPresent()) {
-			gm.setGroupName(found.get().getName());
-			gm.setGroupDescription(found.get().getDescription());
-		}
-	}
-
-	@Override
-	public List<IGroupMember> readLadderMembers(long ladderId, long userId) {
-
-		// find all events for the ladder
-
-		Events events = this.getEvents(ladderId);
-
-		// for each each locate the players (users) relationships - once will be the challenger, one will be the challenged
-		// filter the events - only those relating to the user should be included
-
-		// finally step through group member's decorating them with meta data where necessary
-		// - simply append the event to the groupMember and the player data to the event data
-
-		Events challengesMadeByUser = events.findWhereChallengerIs(userId);
-
-		// we want to use META-DATA to pass data to the client so we will convert to DtoGroupMemberLadder objects
-
-		final List<IGroupMember> members = serviceGroup.getGroupMembershipsForGroup(ladderId);
-
-		return members.stream().map(gm -> {
-
-			DtoGroupMemberEx gmx = new DtoGroupMemberEx(gm);
-
-			// TODO: should only ever be a single "open" event
-			// check to see if there is a ladder challenge between the logged-in user and the group member
-			// find an event of type "CHALLENGE" between them
-			// TODO: implement a position property of the group (use the group meta data)
-			gmx.setPosition(members.indexOf(gm));
-
-			Events challengesMadeByUserToMember = challengesMadeByUser.findWhereChallengedIs(gm.getUserId());
-			if (challengesMadeByUserToMember.size() > 0) {
-				// the user has challenged the ladder member
-				gmx.setChallenged(challengesMadeByUserToMember.get(0));
-			}
-
-			Events challengesMadeByMember = events.findWhereChallengerIs(gm.getUserId());
-			Events challengesMadeByMemberToUser = challengesMadeByMember.findWhereChallengedIs(userId);
-			if (challengesMadeByMemberToUser.size() > 0) {
-				// the ladder member has challenged the user
-				gmx.setChallenger(challengesMadeByMemberToUser.get(0));
-			}
-
-			// populate additional data items
-
-			addDetails(gmx);
-
-			return gmx;
-		}).collect(Collectors.toList());
-	}
-
-	public void updateLadderMember() {
-		// TODO: Add functionality
-	}
-
-	public void deleteLadderMember(long ladderId, long memberId) {
-		// TODO: Add functionality
-	}
-
-	// Ladder Challenge Functions (CRUD)
-
-	/**
-	 * Function gets all DtoEventLadder for a given ladder
-	 *
-	 * @param ladderId
-	 * @return Events
-	 */
-	private Events getEvents(long ladderId) {
-
-		Events events = new Events();
-
-		List<IRelationship> relationshipLadderToEvent = serviceRelationship.findBySourceTypeAndSourceIdAndType(
-				GroupType.LADDER.toString(),
-				ladderId,
-				RelationshipType.CHALLENGE.toString());
-
-		relationshipLadderToEvent.stream().forEach(er -> {
-			Long eventId = er.getDestinationId();
-			IEvent event = serviceEvent.readEvent(eventId, null);
-			if (event == null) {
-				LOGGER.warn(() -> "Failed to locate event - id=" + er.getDestinationId());
-				return;
-			}
-			events.add(getEvent(event));
-		});
-
-		return events;
-	}
-
-	public List<IEvent> readLadderChallenges(long ladderId) {
-		// TODO: Add functionality
-		return new ArrayList<>();
-	}
-
 	@Override
 	public IEvent updateLadderChallenge(IUser actor, DtoEventLadder event) {
 
-		IEvent found = serviceEvent.readEvent(event.getId(), actor);
+		IEvent found = serviceEvent.readEvent(actor, event.getId());
 		if (found == null) {
 			throw new ServiceLadderExceptionNotFound("Ladder Challenge not found - id=" + event.getId());
 		}
@@ -559,13 +493,88 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 		// TODO: Update ladder order based on result
 
-		return new DtoEventLadder(serviceEvent.create(new Event(eventLadder), null));
+		return new DtoEventLadder(serviceEvent.create(actor, new Event(eventLadder)));
 	}
 
 	@Override
-	public void deleteLadderChallenge(long event) {
+	public void deleteLadderChallenge(IUser actor, long event) {
 		// TODO: We need to delete relationships to/from event
 		// the event delete should tidy-up all relationships to the delete event
-		serviceEvent.delete(event, null);
+		serviceEvent.delete(actor, event);
+	}
+
+	public void updateLadderMember() {
+		// TODO: Add functionality
+	}
+
+	public void deleteLadderMember(long ladderId, long memberId) {
+		// TODO: Add functionality
+	}
+
+	// Ladder Challenge Functions (CRUD)
+
+	/**
+	 * Function gets all DtoEventLadder for a given ladder
+	 *
+	 * @param ladderId
+	 * @return Events
+	 */
+	private Events getEvents(IUser actor, long ladderId) {
+
+		Events events = new Events();
+
+		List<IRelationship> relationshipLadderToEvent = serviceRelationship.findBySourceTypeAndSourceIdAndType(
+				GroupType.LADDER.toString(),
+				ladderId,
+				RelationshipType.CHALLENGE.toString());
+
+		relationshipLadderToEvent.stream().forEach(er -> {
+			Long eventId = er.getDestinationId();
+			IEvent event = serviceEvent.readEvent(actor, eventId);
+			if (event == null) {
+				LOGGER.warn(() -> "Failed to locate event - id=" + er.getDestinationId());
+				return;
+			}
+			events.add(getEvent(event));
+		});
+
+		return events;
+	}
+
+	public List<IEvent> readLadderChallenges(long ladderId) {
+		// TODO: Add functionality
+		return new ArrayList<>();
+	}
+
+	private boolean isLadderMemberActive(IUser actor, Long ladderId, Long userId) {
+		return this.serviceGroup.readGroups(actor, gm -> (ladderId.equals(gm.getGroupId()) || gm.getUserId().equals(userId)) &&
+				gm.getStatus().equals(IGroupMember.Status.Accepted) &&
+				gm.isEnabled())
+				.stream()
+				.filter(g -> g.getType().equalsIgnoreCase(GroupType.LADDER.toString()))
+				.collect(Collectors.toList()).size() > 0;
+	}
+
+	/**
+	 * Function constructs the DtoGroupMemberOrdered
+	 *
+	 * @param gm
+	 * @return DtoGroupMemberOrdered
+	 */
+	private void addDetails(IUser actor, final DtoGroupMember gm) {
+		final IUser user = serviceUser.findOne(gm.getUserId());
+		if (user != null) {
+			gm.setEmail(user.getEmail());
+			gm.setFirstName(user.getFirstName());
+			gm.setLastName(user.getLastName());
+			gm.setUserName(user.getFirstName() + " " + user.getLastName());
+		}
+		try {
+			IGroup found = serviceGroup.readGroup(actor, gm.getGroupId());
+			gm.setGroupName(found.getName());
+			gm.setGroupDescription(found.getDescription());
+		} catch (Exception ex) {
+			LOGGER.warn(() -> "Exception occured", ex);
+		}
 	}
 }

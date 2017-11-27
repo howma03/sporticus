@@ -1,8 +1,11 @@
 package com.sporticus.services.rota;
 
 import com.sporticus.domain.interfaces.IGroup;
+import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.interfaces.IServiceEvent;
 import com.sporticus.interfaces.IServiceGroup;
+import com.sporticus.interfaces.IServiceGroup.ServiceGroupExceptionNotAllowed;
+import com.sporticus.interfaces.IServiceGroup.ServiceGroupExceptionNotFound;
 import com.sporticus.interfaces.IServiceRota;
 import com.sporticus.services.dto.DtoEventRota;
 import com.sporticus.util.logging.LogFactory;
@@ -14,11 +17,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ServiceRotaImplRepository implements IServiceRota {
+public class
+
+
+ServiceRotaImplRepository implements IServiceRota {
 
 	private static final Logger LOGGER = LogFactory.getLogger(ServiceRotaImplRepository.class.getName());
 
@@ -32,7 +37,7 @@ public class ServiceRotaImplRepository implements IServiceRota {
 	}
 
 	@Override
-	public List<DtoEventRota> createSchedule(long groupId, Date start, Date end) {
+	public List<DtoEventRota> createSchedule(IUser actor, long groupId, Date start, Date end) {
 
 		// When determining the schedule we collect:-
 		// 1. the rota
@@ -43,29 +48,36 @@ public class ServiceRotaImplRepository implements IServiceRota {
 		// MF require 1 for each day (Mon-Thu) with 2 rota of Tuesday
 
 		// TODO: obtain players from repository
-		Optional<IGroup> group = serviceGroup.readGroup(groupId);
+		try {
+			IGroup group = serviceGroup.readGroup(actor, groupId);
 
-		Players players = new Players(serviceGroup.getMembershipUsersForGroup(groupId, null)
-				.stream().map(u -> new Player(u)).collect(Collectors.toList()));
+			Players players = new Players(serviceGroup.getMembershipUsersForGroup(actor, groupId, null)
+					.stream().map(u -> new Player(u)).collect(Collectors.toList()));
 
 
-		Rota rota = constructRota(start, end, players, dateTime -> new Slots(new Slot(dateTime)),
-				dateTime -> true);
+			Rota rota = constructRota(start, end, players, dateTime -> new Slots(new Slot(dateTime)),
+					dateTime -> true);
 
-		calcRota(rota);
+			calcRota(rota);
 
-		// Convert the rota into individual Events
+			// Convert the rota into individual Events
 
-		List<DtoEventRota> list = new ArrayList<>();
-		rota.forEach((k, v) -> {
-			v.forEach(s -> {
-				DtoEventRota e = new DtoEventRota();
-				e.setDateTime(s.getDate());
-				e.setPlayers(s.getPlayers().stream().map(p -> p.getUser()).collect(Collectors.toList()));
-				list.add(e);
+			List<DtoEventRota> list = new ArrayList<>();
+
+			rota.forEach((k, v) -> {
+				v.forEach(s -> {
+					DtoEventRota e = new DtoEventRota();
+					e.setDateTime(s.getDate());
+					e.setPlayers(s.getPlayers().stream().map(p -> p.getUser()).collect(Collectors.toList()));
+					list.add(e);
+				});
 			});
-		});
-		return list;
+			return list;
+		} catch (ServiceGroupExceptionNotAllowed ex) {
+			throw new ServiceRotaExceptionNotAllowed("Operation not allowed", ex);
+		} catch (ServiceGroupExceptionNotFound ex) {
+			throw new ServiceRotaExceptionNotFound("Not found", ex);
+		}
 	}
 
 	protected Rota constructRota(Date start, Date end, Players players, ISlots fncSlots, IPlayerAvailable playerAvailable) {
@@ -126,27 +138,27 @@ public class ServiceRotaImplRepository implements IServiceRota {
 	}
 
 	@Override
-	public List<DtoEventRota> readSchedule(long groupId) {
+	public List<DtoEventRota> deleteSchedule(IUser actor, long groupId, Date begin, Date end) {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public List<DtoEventRota> readSchedule(long groupId, Date begin, Date end) {
+	public void deleteSchedule(IUser actor, long rotaEventId) {
+
+	}
+
+	@Override
+	public List<DtoEventRota> readSchedule(IUser actor, long groupId) {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public List<DtoEventRota> deleteSchedule(long groupId, Date begin, Date end) {
+	public List<DtoEventRota> readSchedule(IUser actor, long groupId, Date begin, Date end) {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public void deleteSchedule(long rotaEventId) {
-
-	}
-
-	@Override
-	public void updateRotaEvent(DtoEventRota event) {
+	public void updateRotaEvent(IUser actor, DtoEventRota event) {
 
 	}
 
@@ -157,6 +169,4 @@ public class ServiceRotaImplRepository implements IServiceRota {
 	interface IPlayerAvailable {
 		boolean isAvailable(Date dateTime);
 	}
-
-
 }
