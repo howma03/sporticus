@@ -4,7 +4,8 @@ import {Breadcrumb, PageHeaderIconMenu, PageHeaderNavigationItem} from '@ux-aspe
 import {AuthService} from '../../auth/auth.service';
 import {ProfileDialogComponent} from '../../profile/profile-dialog/profile-dialog.component';
 import {MatDialog} from '@angular/material';
-import {PushService} from "../../services/push.service";
+import {PushService} from '../../services/push.service';
+import {NotificationService} from '../../notification/notification.service';
 
 @Component({
   selector: 'app-main',
@@ -13,7 +14,7 @@ import {PushService} from "../../services/push.service";
 })
 export class MainComponent implements OnInit {
 
-  headerMenu;
+  notifications = [];
 
   iconMenus: PageHeaderIconMenu[] = [
     {
@@ -54,7 +55,7 @@ export class MainComponent implements OnInit {
     {
       icon: 'hpe-home',
       title: 'Home',
-      select: () => this.goHome()
+      select: () => this.router.navigate(['main/home'])
     },
     {
       title: 'Track Competitions',
@@ -89,7 +90,8 @@ export class MainComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private dialog: MatDialog,
-    private pushService: PushService
+    private pushService: PushService,
+    private notificationService: NotificationService,
   ) {
   }
 
@@ -112,15 +114,21 @@ export class MainComponent implements OnInit {
       });
     }
 
-    // Subscribe for notification changes.
-    this.updateNotificationsMenu();
+    this.updateNotificationDetails();
+
+    this.pushService.registerForEvents().subscribe((data) => {
+      // Subscribe for notification changes.
+      this.updateNotificationDetails();
+    });
+
   }
 
-
-  private updateNotificationsMenu() {
-    this.pushService.registerForEvents().subscribe((data) => {
-      debugger;
-    });
+  updateNotificationDetails() {
+    this.notificationService.retrieveAll()
+      .map(list => list.data)
+      .subscribe((data) => {
+        this.notifications = data;
+      });
   }
 
   /**
@@ -128,35 +136,38 @@ export class MainComponent implements OnInit {
    * @param {PageHeaderIconMenu} menu The parent menu to attach to
    */
   createNotificationsMenu(menu: PageHeaderIconMenu) {
-    this.headerMenu = menu;
 
-    menu.dropdown = [
-      {
-        icon: 'hpe-chat',
-        title: 'You have 45 messages',
-        subtitle: '100 minutes ago',
-        divider: true
-      },
-      {
-        icon: 'hpe-social-twitter',
-        title: '3 New Followers',
-        subtitle: '12 minutes ago',
-        divider: true
-      },
-      {
-        icon: 'hpe-cloud',
-        title: 'Server Rebooted',
-        subtitle: '22 minutes ago'
-      },
-      {
-        icon: 'hpe-notification',
-        title: 'Notifications',
-        subtitle: 'Temporary',
-        select: () => {
+    if (this.notifications.length === 0) {
+      menu.dropdown = [
+        {
+          icon: 'hpe-chat',
+          title: 'Loading...',
+          subtitle: '100 minutes ago',
+          divider: true,
+          select: () => {
+            this.gotoNotification();
+          }
+        }];
+      return;
+    }
+
+    let i;
+
+    const menuArray = [];
+
+    for (i = 0; i < this.notifications.length; i++) {
+      menuArray.push(
+        {
+          icon: 'hpe-notification',
+          title: this.notifications[i].title,
+          subtitle: this.notifications[i].text,
+          select: () => {
           this.gotoNotification();
         }
-      }
-    ];
+      });
+    }
+
+      menu.dropdown = menuArray;
   }
 
   getUserName(): string {
