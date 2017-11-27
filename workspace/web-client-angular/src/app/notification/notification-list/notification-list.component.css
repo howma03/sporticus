@@ -1,7 +1,7 @@
-.one {
-  color: red;
+.read {
+  font-style: italic;
 }
 
-.two {
-  color: blue;
+.unread {
+  font-style: normal;
 }

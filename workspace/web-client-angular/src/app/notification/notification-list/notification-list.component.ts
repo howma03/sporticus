@@ -40,13 +40,14 @@ export class NotificationListComponent implements OnInit {
 
   markUnread() {}
 
-  /**
-   * Return a tooltip customized for the item being hovered over
-   * @param {LadderUser} rung
-   * @returns {string}
-   */
-  getTooltip(rung ) {
-    return 'doh';
+
+  getTooltip(item ) {
+    const status = item.status;
+    if (status === 'UNREAD') {
+      return 'Mark as read';
+    } else {
+      return 'Mark as un-read';
+    }
   }
 
   public openModal(itemId): void {
@@ -56,8 +57,8 @@ export class NotificationListComponent implements OnInit {
       data: {
         item: item
       },
-      height: '900px',
-      width: '1200px',
+      height: '400px',
+      width: '600px',
     });
 
     dialogRef.afterClosed().subscribe((updateRequired) => {
