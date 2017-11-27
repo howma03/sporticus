@@ -14,6 +14,7 @@ import {ResetPasswordComponent} from "../login/reset-password/reset-password.com
 import {PricesComponent} from "./prices/prices.component";
 import {DevelopmentTeamComponent} from "./development-team/development-team.component";
 import {Initial2Component} from "./initial-2/initial-2.component";
+import {PricesDisplayComponent} from "./prices-display/prices-display.component";
 
 const landingRoutes: Routes = [
   {
@@ -28,7 +29,7 @@ const landingRoutes: Routes = [
       {path: 'help', component: HelpComponent},
       {path: 'help/**', component: HelpComponent},
       {path: 'clubs', component: ClubsComponent},
-      {path: 'prices', component: PricesComponent},
+      {path: 'prices', component: PricesDisplayComponent},
       {path: 'development-team', component: DevelopmentTeamComponent},
       {path: 'legal', component: LegalComponent},
       {path: 'legal/disclosure_policy', component: LegalDisclosurePolicyComponent},
