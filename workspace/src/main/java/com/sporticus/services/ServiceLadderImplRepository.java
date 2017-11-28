@@ -434,16 +434,16 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 				}
 			}
 
-			if (userPosition <= members.size() - 2) {
-				IGroupMember gm = members.get(userPosition + 2);
-				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
-					g.addBelow(addDetails(actor, new DtoGroupMemberOrdered(gm).setPosition(-2)));
-				}
-			}
 			if (userPosition <= members.size() - 1) {
 				IGroupMember gm = members.get(userPosition + 1);
 				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
 					g.addBelow(addDetails(actor, new DtoGroupMemberOrdered(gm).setPosition(-1)));
+				}
+			}
+			if (userPosition <= members.size() - 2) {
+				IGroupMember gm = members.get(userPosition + 2);
+				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
+					g.addBelow(addDetails(actor, new DtoGroupMemberOrdered(gm).setPosition(-2)));
 				}
 			}
 
@@ -471,7 +471,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			gm.setGroupName(found.getName());
 			gm.setGroupDescription(found.getDescription());
 		} catch (Exception ex) {
-			LOGGER.warn(() -> "Exception occured", ex);
+			LOGGER.warn(() -> "Exception occurred", ex);
 		}
 		return gm;
 	}
