@@ -68,23 +68,6 @@ public class ServiceGroupImplRepository implements IServiceGroup {
     @Qualifier("serviceMailImplRepository")
     private IServiceMail mailService;
 
-    /***
-     * Function to delete a Group Membership - we will not implement this function yet; we will simply mark the membership as disabled
-     * @param groupMemberId
-     * @return IGroupMember
-     */
-    public IGroupMember deleteGroupMember(IUser actor, final Long groupMemberId) throws ServiceGroupExceptionNotAllowed,
-            ServiceGroupExceptionNotFound {
-        final IGroupMember gm = this.repositoryGroupMember.findOne(groupMemberId);
-        if (gm == null) {
-            String message = "Cannot delete group membership - not found - " + groupMemberId;
-            LOGGER.warn(() -> message);
-            throw new ServiceGroupExceptionNotFound(message);
-        }
-        gm.setEnabled(false);
-        return this.repositoryGroupMember.save((GroupMember) gm);
-    }
-
     /**
      * Function construct the DtoGroupMember container
      *
@@ -561,7 +544,6 @@ public class ServiceGroupImplRepository implements IServiceGroup {
         return repositoryGroupMember.save((GroupMember) found);
     }
 
-
     /***
      * Function accept an invitation
      *
@@ -601,14 +583,33 @@ public class ServiceGroupImplRepository implements IServiceGroup {
             ServiceGroupExceptionNotFound {
         final IGroupMember found = this.repositoryGroupMember.findOne(id);
         if(found == null) {
-            LOGGER.error(() -> "Failed to find group member - id=" + id);
-            return null;
+	        String message = "Failed to find group membership - id=" + id;
+	        LOGGER.error(() -> message);
+	        throw new ServiceGroupExceptionNotFound(message);
         }
         found.setStatus(IGroupMember.Status.Declined);
         found.setEnabled(false);
         found.setAcceptedOrRejectedDate(new Date());
         return repositoryGroupMember.save((GroupMember) found);
     }
+
+	/**
+	 * Function to delete a group membership
+	 *
+	 * @param actor
+	 * @param groupMemberId
+	 */
+	@Override
+	public void deleteGroupMember(IUser actor, final Long groupMemberId) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound {
+		final IGroupMember found = this.repositoryGroupMember.findOne(groupMemberId);
+		if (found == null) {
+			String message = "Failed to find group membership - id=" + groupMemberId;
+			LOGGER.error(() -> message);
+			throw new ServiceGroupExceptionNotFound(message);
+		}
+		repositoryGroupMember.delete(groupMemberId);
+	}
 
 
 }

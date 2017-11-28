@@ -1,7 +1,6 @@
 package com.sporticus.services;
 
 import com.sporticus.domain.entities.Message;
-import com.sporticus.domain.interfaces.IMessage;
 import com.sporticus.domain.interfaces.IMessage.IMPORTANCE;
 import com.sporticus.domain.interfaces.IMessage.STATUS;
 import com.sporticus.domain.interfaces.IMessage.TYPE;
@@ -53,16 +52,14 @@ public class ServiceMailImplRepository extends ServiceMailAbstract implements IS
 		IUser sender = serviceUser.findUserByEmail(from);
 		IUser recipient = serviceUser.findUserByEmail(to);
 
-		IMessage message = new Message();
-		message.setType(TYPE.EMAIL)
+		repositoryMessage.save((Message) new Message()
+				.setType(TYPE.EMAIL)
 				.setImportance(IMPORTANCE.NORMAL)
 				.setStatus(STATUS.UNREAD)
 				.setSubject(inSubject)
 				.setBody(inBody)
-				.setSenderId(sender.getId())
-				.setRecipientId(recipient.getId());
-
-		repositoryMessage.save((Message) message);
+				.setSenderId(sender == null ? null : sender.getId())
+				.setRecipientId(recipient.getId()));
 	}
 
 }

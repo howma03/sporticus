@@ -1,4 +1,4 @@
-package com.sporticus.web.services.management;
+package com.sporticus.web.services.admin;
 
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.interfaces.IServiceJobScheduler;
@@ -26,9 +26,9 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/management/user")
-public class RestControllerManagementUser extends ControllerAbstract {
+public class RestControllerAdminUser extends ControllerAbstract {
 
-    private static final Logger LOGGER = LogFactory.getLogger(RestControllerManagementUser.class.getName());
+    private static final Logger LOGGER = LogFactory.getLogger(RestControllerAdminUser.class.getName());
 
     private static final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
@@ -37,9 +37,9 @@ public class RestControllerManagementUser extends ControllerAbstract {
     private final IServiceJobScheduler serviceScheduler;
 
     @Autowired
-    public RestControllerManagementUser(final IServiceUser serviceUser,
-                                        final IServiceOrganisation serviceOrganisation,
-                                        final IServiceJobScheduler serviceScheduler) {
+    public RestControllerAdminUser(final IServiceUser serviceUser,
+                                   final IServiceOrganisation serviceOrganisation,
+                                   final IServiceJobScheduler serviceScheduler) {
         this.serviceUser = serviceUser;
         this.serviceOrganisation = serviceOrganisation;
         this.serviceScheduler = serviceScheduler;

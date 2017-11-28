@@ -11,6 +11,7 @@ import java.util.List;
  */
 public interface IServiceOrganisation {
 
+
 	IOrganisation createOrganisation(IUser actor, IOrganisation organisation) throws ServiceOrganisationExceptionNotAllowed;
 
 	IOrganisation deleteOrganisation(IUser actor, Long id) throws ServiceOrganisationExceptionNotAllowed,
@@ -24,18 +25,23 @@ public interface IServiceOrganisation {
 	IOrganisation readOrganisation(IUser actor, Long id) throws ServiceOrganisationExceptionNotAllowed,
 			ServiceOrganisationExceptionNotFound;
 
-	/**
-	 * Membership functions
-	 */
-
-	List<IGroupMember> readOrganisationsMembers(IUser actor, long organisationId) throws ServiceOrganisationExceptionNotAllowed,
-			ServiceOrganisationExceptionNotFound;
-
 	List<IOrganisation> readOrganisationsOwnedByUser(IUser actor, Long userId) throws ServiceOrganisationExceptionNotAllowed,
 			ServiceOrganisationExceptionNotFound;
 
 	IOrganisation updateOrganisation(IUser actor, IOrganisation organisation) throws ServiceOrganisationExceptionNotAllowed,
 			ServiceOrganisationExceptionNotFound;
+
+	IGroupMember addMember(IUser loggedInUser, Long orgId, Long userId);
+
+	/**
+	 * Membership functions
+	 */
+
+	List<IGroupMember> readMembers(IUser actor, long organisationId) throws ServiceOrganisationExceptionNotAllowed,
+			ServiceOrganisationExceptionNotFound;
+
+	void removeMember(IUser loggedInUser, Long orgId, Long userId);
+
 
 	final class ServiceOrganisationExceptionNotAllowed extends RuntimeException {
 		public ServiceOrganisationExceptionNotAllowed(String message) {

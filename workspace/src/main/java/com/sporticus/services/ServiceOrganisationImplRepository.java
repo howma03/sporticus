@@ -4,12 +4,14 @@ import com.sporticus.domain.entities.Group;
 import com.sporticus.domain.entities.Organisation;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
+import com.sporticus.domain.interfaces.IGroupMember.Permission;
 import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryGroup;
 import com.sporticus.domain.repositories.IRepositoryOrganisation;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceOrganisation;
+import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
 import org.apache.commons.collections.IteratorUtils;
@@ -28,18 +30,22 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
 
     private static final Logger LOGGER = LogFactory.getLogger(ServiceOrganisationImplRepository.class.getName());
 
+	private static final String GROUP_TYPE_MEMBERS = "MEMBERS";
+
     /**
      * CRUD operations for Organisations
      */
 
     @Autowired
     private IRepositoryOrganisation repositoryOrganisation;
+	@Autowired
+	private IRepositoryGroup repositoryGroup;
 
-    private static final String GROUP_TYPE_MEMBERS = "MEMBERS";
     @Autowired
     private IServiceGroup serviceGroup;
+
     @Autowired
-    private IRepositoryGroup repositoryGroup;
+    private IServiceUser serviceUser;
 
     @Override
     public IOrganisation createOrganisation(IUser actor, final IOrganisation organisation) throws ServiceOrganisationExceptionNotAllowed {
@@ -146,7 +152,7 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
     }
 
     @Override
-    public List<IGroupMember> readOrganisationsMembers(IUser actor, long organisationId) throws ServiceOrganisationExceptionNotAllowed, ServiceOrganisationExceptionNotFound {
+    public List<IGroupMember> readMembers(IUser actor, long organisationId) throws ServiceOrganisationExceptionNotAllowed, ServiceOrganisationExceptionNotFound {
         LOGGER.info(() -> "Reading Organisation members - id=" + organisationId);
         IOrganisation organisation = this.readOrganisation(actor, organisationId);
         // FIXME: When created an organisation is given a default member's group
@@ -156,8 +162,8 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
                 .stream()
                 .filter(g -> g.getType().equalsIgnoreCase(GROUP_TYPE_MEMBERS))
                 .findFirst();
-        IGroup group = null;
-        if (found.isPresent()) {
+	    IGroup group;
+	    if (found.isPresent()) {
             group = found.get();
         } else {
             LOGGER.warn(() -> "Unable to locate organisation's member group - creating ..");
@@ -165,6 +171,86 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
         }
         return serviceGroup.getGroupMembershipsForGroup(actor, group.getId());
     }
+
+	protected Optional<IGroupMember> findMember(IUser actor, long orgId, long userId) {
+		return this.readMembers(actor, orgId).stream().filter(gm -> gm.getUserId().equals(userId)).findFirst();
+	}
+
+	private Optional<IGroup> findOrganisationMemberGroup(IUser actor, Long orgId) {
+		return repositoryGroup
+				.findByOwnerOrganisationId(orgId)
+				.stream()
+				.filter(g -> g.getType().equalsIgnoreCase(GROUP_TYPE_MEMBERS))
+				.findFirst();
+	}
+
+	/**
+	 * Function to add a member
+	 *
+	 * @param actor
+	 * @param orgId
+	 * @param userId
+	 * @return IGroupMember
+	 */
+	@Override
+	public IGroupMember addMember(IUser actor, Long orgId, Long userId) {
+		LOGGER.debug(() -> String.format("Adding Organisation Member - orgId=[%d] userId=[%d]", orgId, userId));
+		IOrganisation organisation = this.readOrganisation(actor, orgId);
+		IUser user = serviceUser.findOne(userId);
+		if (user == null) {
+			String message = "User not found - id=" + userId;
+			LOGGER.warn(() -> message);
+			throw new ServiceOrganisationExceptionNotFound(message);
+		}
+		Optional<IGroupMember> foundMember = findMember(actor, orgId, userId);
+		if (foundMember.isPresent()) {
+			if (!foundMember.get().isEnabled()) {
+				LOGGER.warn(() -> "Group member - User is not enabled - id=" + userId);
+			}
+			String message = "User is already a member of the organisation";
+			LOGGER.warn(() -> message);
+			throw new ServiceOrganisationExceptionNotAllowed(message);
+		}
+		Optional<IGroup> foundGroup = findOrganisationMemberGroup(actor, orgId);
+		if (!foundGroup.isPresent()) {
+			String message = "Organisation Membership Group not found - orgId=" + orgId;
+			LOGGER.warn(() -> message);
+			throw new ServiceOrganisationExceptionNotFound(message);
+		}
+		return serviceGroup.createGroupMember(actor,
+				foundGroup.get(),
+				user,
+				Permission.WRITE,
+				actor);
+	}
+
+	@Override
+	public void removeMember(IUser actor, Long orgId, Long userId) {
+		LOGGER.debug(() -> String.format("Removing Organisation Member - orgId=[%d] userId=[%d]", orgId, userId));
+		IOrganisation organisation = this.readOrganisation(actor, orgId);
+
+		Optional<IGroup> foundGroup = findOrganisationMemberGroup(actor, orgId);
+		if (!foundGroup.isPresent()) {
+			String message = "Organisation Membership Group not found - orgId=" + orgId;
+			LOGGER.warn(() -> message);
+			throw new ServiceOrganisationExceptionNotFound(message);
+		}
+
+		IGroup orgGroup = foundGroup.get();
+
+		Optional<IGroupMember> foundMember = serviceGroup.getGroupMembershipsForUser(actor, userId)
+				.stream()
+				.filter(gm -> gm.getGroupId().equals(orgGroup.getId()) && gm.getUserId().equals(userId))
+				.findFirst();
+
+		if (!foundMember.isPresent()) {
+			String message = "User is not a member of the organisation";
+			LOGGER.warn(() -> message);
+			throw new ServiceOrganisationExceptionNotAllowed(message);
+		}
+		serviceGroup.deleteGroupMember(actor, foundMember.get().getId());
+		LOGGER.info(() -> String.format("Removed Organisation Member - orgId=[%d] userId=[%d]", orgId, userId));
+	}
 
     /**
      * Functions for Organisation Memberships - user members

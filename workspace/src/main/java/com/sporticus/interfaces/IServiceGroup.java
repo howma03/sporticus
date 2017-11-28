@@ -34,6 +34,10 @@ public interface IServiceGroup {
 	IGroup createGroup(IUser actor, IOrganisation organisation, IGroup group) throws ServiceGroupExceptionNotAllowed,
 			ServiceGroupExceptionNotFound;
 
+	void deleteGroup(IUser actor, Long id) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
+
+
 	/**
 	 * Group Membership functions
 	 */
@@ -51,7 +55,7 @@ public interface IServiceGroup {
 	IGroupMember declineInvitation(IUser actor, Long id) throws ServiceGroupExceptionNotAllowed,
 			ServiceGroupExceptionNotFound;
 
-	void deleteGroup(IUser actor, Long id) throws ServiceGroupExceptionNotAllowed,
+	void deleteGroupMember(IUser actor, Long groupMemberId) throws ServiceGroupExceptionNotAllowed,
 			ServiceGroupExceptionNotFound;
 
 	List<IGroupMember> getGroupMembershipsForGroup(IUser actor, Long groupId) throws ServiceGroupExceptionNotAllowed,

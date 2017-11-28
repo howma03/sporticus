@@ -162,6 +162,9 @@ subprojects {
 	}
 }
 
+//frontend:build will be run before the processResources
+processResources.dependsOn('web-client-angular:build')
+
 jar {
 	from ('web-client-angular/dist/') {
 		//Public is a default supported Spring Boot resources directory.
@@ -169,8 +172,6 @@ jar {
 	}
 }
 
-//frontend:build will be run before the processResources
-processResources.dependsOn('web-client-angular:build')
 
 findbugs {
     ignoreFailures = true

@@ -38,6 +38,7 @@ public class RestControllerOrganisation extends ControllerAbstract {
     private IServiceGroup serviceGroup;
 
     public RestControllerOrganisation() {
+
     }
 
     /**
@@ -57,8 +58,8 @@ public class RestControllerOrganisation extends ControllerAbstract {
         }
     }
 
-    private DtoOrganisation convertToDtoOrganisation(final IOrganisation o) {
-        final DtoOrganisation dtoOrganisation = new DtoOrganisation(o);
+	protected DtoOrganisation convertToDtoOrganisation(final IOrganisation o) {
+		final DtoOrganisation dtoOrganisation = new DtoOrganisation(o);
 
         // Now determine the number of groups the user is a member of
         if(o.getOwnerId() != null) {
@@ -75,24 +76,6 @@ public class RestControllerOrganisation extends ControllerAbstract {
         return dtoOrganisation;
     }
 
-    /**
-     * Function to delete a group
-     * Only the owner of an Organisation or an admin can delete a Organisation
-     * @param id
-     * @return ResponseEntity<DtoOrganisation>
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteOne(@PathVariable("id") final long id) {
-        try {
-            serviceOrganisation.deleteOrganisation(getLoggedInUser(), id);
-            LOGGER.info(() -> "Deleted Organisation with id " + id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (ServiceOrganisationExceptionNotAllowed ex) {
-            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
-        } catch (ServiceOrganisationExceptionNotFound ex) {
-            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
-        }
-    }
 
     /**
      * Function to find an organisation given a url fragment
@@ -130,6 +113,26 @@ public class RestControllerOrganisation extends ControllerAbstract {
         }
     }
 
+	/**
+	 * Function to delete a organisation
+	 * Only the owner of an Organisation or an admin can delete a Organisation
+	 *
+	 * @param id
+	 * @return ResponseEntity<DtoOrganisation>
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteOne(@PathVariable("id") final long id) {
+		try {
+			serviceOrganisation.deleteOrganisation(getLoggedInUser(), id);
+			LOGGER.info(() -> "Deleted Organisation with id " + id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (ServiceOrganisationExceptionNotAllowed ex) {
+			return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+		} catch (ServiceOrganisationExceptionNotFound ex) {
+			return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+		}
+	}
+
     /**
      * Function to read all organisations - owned by logged-in user
      *
@@ -141,8 +144,8 @@ public class RestControllerOrganisation extends ControllerAbstract {
             return new ResponseEntity<>(new DtoList<>(this.serviceOrganisation
                     .readAllOrganisations(this.getLoggedInUser())
                     .stream()
-                    .map(o -> convertToDtoOrganisation(o))
-                    .collect(Collectors.toList())), HttpStatus.OK);
+		            .map(this::convertToDtoOrganisation)
+		            .collect(Collectors.toList())), HttpStatus.OK);
         } catch (ServiceOrganisationExceptionNotAllowed ex) {
             return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
         } catch (ServiceOrganisationExceptionNotFound ex) {
@@ -150,38 +153,18 @@ public class RestControllerOrganisation extends ControllerAbstract {
         }
     }
 
-    //------------------- Delete a Organisation --------------------------------------------------------
-
-    /***
-     * Function returns a list of the group memberships for an organisation
-     * @return ResponseEntity<DtoGroupMember>
-     */
-    @RequestMapping(value = "/{id}/members", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> readOrganisationMembers(@PathVariable("id") Long orgId) {
-        try {
-            return new ResponseEntity<>(serviceGroup.convertToDtoGroupMembers(this.serviceOrganisation.readOrganisationsMembers(getLoggedInUser(), orgId)), HttpStatus.OK);
-        } catch (ServiceOrganisationExceptionNotAllowed ex) {
-            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
-        } catch (ServiceOrganisationExceptionNotFound ex) {
-            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
-        }
-    }
-
-
-    /**
-     * CRUD Operations for Organisation - these are proxy method calls (all of this functionality could be
-     * obtained for the organisation's member group)
-     */
-
-    /**
-     * Function to update a group - only owners (or administrators) should be allowed to update the group
-     *
-     * @param id
-     * @param organisation
-     * @return ResponseEntity<DtoOrganisation>
+	/**
+	 * Function to update an organisation
+	 *
+	 * Only owners (or administrators) should be allowed to update the group
+	 *
+	 * @param id - organisation's identifier
+	 * @param organisation - organisation details
+	 * @return ResponseEntity<DtoOrganisation>
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@PathVariable("id") final long id, @RequestBody final DtoOrganisation organisation) {
+    public ResponseEntity<?> update(@PathVariable("id") final long id,
+                                    @RequestBody final DtoOrganisation organisation) {
         try {
             organisation.setId(id);
             final IOrganisation updated = serviceOrganisation.updateOrganisation(getLoggedInUser(), organisation);
@@ -193,4 +176,5 @@ public class RestControllerOrganisation extends ControllerAbstract {
             return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
         }
     }
+
 }
