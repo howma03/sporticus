@@ -6,7 +6,7 @@ import {ServicesModule} from "../services/services.module";
 import {
   MatDialogModule,
   MatFormFieldModule,
-  MatGridListModule,
+  MatGridListModule, MatMenuModule,
   MatSelectModule,
   MatTableModule,
   MatTooltipModule
@@ -28,6 +28,7 @@ import {UtilModule} from "../util/util.module";
     MatTableModule,
     MatGridListModule,
     MatFormFieldModule,
+    MatMenuModule,
     MatTooltipModule,
     MatSelectModule,
     UtilModule,

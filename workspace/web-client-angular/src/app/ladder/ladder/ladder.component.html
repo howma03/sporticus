@@ -18,10 +18,18 @@
       <td class="text-black">{{ rung.position+1 | appendOrdinal }}</td>
       <td class="text-black">{{ rung.userName }}</td>
       <td>
-        <i *ngIf="rung.isChallenged" class="hpe-icon hpe-vulnerability hover-action-icon" (click)="cancelChallenge(rung)" [matTooltip]="getTooltip(rung)"></i>
+        <i *ngIf="rung.isChallenged" class="hpe-icon hpe-vulnerability hover-action-icon" [matMenuTriggerFor]="dayMenu" [matTooltip]="getTooltip(rung)"></i>
         <i *ngIf="rung.isChallenger" class="hpe-icon hpe-alarm hover-action-icon" (click)="editChallenge(rung)" [matTooltip]="getTooltip(rung)"></i>
         <i *ngIf="rung.canChallenge"  class="hpe-icon hpe-target hover-action-icon" (click)="createChallenge(rung)" [matTooltip]="getTooltip(rung)" uxHoverAction></i>
       </td>
+      <mat-menu #dayMenu>
+        <button mat-menu-item (click)="editChallenge(rung)">
+          <span>Amend Challenge</span>
+        </button>
+        <button mat-menu-item (click)="cancelChallenge(rung)">
+          <span>Cancel Challenge</span>
+        </button>
+      </mat-menu>
     </tr>
     </tbody>
   </table>
