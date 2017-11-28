@@ -414,31 +414,34 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 			// find the user's position in the group and then add 2 above and 2 below (where possible)
 			final List<IGroupMember> members = serviceGroup.getGroupMembershipsForGroup(actor, l.getId());
-			Optional<IGroupMember> userPosition = members.stream().filter(m -> m.getUserId().equals(userId)).findFirst();
 
-			int userIndex = members.indexOf(userPosition);
+			Optional<IGroupMember> found = members.stream().filter(m -> m.getUserId().equals(userId)).findFirst();
 
-			if (userIndex >= 2) {
-				IGroupMember gm = members.get(userIndex - 2);
+			int userPosition = members.indexOf(found.get());
+
+			LOGGER.info(() -> String.format("User's position in ladder - %d", userPosition));
+
+			if (userPosition >= 2) {
+				IGroupMember gm = members.get(userPosition - 2);
 				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
 					g.addAbove(new DtoGroupMemberOrdered(gm).setPosition(+2));
 				}
 			}
-			if (userIndex >= 1) {
-				IGroupMember gm = members.get(userIndex - 1);
+			if (userPosition >= 1) {
+				IGroupMember gm = members.get(userPosition - 1);
 				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
 					g.addAbove(addDetails(actor, new DtoGroupMemberOrdered(gm).setPosition(+1)));
 				}
 			}
 
-			if (userIndex <= members.size() - 2) {
-				IGroupMember gm = members.get(userIndex + 2);
+			if (userPosition <= members.size() - 2) {
+				IGroupMember gm = members.get(userPosition + 2);
 				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
 					g.addBelow(addDetails(actor, new DtoGroupMemberOrdered(gm).setPosition(-2)));
 				}
 			}
-			if (userIndex <= members.size() - 1) {
-				IGroupMember gm = members.get(userIndex + 1);
+			if (userPosition <= members.size() - 1) {
+				IGroupMember gm = members.get(userPosition + 1);
 				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
 					g.addBelow(addDetails(actor, new DtoGroupMemberOrdered(gm).setPosition(-1)));
 				}
