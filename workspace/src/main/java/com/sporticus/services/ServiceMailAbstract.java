@@ -25,16 +25,17 @@ import java.util.Properties;
 public abstract class ServiceMailAbstract implements IServiceMail {
 
     private static final Logger LOGGER = LogFactory.getLogger(ServiceMailAbstract.class.getName());
+
     static final String VAR_NAME_COMPANY = "company";
     static final String VAR_NAME_PRODUCT = "product";
     static final String VAR_NAME_USER = "user";
     static final String VAR_NAME_WEB_ADDRESS = "webAddress";
     static final String VAR_NAME_SUPPORT_EMAIL = "supportEmail";
     static final String VAR_NAME_RESET_PASSWORD_ID = "id";
-    static final String COMPANY = "GARK Ltd";
-    static final String PRODUCT = "My Achievements";
-    static final String SENDER_EMAIL_ADDRESS = "myAchievementsWeb@gmail.com";
-    static final String SUBJECT_SUCCESSFUL_REGISTRATION = "Registration successful";
+	static final String COMPANY = "Sporticus Ltd";
+	static final String PRODUCT = "Sporticus";
+	static final String SENDER_EMAIL_ADDRESS = "sporticus.app@gmail.com";
+	static final String SUBJECT_SUCCESSFUL_REGISTRATION = "Registration successful";
     static final String SUBJECT_PASSWORD_RESET = "Password Reset";
     static final String TEMPLATE_LOCATION_FOR_EMAIL_VERIFICATION = "registration-verification.vm";
     static final String TEMPLATE_LOCATION_FOR_EMAIL_VERIFICATION_INVITED = "registration-invitation.vm";
