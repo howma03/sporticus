@@ -192,8 +192,8 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 		public Events findActiveChallengesBetween(Long player1Id, Long player2Id) {
 			return new Events(list.stream().filter(e -> !e.getStatus().equals(STATUS.CLOSED) &&
-					(e.getChallengerId().equals(player1Id) && e.getChallengerId().equals(player2Id)) ||
-							(e.getChallengerId().equals(player2Id) && e.getChallengerId().equals(player1Id))
+					(e.getChallengerId().equals(player1Id) && e.getChallengedId().equals(player2Id)) ||
+					(e.getChallengedId().equals(player2Id) && e.getChallengerId().equals(player1Id))
 			).collect(Collectors.toList()));
 		}
 
