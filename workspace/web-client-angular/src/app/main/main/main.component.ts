@@ -16,7 +16,7 @@ export class MainComponent implements OnInit {
 
   notifications = [];
 
-  notificationCount = 32
+  notificationCount = 0;
 
   iconMenus: PageHeaderIconMenu[] = [
     {
@@ -140,6 +140,10 @@ export class MainComponent implements OnInit {
    */
   createNotificationsMenu(menu: PageHeaderIconMenu) {
 
+
+    let broadcastCount = 0;
+    let ladderCount = 0;
+
     if (this.notifications.length === 0) {
       menu.dropdown = [
         {
@@ -157,13 +161,38 @@ export class MainComponent implements OnInit {
 
     const menuArray = [];
 
-    for (i = 0; i < this.notifications.length; i++) {
-      menuArray.push(
+    if (this.notifications.length === 0) {
+      menu.dropdown = [
         {
-          icon: 'hpe-notification',
-          title: this.notifications[i].title,
-          subtitle: this.notifications[i].text,
-          select: () => {
+          icon: 'hpe-chat',
+          title: 'You have no new notifications',
+        }];
+    }
+
+    for (i = 0; i < this.notifications.length; i++) {
+     if (this.notifications[i].title === 'Broadcast') {
+       broadcastCount++;
+     }
+      if (this.notifications[i].title === 'Ladder Challenge') {
+        ladderCount++;
+      }
+    }
+
+    if (broadcastCount > 0) {
+      menuArray.push({
+        icon: 'fa fa-bullhorn',
+        title: 'You have ' + broadcastCount + ' broadcasts',
+        select: () => {
+        this.gotoNotification();
+      }
+      });
+    }
+
+    if (ladderCount > 0) {
+      menuArray.push({
+        icon: 'hpe-icon hpe-target',
+        title: 'You have received ' + ladderCount + ' ladder challenge',
+        select: () => {
           this.gotoNotification();
         }
       });

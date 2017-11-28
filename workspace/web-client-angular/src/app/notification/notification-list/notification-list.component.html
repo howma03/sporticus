@@ -10,8 +10,8 @@
     <thead>
     <tr class="table-header-dark">
       <th>Type</th>
+      <th>Priority</th>
       <th>Text</th>
-      <th>Severity</th>
       <th>Date</th>
       <th></th>
     </tr>
@@ -20,8 +20,8 @@
     <tr class= "{{item.status === 'UNREAD' ? 'unread' : 'read'}}" *ngFor="let item of notifications" uxHoverActionContainer>
 
         <td>
-          <i *ngIf="item.title === 'Broadcast'" class="fa fa-bullhorn hover-action-icon" (click)="markRead(item)" [matTooltip]="getTooltip(item)"></i>
-          <i *ngIf="item.title === 'Ladder Challenge'" class="hpe-icon hpe-target hover-action-icon" (click)="markUnread(item)" [matTooltip]="getTooltip(item)"></i>
+          <i *ngIf="item.title === 'Broadcast'" class="fa fa-bullhorn hover-action-icon" (click)="markRead(item)"></i>
+          <i *ngIf="item.title === 'Ladder Challenge'" class="hpe-icon hpe-target hover-action-icon" (click)="markUnread(item)"></i>
           {{ item.title }}
         </td>
         <td>{{ item.severity }}</td>
