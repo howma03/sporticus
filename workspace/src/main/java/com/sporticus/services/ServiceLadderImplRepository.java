@@ -22,6 +22,7 @@ import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.services.Transaction.Step;
 import com.sporticus.services.Transaction.Transaction;
 import com.sporticus.services.dto.DtoEventLadder;
+import com.sporticus.services.dto.DtoGroup;
 import com.sporticus.services.dto.DtoGroupMember;
 import com.sporticus.services.dto.DtoGroupMemberOrdered;
 import com.sporticus.types.EventType;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -398,6 +400,84 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 		return serviceGroup.getGroupMembershipsForGroup(actor, ladderId);
 	}
 
+	@Override
+	public List<IGroup> readPossibleChallenges(IUser actor, long userId) {
+
+		// for each group the user is a member of we can determine the available players above and below (depending on the ladder)
+		// configuration.
+
+		return getLaddersForUser(actor, userId).stream().map(l -> {
+
+			Events events = getEvents(actor, l.getId());
+
+			DtoEventLadderChallengesAvailable g = new DtoEventLadderChallengesAvailable(l);
+
+			// find the user's position in the group and then add 2 above and 2 below (where possible)
+			final List<IGroupMember> members = serviceGroup.getGroupMembershipsForGroup(actor, l.getId());
+			Optional<IGroupMember> userPosition = members.stream().filter(m -> m.getUserId().equals(userId)).findFirst();
+
+			int userIndex = members.indexOf(userPosition);
+
+			if (userIndex >= 2) {
+				IGroupMember gm = members.get(userIndex - 2);
+				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
+					g.addAbove(new DtoGroupMemberOrdered(gm).setPosition(+2));
+				}
+			}
+			if (userIndex >= 1) {
+				IGroupMember gm = members.get(userIndex - 1);
+				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
+					g.addAbove(new DtoGroupMemberOrdered(gm).setPosition(+1));
+				}
+			}
+
+			if (userIndex <= members.size() - 2) {
+				IGroupMember gm = members.get(userIndex + 2);
+				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
+					g.addBelow(new DtoGroupMemberOrdered(gm).setPosition(-2));
+				}
+			}
+			if (userIndex <= members.size() - 1) {
+				IGroupMember gm = members.get(userIndex + 1);
+				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
+					g.addBelow(new DtoGroupMemberOrdered(gm).setPosition(-1));
+				}
+			}
+
+			return g;
+
+		}).collect(Collectors.toList());
+	}
+
+	class DtoEventLadderChallengesAvailable extends DtoGroup {
+		protected List<IGroupMember> above = new ArrayList<>();
+		protected List<IGroupMember> below = new ArrayList<>();
+
+		public DtoEventLadderChallengesAvailable() {
+
+		}
+
+		public DtoEventLadderChallengesAvailable(IGroup group) {
+			IGroup.COPY(group, this);
+		}
+
+		public void addAbove(IGroupMember member) {
+			above.add(member);
+		}
+
+		public void addBelow(IGroupMember member) {
+			below.add(member);
+		}
+
+		public List<IGroupMember> getAbove() {
+			return above;
+		}
+
+		public List<IGroupMember> getBelow() {
+			return above;
+		}
+	}
+
 	/**
 	 * Function gets a DtoEventLadder for a given IEvent
 	 *
@@ -495,6 +575,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 
 		return new DtoEventLadder(serviceEvent.create(actor, new Event(eventLadder)));
 	}
+
 
 	@Override
 	public void deleteLadderChallenge(IUser actor, long event) {

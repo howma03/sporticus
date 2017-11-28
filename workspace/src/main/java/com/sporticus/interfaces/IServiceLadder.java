@@ -85,9 +85,9 @@ public interface IServiceLadder {
 
 	/**
 	 * Returns a list of all members of the ladder
+	 *
 	 * @param ladderId
 	 * @return List<IGroupMember>
-	 *
 	 */
 	List<IGroupMember> readLadderMembers(IUser actor, long ladderId) throws ServiceLadderExceptionNotFound,
 			ServiceLadderExceptionNotAllowed;
@@ -112,12 +112,22 @@ public interface IServiceLadder {
 			ServiceLadderExceptionNotAllowed;
 
 	/**
+	 * Function to return the possible challenges available for a user
+	 *
+	 * @param actor
+	 * @param userId
+	 * @return
+	 */
+	List<IGroup> readPossibleChallenges(IUser actor, long userId);
+
+	/**
 	 * Function to allow the ladder challenge event to be updated
+	 *
 	 * @param actor
 	 * @param event
 	 * @return IEvent
 	 */
-	IEvent updateLadderChallenge(IUser actor, DtoEventLadder event)throws ServiceLadderExceptionNotFound,
+	IEvent updateLadderChallenge(IUser actor, DtoEventLadder event) throws ServiceLadderExceptionNotFound,
 			ServiceLadderExceptionNotAllowed;
 
 }
