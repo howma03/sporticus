@@ -1,5 +1,5 @@
 import {
-  ChangeDetectorRef, Component, OnInit, QueryList, ViewChild, ViewChildren
+  Component, OnInit, QueryList, ViewChild, ViewChildren
 } from '@angular/core';
 import {CalendarComponent} from 'ng-fullcalendar';
 import {Options} from 'fullcalendar';
@@ -51,8 +51,7 @@ export class CalendarWrapperComponent implements OnInit {
   constructor(
     private challengeService : ChallengeService,
     private eventService : EventService,
-    private dialog: MatDialog,
-    private ref: ChangeDetectorRef
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -94,8 +93,6 @@ export class CalendarWrapperComponent implements OnInit {
           };
         });
 
-        debugger;
-
         this.navItems = [
           {
             displayName: 'Register Unavailable Times',
@@ -118,8 +115,9 @@ export class CalendarWrapperComponent implements OnInit {
    */
   private userToMenu(user : LadderUser) {
     {
+      let position = (user.position > 0) ? "above" : "below";
       return {
-        displayName: `${user.userName} : ${user.position}`,
+        displayName: `${user.userName} (${Math.abs(user.position)} ${position})`,
         iconName: 'person',
         route: null
       }
