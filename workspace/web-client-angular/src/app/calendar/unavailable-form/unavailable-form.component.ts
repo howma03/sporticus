@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {Event, EventService} from '../../services/event.service';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-unavailable-form',
@@ -10,7 +11,8 @@ import {Event, EventService} from '../../services/event.service';
 export class UnavailableFormComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
-              private eventService: EventService) {}
+              private eventService: EventService,
+              private datePipe : DatePipe) {}
 
   @Input()
   date: Date;
@@ -106,7 +108,9 @@ export class UnavailableFormComponent implements OnInit {
       name: 'holiday',
       created: new Date(),
       dateTime: fromDateTime,
+      dateTimeString: this.formatDate(fromDateTime),
       dateTimeEnd: toDateTime,
+      dateTimeEndString: this.formatDate(toDateTime),
       type: 'BUSY',
       status: 'ACCEPTED'
     };
@@ -122,6 +126,12 @@ export class UnavailableFormComponent implements OnInit {
           this.onDone();
         })
     }
+  }
+
+  private formatDate(date : Date) {
+    return this.unavailableForm.get('entireDays').value
+      ? this.datePipe.transform(date, 'yyyy-MM-dd')
+      : date.toISOString();
   }
 
   onCancel() {
