@@ -427,20 +427,20 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			if (userIndex >= 1) {
 				IGroupMember gm = members.get(userIndex - 1);
 				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
-					g.addAbove(new DtoGroupMemberOrdered(gm).setPosition(+1));
+					g.addAbove(addDetails(actor, new DtoGroupMemberOrdered(gm).setPosition(+1)));
 				}
 			}
 
 			if (userIndex <= members.size() - 2) {
 				IGroupMember gm = members.get(userIndex + 2);
 				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
-					g.addBelow(new DtoGroupMemberOrdered(gm).setPosition(-2));
+					g.addBelow(addDetails(actor, new DtoGroupMemberOrdered(gm).setPosition(-2)));
 				}
 			}
 			if (userIndex <= members.size() - 1) {
 				IGroupMember gm = members.get(userIndex + 1);
 				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
-					g.addBelow(new DtoGroupMemberOrdered(gm).setPosition(-1));
+					g.addBelow(addDetails(actor, new DtoGroupMemberOrdered(gm).setPosition(-1)));
 				}
 			}
 
@@ -449,33 +449,28 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 		}).collect(Collectors.toList());
 	}
 
-	class DtoEventLadderChallengesAvailable extends DtoGroup {
-		protected List<IGroupMember> above = new ArrayList<>();
-		protected List<IGroupMember> below = new ArrayList<>();
-
-		public DtoEventLadderChallengesAvailable() {
-
+	/**
+	 * Function constructs the DtoGroupMemberOrdered
+	 *
+	 * @param gm
+	 * @return DtoGroupMemberOrdered
+	 */
+	private IGroupMember addDetails(IUser actor, final DtoGroupMember gm) {
+		final IUser user = serviceUser.findOne(gm.getUserId());
+		if (user != null) {
+			gm.setEmail(user.getEmail());
+			gm.setFirstName(user.getFirstName());
+			gm.setLastName(user.getLastName());
+			gm.setUserName(user.getFirstName() + " " + user.getLastName());
 		}
-
-		public DtoEventLadderChallengesAvailable(IGroup group) {
-			IGroup.COPY(group, this);
+		try {
+			IGroup found = serviceGroup.readGroup(actor, gm.getGroupId());
+			gm.setGroupName(found.getName());
+			gm.setGroupDescription(found.getDescription());
+		} catch (Exception ex) {
+			LOGGER.warn(() -> "Exception occured", ex);
 		}
-
-		public void addAbove(IGroupMember member) {
-			above.add(member);
-		}
-
-		public void addBelow(IGroupMember member) {
-			below.add(member);
-		}
-
-		public List<IGroupMember> getAbove() {
-			return above;
-		}
-
-		public List<IGroupMember> getBelow() {
-			return above;
-		}
+		return gm;
 	}
 
 	/**
@@ -636,26 +631,32 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 				.collect(Collectors.toList()).size() > 0;
 	}
 
-	/**
-	 * Function constructs the DtoGroupMemberOrdered
-	 *
-	 * @param gm
-	 * @return DtoGroupMemberOrdered
-	 */
-	private void addDetails(IUser actor, final DtoGroupMember gm) {
-		final IUser user = serviceUser.findOne(gm.getUserId());
-		if (user != null) {
-			gm.setEmail(user.getEmail());
-			gm.setFirstName(user.getFirstName());
-			gm.setLastName(user.getLastName());
-			gm.setUserName(user.getFirstName() + " " + user.getLastName());
+	class DtoEventLadderChallengesAvailable extends DtoGroup {
+		protected List<IGroupMember> above = new ArrayList<>();
+		protected List<IGroupMember> below = new ArrayList<>();
+
+		public DtoEventLadderChallengesAvailable() {
+
 		}
-		try {
-			IGroup found = serviceGroup.readGroup(actor, gm.getGroupId());
-			gm.setGroupName(found.getName());
-			gm.setGroupDescription(found.getDescription());
-		} catch (Exception ex) {
-			LOGGER.warn(() -> "Exception occured", ex);
+
+		public DtoEventLadderChallengesAvailable(IGroup group) {
+			IGroup.COPY(group, this);
+		}
+
+		public void addAbove(IGroupMember member) {
+			above.add(member);
+		}
+
+		public void addBelow(IGroupMember member) {
+			below.add(member);
+		}
+
+		public List<IGroupMember> getAbove() {
+			return above;
+		}
+
+		public List<IGroupMember> getBelow() {
+			return below;
 		}
 	}
 }

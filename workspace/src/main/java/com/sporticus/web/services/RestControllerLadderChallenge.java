@@ -71,6 +71,19 @@ public class RestControllerLadderChallenge extends ControllerAbstract {
         }
     }
 
+    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> readChallengesAvailableForLoggedInUser() {
+        try {
+            return new ResponseEntity<>(serviceLadder.readPossibleChallenges(getLoggedInUser(), getLoggedInUserId()), HttpStatus.OK);
+        } catch (ServiceLadderExceptionNotFound ex) {
+            LOGGER.warn(() -> "Failed to read challenges", ex);
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+        } catch (ServiceLadderExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Failed to read challenges", ex);
+            return new ResponseEntity<>(ex, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
     // We will provide functions to:-
     // 1. record/update the ladder event date/time (which must be in the future)
     // 2. record the result (score)
