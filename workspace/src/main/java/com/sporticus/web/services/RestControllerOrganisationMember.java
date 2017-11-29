@@ -39,18 +39,19 @@ public class RestControllerOrganisationMember extends ControllerAbstract {
 	/**
 	 * Function to add a member to an organisation
 	 * Only a system administrator and organisation owners can perform this operation
-	 * <p>
+	 *
 	 * TODO: We may allow group admins to perform this operation in the future
 	 *
 	 * @param orgId  - the organisation's identifier
 	 * @param userId - the user's identifier
 	 * @return ResponseEntity
 	 */
-	@RequestMapping(value = "/{id}/member/{userId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> add(@PathVariable("id") Long orgId, @PathVariable("userId") Long userId) {
+	@RequestMapping(value = "/{orgId}/member/{userId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> add(@PathVariable("orgId") Long orgId, @PathVariable("userId") Long userId) {
 		try {
 			LOGGER.debug(() -> String.format("Adding Organisation Member - orgId=[%d] userId=[%d]", orgId, userId));
-			return new ResponseEntity<>(serviceGroup.convertToDtoGroupMember(serviceOrganisation.addMember(getLoggedInUser(), orgId, userId)), HttpStatus.OK);
+			IUser actor = getLoggedInUser();
+			return new ResponseEntity<>(serviceGroup.convertToDtoGroupMember(serviceOrganisation.addMember(actor, orgId, userId)), HttpStatus.OK);
 		} catch (ServiceOrganisationExceptionNotFound ex) {
 			return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
 		} catch (ServiceOrganisationExceptionNotAllowed ex) {
@@ -60,21 +61,21 @@ public class RestControllerOrganisationMember extends ControllerAbstract {
 
 	/**
 	 * Function to add a member to an organisation
-	 * <p>
+	 *
 	 * Only a system administrator and organisation owners can perform this operation
-	 * <p>
+	 *
 	 * TODO: We may allow group admins to perform this operation in the future
 	 *
 	 * @param orgId - the organisation's identifier
 	 * @param user  - the user
 	 * @return ResponseEntity
 	 */
-	@RequestMapping(value = "/{id}/member", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> add(@PathVariable("id") Long orgId, @RequestBody DtoUser user) {
+	@RequestMapping(value = "/{orgId}/member", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> add(@PathVariable("orgId") Long orgId, @RequestBody DtoUser user) {
 		try {
 			LOGGER.debug(() -> String.format("Adding Organisation Member - orgId=[%d] email=[%s]", orgId, user.getEmail()));
 			IUser actor = getLoggedInUser();
-			return new ResponseEntity<>(serviceGroup.convertToDtoGroupMember(serviceOrganisation.addMember(getLoggedInUser(), orgId, user)), HttpStatus.OK);
+			return new ResponseEntity<>(serviceGroup.convertToDtoGroupMember(serviceOrganisation.addMember(actor, orgId, user)), HttpStatus.OK);
 		} catch (ServiceOrganisationExceptionNotFound ex) {
 			return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
 		} catch (ServiceOrganisationExceptionNotAllowed ex) {

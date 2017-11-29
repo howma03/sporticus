@@ -116,15 +116,40 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
         return found;
     }
 
-    private void verifyOwnership(IUser actor, IOrganisation organisation) {
-        if (!actor.isAdmin()) {
-            if (!actor.getId().equals(organisation.getOwnerId())) {
-                String message = "User can only read organisations they own";
-                LOGGER.error(() -> message);
-                throw new ServiceOrganisationExceptionNotAllowed(message);
-            }
-        }
-    }
+	/**
+	 * Function to add a member
+	 *
+	 * @param actor
+	 * @param orgId
+	 * @param userId
+	 * @return IGroupMember
+	 */
+	@Override
+	public IGroupMember addMember(IUser actor, Long orgId, Long userId) {
+		LOGGER.debug(() -> String.format("Adding Organisation Member - orgId=[%d] userId=[%d]", orgId, userId));
+		IOrganisation organisation = this.readOrganisation(actor, orgId);
+		IUser user = serviceUser.findOne(userId);
+		if (user == null) {
+			String message = "User not found - id=" + userId;
+			LOGGER.warn(() -> message);
+			throw new ServiceOrganisationExceptionNotFound(message);
+		}
+		Optional<IGroupMember> foundMember = findMember(actor, orgId, userId);
+		if (foundMember.isPresent()) {
+			if (!foundMember.get().isEnabled()) {
+				LOGGER.warn(() -> "Group member - User is not enabled - id=" + userId);
+			}
+			String message = "User is already a member of the organisation";
+			LOGGER.warn(() -> message);
+			throw new ServiceOrganisationExceptionNotAllowed(message);
+		}
+		IGroup foundGroup = findOrCreateOrganisationMemberGroup(actor, orgId);
+		return serviceGroup.createGroupMember(actor,
+				foundGroup,
+				user,
+				Permission.WRITE,
+				actor);
+	}
 
     @Override
     public IOrganisation updateOrganisation(final IUser actor, final IOrganisation organisation) throws ServiceOrganisationExceptionNotAllowed,
@@ -176,53 +201,6 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
 		return this.readMembers(actor, orgId).stream().filter(gm -> gm.getUserId().equals(userId)).findFirst();
 	}
 
-	private Optional<IGroup> findOrganisationMemberGroup(IUser actor, Long orgId) {
-		return repositoryGroup
-				.findByOwnerOrganisationId(orgId)
-				.stream()
-				.filter(g -> g.getType().equalsIgnoreCase(GROUP_TYPE_MEMBERS))
-				.findFirst();
-	}
-
-	/**
-	 * Function to add a member
-	 *
-	 * @param actor
-	 * @param orgId
-	 * @param userId
-	 * @return IGroupMember
-	 */
-	@Override
-	public IGroupMember addMember(IUser actor, Long orgId, Long userId) {
-		LOGGER.debug(() -> String.format("Adding Organisation Member - orgId=[%d] userId=[%d]", orgId, userId));
-		IOrganisation organisation = this.readOrganisation(actor, orgId);
-		IUser user = serviceUser.findOne(userId);
-		if (user == null) {
-			String message = "User not found - id=" + userId;
-			LOGGER.warn(() -> message);
-			throw new ServiceOrganisationExceptionNotFound(message);
-		}
-		Optional<IGroupMember> foundMember = findMember(actor, orgId, userId);
-		if (foundMember.isPresent()) {
-			if (!foundMember.get().isEnabled()) {
-				LOGGER.warn(() -> "Group member - User is not enabled - id=" + userId);
-			}
-			String message = "User is already a member of the organisation";
-			LOGGER.warn(() -> message);
-			throw new ServiceOrganisationExceptionNotAllowed(message);
-		}
-		Optional<IGroup> foundGroup = findOrganisationMemberGroup(actor, orgId);
-		if (!foundGroup.isPresent()) {
-			String message = "Organisation Membership Group not found - orgId=" + orgId;
-			LOGGER.warn(() -> message);
-			throw new ServiceOrganisationExceptionNotFound(message);
-		}
-		return serviceGroup.createGroupMember(actor,
-				foundGroup.get(),
-				user,
-				Permission.WRITE,
-				actor);
-	}
 	@Override
 	public IGroupMember addMember(IUser actor, Long orgId, IUser inUser) {
 		LOGGER.debug(() -> String.format("Adding Organisation Member - orgId=[%d] email=[%s]", orgId, inUser.getEmail()));
@@ -231,14 +209,9 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
 		if (user != null) {
 			return this.addMember(actor, orgId, user.getId());
 		}
-		Optional<IGroup> foundGroup = findOrganisationMemberGroup(actor, orgId);
-		if (!foundGroup.isPresent()) {
-			String message = "Organisation Membership Group not found - orgId=" + orgId;
-			LOGGER.warn(() -> message);
-			throw new ServiceOrganisationExceptionNotFound(message);
-		}
+		IGroup foundGroup = findOrCreateOrganisationMemberGroup(actor, orgId);
 		return serviceGroup.createGroupMember(actor,
-				foundGroup.get(),
+				foundGroup,
 				inUser,
 				Permission.WRITE,
 				actor);
@@ -249,14 +222,7 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
 		LOGGER.debug(() -> String.format("Removing Organisation Member - orgId=[%d] userId=[%d]", orgId, userId));
 		IOrganisation organisation = this.readOrganisation(actor, orgId);
 
-		Optional<IGroup> foundGroup = findOrganisationMemberGroup(actor, orgId);
-		if (!foundGroup.isPresent()) {
-			String message = "Organisation Membership Group not found - orgId=" + orgId;
-			LOGGER.warn(() -> message);
-			throw new ServiceOrganisationExceptionNotFound(message);
-		}
-
-		IGroup orgGroup = foundGroup.get();
+		IGroup orgGroup = findOrCreateOrganisationMemberGroup(actor, orgId);
 
 		Optional<IGroupMember> foundMember = serviceGroup.getGroupMembershipsForUser(actor, userId)
 				.stream()
@@ -268,12 +234,45 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
 			LOGGER.warn(() -> message);
 			throw new ServiceOrganisationExceptionNotAllowed(message);
 		}
+
 		serviceGroup.deleteGroupMember(actor, foundMember.get().getId());
+
 		LOGGER.info(() -> String.format("Removed Organisation Member - orgId=[%d] userId=[%d]", orgId, userId));
 	}
 
-    /**
-     * Functions for Organisation Memberships - user members
+	/**
+	 * Function find or create the organisation's member group
+	 *
+	 * @param actor
+	 * @param orgId
+	 * @return
+	 */
+	private IGroup findOrCreateOrganisationMemberGroup(IUser actor, Long orgId) {
+		Optional<IGroup> found = repositoryGroup
+				.findByOwnerOrganisationId(orgId)
+				.stream()
+				.filter(g -> g.getType().equalsIgnoreCase(GROUP_TYPE_MEMBERS))
+				.findFirst();
+		if (found.isPresent()) {
+			return found.get();
+		}
+		LOGGER.warn(() -> "Creating Organisation Membership Group  - orgId=" + orgId);
+		IOrganisation organisation = this.readOrganisation(actor, orgId);
+		return this.createMembersGroup(organisation);
+	}
+
+	private void verifyOwnership(IUser actor, IOrganisation organisation) throws ServiceOrganisationExceptionNotAllowed {
+		if (!actor.isAdmin()) {
+			if (!actor.getId().equals(organisation.getOwnerId())) {
+				String message = "User can only read organisations they own";
+				LOGGER.error(() -> message);
+				throw new ServiceOrganisationExceptionNotAllowed(message);
+			}
+		}
+	}
+
+	/**
+	 * Functions for Organisation Memberships - user members
      */
 
     private IGroup createMembersGroup(IOrganisation organisation) {
