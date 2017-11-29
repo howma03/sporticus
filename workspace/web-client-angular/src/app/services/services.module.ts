@@ -10,6 +10,7 @@ import {ChallengeService} from "./challenge.service";
 import {AgendaService} from "./agenda.service";
 import {PushService} from "./push.service";
 import {EventService} from './event.service';
+import {OrganisationGroupsService} from "./organisation-groups.service";
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import {EventService} from './event.service';
     UsersService,
     RegistrationService,
     OrganisationService,
+    OrganisationGroupsService,
     PushService,
     LadderService,
     ProfileService,

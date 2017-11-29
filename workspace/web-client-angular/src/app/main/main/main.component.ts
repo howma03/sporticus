@@ -80,8 +80,8 @@ export class MainComponent implements OnInit {
           select: () => this.router.navigate(['main/manage/members'])
         },
         {
-          title: 'Competitions',
-          select: () => this.router.navigate(['main/manage/competitions'])
+          title: 'Groups',
+          select: () => this.router.navigate(['main/manage/groups'])
         }
 
       ]

@@ -21,7 +21,7 @@ export class ManageMainComponent implements OnInit {
   }
 
   subComponent = 'organisation';
-  tabs: string[] = ['organisation', 'members', 'competitions'];
+  tabs: string[] = ['organisation', 'members', 'groups'];
 
   get selectedIndex(): number {
     return this.tabs.indexOf(this.subComponent);

@@ -1,6 +1,19 @@
-<p>
-  manage-group-main works!
-</p>
+<mat-form-field>
+  <mat-select [value]="groupId" (change)="onGroupSelect($event)">
+    <mat-option *ngFor="let group of groups" [value]="group.id">
+      {{group.name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
 
 
-
+<mat-tab-group>
+  <mat-tab label="One">
+    <h1>Some tab content</h1>
+    <p>...</p>
+  </mat-tab>
+  <mat-tab label="Two">
+    <h1>Some more tab content</h1>
+    <p>...</p>
+  </mat-tab>
+</mat-tab-group>
