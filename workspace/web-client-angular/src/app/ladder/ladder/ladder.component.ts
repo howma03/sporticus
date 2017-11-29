@@ -73,16 +73,17 @@ export class LadderComponent implements OnInit, OnDestroy {
    * @param {LadderUser} ladderUser
    */
   editChallenge(ladderUser : LadderUser) {
-    let dialogRef = this.dialog.open(ChallengeDialogComponent, {
-      disableClose: true,
-      data: {
-        rung: ladderUser
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(challenge => {
-      this.reload();
-    });
+    alert("not yet available - currently only the challenged person can edit");
+    // let dialogRef = this.dialog.open(ChallengeDialogComponent, {
+    //   disableClose: true,
+    //   data: {
+    //     rung: ladderUser
+    //   }
+    // });
+    //
+    // dialogRef.afterClosed().subscribe(challenge => {
+    //   this.reload();
+    // });
   }
 
   /**
