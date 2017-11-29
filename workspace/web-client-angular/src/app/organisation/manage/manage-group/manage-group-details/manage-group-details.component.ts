@@ -14,7 +14,6 @@ export class ManageGroupDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    debugger;
   }
 
 }
