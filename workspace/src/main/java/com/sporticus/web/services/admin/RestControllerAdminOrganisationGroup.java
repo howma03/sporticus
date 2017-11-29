@@ -34,7 +34,6 @@ public class RestControllerAdminOrganisationGroup extends ControllerAbstract {
 
 	private IServiceOrganisation serviceOrganisation;
 
-	@Autowired
 	private IServiceGroup serviceGroup;
 
 	@Autowired
