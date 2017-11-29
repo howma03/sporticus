@@ -8,8 +8,16 @@ import {Group, OrganisationGroupsService} from "../../../../services/organisatio
 })
 export class ManageGroupDetailsComponent implements OnInit {
 
+  get group(): Group {
+    return this._group;
+  }
+
   @Input()
-  public group: Group;
+  set group(value: Group) {
+    this._group = value;
+  }
+
+  private _group: Group;
 
   constructor() {
   }

@@ -7,11 +7,21 @@ import {GroupMemberService} from '../../../../services/group-member.service';
   styleUrls: ['./manage-group-members.component.css']
 })
 export class ManageGroupMembersComponent implements OnInit {
+  get group() {
+    return this._group;
+  }
 
   @Input()
-  public group;
+  set group(value) {
+    this._group = value;
+    this.getGroupMembers();
+  }
+
+  private _group;
 
   members = [];
+
+  groupMembersCount = 0;
 
   constructor(
     public groupMemberService: GroupMemberService
@@ -19,8 +29,12 @@ export class ManageGroupMembersComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.groupMemberService.retrieveAll(this.group.id).subscribe(members => {
+  }
+
+  getGroupMembers() {
+    this.groupMemberService.retrieveAll(this._group.id).subscribe(members => {
       this.members = members.data;
+      this.groupMembersCount = this.members.length;
     });
   }
 

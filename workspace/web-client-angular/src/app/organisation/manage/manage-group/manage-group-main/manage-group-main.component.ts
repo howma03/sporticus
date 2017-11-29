@@ -8,13 +8,21 @@ import {Group, OrganisationGroupsService} from "../../../../services/organisatio
 })
 export class ManageGroupMainComponent implements OnInit {
 
+  get organisationId(): number {
+    return this._organisationId;
+  }
+
   @Input()
-  public organisationId: number;
+  set organisationId(value: number) {
+    this._organisationId = value;
+    this.updateGroups();
+  }
+
+  private _organisationId: number;
 
   selectedGroup: Group = <Group> {
     id: -1
   };
-
 
   groups: Group[] = [];
   groupId: number = null;
@@ -26,7 +34,10 @@ export class ManageGroupMainComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.organisationGroupsService.retrieveAll(this.organisationId).subscribe(groups => {
+  }
+
+  updateGroups() {
+    this.organisationGroupsService.retrieveAll(this._organisationId).subscribe(groups => {
       this.groups = groups.data;
       if (this.groupId === null) {
         this.groupId = this.groups[0].id;
