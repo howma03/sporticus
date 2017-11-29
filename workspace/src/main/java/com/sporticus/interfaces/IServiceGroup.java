@@ -6,9 +6,10 @@ import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.domain.interfaces.IGroupMember.Permission;
 import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IUser;
+import com.sporticus.services.dto.DtoGroupMember;
+import com.sporticus.services.dto.DtoList;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -16,75 +17,124 @@ import java.util.function.Predicate;
  */
 public interface IServiceGroup {
 
-    class ServiceGroupException extends RuntimeException {
-        public ServiceGroupException() {
+	IGroupMember acceptInvitation(IUser actor, Long id) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-        }
+	/**
+	 * Utility functions
+	 */
+	DtoGroupMember convertToDtoGroupMember(final IGroupMember gm);
 
-        public ServiceGroupException(final String message) {
-            super(message);
-        }
+	DtoList<DtoGroupMember> convertToDtoGroupMembers(final List<IGroupMember> list);
 
-        public ServiceGroupException(final String message, final Exception ex) {
-            super(message, ex);
-        }
-    }
+	/**
+	 * CRUD Operations
+	 */
 
-    IGroup createGroup(IOrganisation organisation, IGroup group);
+	IGroup createGroup(IUser actor, IOrganisation organisation, IGroup group) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    Optional<IGroup> readGroup(Long groupId);
+	void deleteGroup(IUser actor, Long id) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    List<IGroup> readGroups(IOrganisation organisation);
 
-    List<IUser> readGroupAdminsActive(long groupId);
+	/**
+	 * Group Membership functions
+	 */
 
-    IGroup updateGroup(IGroup group);
+	IGroupMember createGroupMember(IUser actor, IGroupMember groupMember, IUser inviter) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    void deleteGroup(Long id);
+	IGroupMember createGroupMember(IUser actor,
+	                               IGroup Group,
+	                               IUser user,
+	                               Permission permissions,
+	                               IUser inviter) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    IOrganisation getGroupOwner(Long groupId);
+	IGroupMember declineInvitation(IUser actor, Long id) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    void setGroupOwner(Long groupId, IOrganisation organisation);
+	void deleteGroupMember(IUser actor, Long groupMemberId) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    List<IGroup> readAllGroups();
+	List<IGroupMember> getGroupMembershipsForGroup(IUser actor, Long groupId) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    List<IGroup> readGroups(IGroupMember.IGroupMemberFilter iGroupMemberFilter);
+	List<IGroupMember> getGroupMembershipsForUser(IUser actor, Long userId) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    List<IGroup> readGroupsManagedByUser(Long userId);
+	IGroupMember getGroupMembershipsForUser(IUser actor, Long userId, Long groupId) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    List<IUser> readGroupAdmins(long groupId);
+	/**
+	 * Additional read functions
+	 */
 
-    /**
-     * Group Membership functions
-     */
+	IOrganisation getGroupOwner(IUser actor, Long groupId) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    IGroupMember createGroupMember(IGroupMember groupMember, IUser inviter) throws ServiceGroupException;
+	IGroupMember getMembership(IUser actor, Long groupMembershipId) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    IGroupMember createGroupMember(IGroup Group, IUser newUser,
-                                   Permission permissions,
-                                   IUser inviter) throws ServiceGroupException;
+	List<IGroup> getMembershipGroupsForUser(IUser actor, Long userId) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    List<IGroup> getMembershipGroupsForUser(Long userId);
+	List<IUser> getMembershipUsersForGroup(IUser actor, Long groupId, Predicate<IGroupMember> filter) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    List<IUser> getMembershipUsersForGroup(Long groupId, Predicate<IGroupMember> filter);
+	boolean isActiveGroupAdmin(IUser actor, Long groupId, IUser loggedInUser) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    List<IGroupMember> getGroupMembershipsForUser(Long userId);
+	boolean isAllowedAccess(IUser actor, IUser user, IGroup group) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    IGroupMember getGroupMembershipsForUser(Long userId, Long groupId);
+	List<IGroup> readAllGroups(IUser actor) throws ServiceGroupExceptionNotAllowed;
 
-    List<IGroupMember> getGroupMembershipsForGroup(Long groupId);
+	IGroup readGroup(IUser actor, Long groupId) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    IGroupMember getMembership(Long groupMembershipId);
+	List<IUser> readGroupAdmins(IUser actor, long groupId) throws ServiceGroupExceptionNotAllowed;
 
-    boolean isAllowedAccess(IUser user, IGroup group);
+	List<IUser> readGroupAdminsActive(IUser actor, long groupId) throws ServiceGroupExceptionNotAllowed;
 
-    IGroupMember updateGroupMember(GroupMember groupMember);
+	List<IGroup> readGroups(IUser actor, IOrganisation organisation) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    IGroupMember resendInvitation(IUser actor, Long id);
+	List<IGroup> readGroups(IUser actor, IGroupMember.IGroupMemberFilter groupMemberFilter) throws ServiceGroupExceptionNotAllowed;
 
-    IGroupMember acceptInvitation(Long id) throws ServiceGroupException;
+	List<IGroup> readGroupsManagedByUser(IUser actor, Long userId) throws ServiceGroupExceptionNotAllowed;
 
-    IGroupMember declineInvitation(Long id) throws ServiceGroupException;
+	IGroupMember resendInvitation(IUser actor, Long id) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
-    boolean isActiveGroupAdmin(Long groupId, IUser loggedInUser);
+	void setGroupOwnerOrganisation(IUser actor, Long groupId, IOrganisation organisation) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
+
+	IGroup updateGroup(IUser actor, IGroup group) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
+
+	IGroupMember updateGroupMember(IUser actor, GroupMember groupMember) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
+
+	class ServiceGroupExceptionNotAllowed extends RuntimeException {
+		public ServiceGroupExceptionNotAllowed(final String message) {
+			super(message);
+		}
+
+		public ServiceGroupExceptionNotAllowed(final String message, final Exception ex) {
+			super(message, ex);
+		}
+	}
+
+	class ServiceGroupExceptionNotFound extends RuntimeException {
+		public ServiceGroupExceptionNotFound(final String message) {
+			super(message);
+		}
+
+		public ServiceGroupExceptionNotFound(final String message, final Exception ex) {
+			super(message, ex);
+		}
+	}
+
 }

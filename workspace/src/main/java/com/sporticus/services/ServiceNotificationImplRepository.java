@@ -58,16 +58,19 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 		final INotification newNotification = new Notification();
 		INotification.COPY(notification, newNotification);
 		// If the actor is not an admin then they should own the notification
-		if (actor != null) {
-			if (newNotification.getOwnerId() == null) {
-				newNotification.setOwnerId(actor.getId());
-			}
+
+		if (newNotification.getOwnerId() == null) {
+			newNotification.setOwnerId(actor.getId());
 		}
 
 		try {
-			engine.getEmitterByUserId(newNotification.getOwnerId()).send(newNotification);
-		} catch (IOException e) {
-			e.printStackTrace();
+			if (engine == null) {
+				LOGGER.warn(() -> "Cannot send notification - no SSE Engine available");
+			} else {
+				engine.send(newNotification.getOwnerId(), newNotification);
+			}
+		} catch (IOException ex) {
+			LOGGER.warn(() -> "Failed to send notification", ex);
 		}
 
 		return repositoryNotification.save((Notification)newNotification);
@@ -125,9 +128,13 @@ private static final Logger LOGGER = LogFactory.getLogger(ServiceNotificationImp
 					list.add(repositoryNotification.save((Notification)newNotification));
 
 					try {
-						engine.getEmitterByUserId(newNotification.getOwnerId()).send(newNotification);
-					} catch (IOException e) {
-						e.printStackTrace();
+						if (engine == null) {
+							LOGGER.warn(() -> "Unable to send notification - no SSE Engine available");
+						} else {
+							engine.send(newNotification.getOwnerId(), newNotification);
+						}
+					} catch (Exception ex) {
+						LOGGER.warn(() -> "Failed to send notification", ex);
 					}
 				});
 			}

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthService} from '../../auth/auth.service';
+import {FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {Event, EventService} from '../../services/event.service';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-unavailable-form',
@@ -12,7 +12,7 @@ export class UnavailableFormComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private eventService: EventService,
-              private authService: AuthService) {}
+              private datePipe : DatePipe) {}
 
   @Input()
   date: Date;
@@ -22,47 +22,29 @@ export class UnavailableFormComponent implements OnInit {
 
   unavailableForm: FormGroup;
 
-  isNew: boolean = false;
+  isNew: boolean = true;
+
+  get entireDays() {
+    return this.unavailableForm.get('entireDays');
+  }
 
   get fromEventDate() {
-   return this.unavailableForm.get('fromDate').get('fromEventDate')
+   return this.unavailableForm.get('fromDate').get('fromEventDate');
   }
 
   get fromEventTime() {
-   return this.unavailableForm.get('fromDate').get('fromEventTime')
+   return this.unavailableForm.get('fromDate').get('fromEventTime');
   }
 
   get toEventDate() {
-    return this.unavailableForm.get('toDate').get('toEventDate')
+    return this.unavailableForm.get('toDate').get('toEventDate');
   }
 
   get toEventTime() {
-   return this.unavailableForm.get('toDate').get('toEventTime')
+   return this.unavailableForm.get('toDate').get('toEventTime');
   }
 
   ngOnInit() {
-
-    // if (!this.rung.challenger) {
-    //   // this is a new challenge from a challenger
-    //   this.isNew = true;
-    //
-    //   let newDate =  new Date();
-    //   let newEndDate =  new Date();
-
-
-    //   this.rung.challenger = {
-    //     id: null,
-    //     name: 'New Challenge',
-    //     created: newDate,
-    //     status: 'PROPOSED',
-    //     dateTime: newDate,
-    //     dateTimeEnd: new Date(newDate.getTime() + (60*60*1000)),
-    //     challengerId: this.authService.getCurrentUser().id,
-    //     challengedId: this.rung.userId,
-    //     scoreChallenger: null,
-    //     scoreChallenged: null,
-    //   }
-    // }
 
     let toDateOnly : string = null;
     let toTimeOnly : string = null;
@@ -70,13 +52,8 @@ export class UnavailableFormComponent implements OnInit {
     let fromDateOnly : string = null;
     let fromTimeOnly : string = null;
 
-    // if (this.rung.challenger.dateTime) {
-    //   let datetime : Date = new Date(this.rung.challenger.dateTime);
-    //   dateOnly = datetime.toISOString().substring(0, 10);
-    //   timeOnly = ('0' + datetime.getHours()).slice(-2) + ":" + ('0' + datetime.getMinutes()).slice(-2);
-    // }
-
     this.unavailableForm = this.fb.group({
+      entireDays: false,
       fromDate: this.fb.group({
         fromEventDate: [fromDateOnly, [Validators.required]], // TODO: We're waiting upon the Material datetime picker,
         fromEventTime: [fromTimeOnly, [Validators.required]], // to enter date and time as a single field,
@@ -86,43 +63,75 @@ export class UnavailableFormComponent implements OnInit {
         toEventTime: [toTimeOnly, [Validators.required]], // to enter date and time as a single field,
       }),
     });
+    this.unavailableForm.get('entireDays').valueChanges.subscribe(value => this.requireTime(value));
+  }
+
+  /**
+   * Make the times required only if we are not looking for whole days
+   * @param {boolean} entireDays
+   */
+  requireTime(entireDays : boolean) {
+
+    let validator : ValidatorFn = entireDays ? null : Validators.required;
+    this.unavailableForm.get('fromDate').get('fromEventTime').setValidators(validator);
+    this.unavailableForm.get('toDate').get('toEventTime').setValidators(validator);
+    this.unavailableForm.get('fromDate').get('fromEventTime').updateValueAndValidity();
+    this.unavailableForm.get('toDate').get('toEventTime').updateValueAndValidity();
   }
 
   onSave() {
-    let dateOnly = this.unavailableForm.get('fromDate').get('fromEventDate').value;
-    let timeOnly = this.unavailableForm.get('fromDate').get('fromEventTime').value;
+    let fromDateOnly = this.unavailableForm.get('fromDate').get('fromEventDate').value;
+    let toDateOnly = this.unavailableForm.get('toDate').get('toEventDate').value;
 
-    let dateTime = new Date(dateOnly);
-    let splitTime = timeOnly.split(":");
-    dateTime.setHours(+splitTime[0]);
-    dateTime.setMinutes(+splitTime[1]);
+    let fromDateTime = new Date(fromDateOnly);
 
-    dateTime.setHours(+splitTime[0]);
-    let dateTimeEnd = new Date(dateTime.getTime() + (60*60*1000));
+    if (!this.unavailableForm.get('entireDays')) {
+      let fromTimeOnly = this.unavailableForm.get('fromDate').get('fromEventTime').value;
+      let splitTime = fromTimeOnly.split(":");
+      fromDateTime.setHours(+splitTime[0]);
+      fromDateTime.setMinutes(+splitTime[1]);
+      fromDateTime.setHours(+splitTime[0]);
+    }
+
+    let toDateTime = new Date(toDateOnly);
+
+    if (!this.unavailableForm.get('entireDays')) {
+      let toTimeOnly = this.unavailableForm.get('toDate').get('toEventTime').value;
+      let splitTime = toTimeOnly.split(":");
+      toDateTime.setHours(+splitTime[0]);
+      toDateTime.setMinutes(+splitTime[1]);
+      toDateTime.setHours(+splitTime[0]);
+    }
 
     const toSave: Event = {
       id: null,
       name: 'holiday',
       created: new Date(),
-      dateTime: dateTime,
-      dateTimeEnd: dateTimeEnd,
-      type: 'UNAVAILABLE',
+      dateTime: fromDateTime,
+      dateTimeString: this.formatDate(fromDateTime),
+      dateTimeEnd: toDateTime,
+      dateTimeEndString: this.formatDate(toDateTime),
+      type: 'BUSY',
       status: 'ACCEPTED'
     };
 
     if (this.isNew) {
       this.eventService.createOne(toSave)
         .subscribe(challenge => {
-//          this.rung.challenger = challenge;
           this.onDone();
         })
     } else {
       this.eventService.updateOne(toSave.id, toSave)
         .subscribe(challenge => {
-//          this.rung.challenger = challenge;
           this.onDone();
         })
     }
+  }
+
+  private formatDate(date : Date) {
+    return this.unavailableForm.get('entireDays').value
+      ? this.datePipe.transform(date, 'yyyy-MM-dd')
+      : date.toISOString();
   }
 
   onCancel() {

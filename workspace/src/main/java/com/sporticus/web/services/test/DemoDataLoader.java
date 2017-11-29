@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,19 +53,43 @@ public class DemoDataLoader {
 		this.serviceLadder = serviceLadder;
 	}
 
+	private IUser actor = new User() {
+		public Boolean isAdmin() {
+			return true;
+		}
+	};
+
 	@PostConstruct
 	private void init() {
 		LOGGER.debug(() -> "Checking for demo data");
 
 		LOGGER.debug(() -> "Checking users");
-		if (serviceUser.getUserCount() == 1) {
-			generateUsers();
+		List<IUser> users = serviceUser.getAll();
+		if (users.size() == 1) {
+			users.addAll(generateUsers());
 		}
 
 		LOGGER.debug(() -> "Check for (ladder) groups - if there are none then create one and make each user a member of the new group");
-		List<IGroup> groupsLadder = serviceLadder.readLaddersGroups();
+		List<IGroup> groupsLadder = serviceLadder.readLaddersGroups(actor);
 		if (groupsLadder.size() < 2) {
-			this.generateLadders();
+			groupsLadder.addAll(this.generateLadders());
+		} else {
+			// Ensure all users are members of the first ladder
+			IGroup ladder = groupsLadder.get(0);
+			List<IGroupMember> members = serviceGroup.getGroupMembershipsForGroup(actor, ladder.getId());
+			for (IUser user : users) {
+				if (members.stream().noneMatch(gm -> gm.getUserId().equals(user.getId()))) {
+					IGroupMember gm = new GroupMember()
+							.setCreated(new Date())
+							.setEnabled(true)
+							.setAcceptedOrRejectedDate(new Date())
+							.setGroupId(ladder.getId())
+							.setUserId(user.getId())
+							.setPermissions(Permission.WRITE)
+							.setStatus(Status.Accepted);
+					serviceGroup.createGroupMember(actor, gm, users.get(0));
+				}
+			}
 		}
 	}
 
@@ -108,14 +133,15 @@ public class DemoDataLoader {
 		return users;
 	}
 
-	public void generateLadders() {
+	public List<IGroup> generateLadders() {
+		List<IGroup> list = new ArrayList<>();
 		LOGGER.debug(() -> "Creating demo data");
 		try {
 			IOrganisation org;
 			List<IUser> users = serviceUser.getAll();
 
 			if (users.size() > 0) {
-				List<IOrganisation> orgs = serviceOrganisation.readAllOrganisations();
+				List<IOrganisation> orgs = serviceOrganisation.readAllOrganisations(actor);
 				if (orgs.size() == 0) {
 					org = new Organisation()
 							.setEnabled(true)
@@ -124,7 +150,7 @@ public class DemoDataLoader {
 							.setName("Test Organisation")
 							.setOwnerId(users.get(0).getId())
 							.setDomain("domain.com");
-					orgs.add(serviceOrganisation.createOrganisation(org));
+					orgs.add(serviceOrganisation.createOrganisation(actor, org));
 				}
 
 				org = orgs.get(0);
@@ -137,6 +163,8 @@ public class DemoDataLoader {
 							"Example ladder competition",
 							org);
 
+					list.add(group);
+
 					for (IUser user : users) {
 						IGroupMember gm = new GroupMember()
 								.setCreated(new Date())
@@ -147,7 +175,7 @@ public class DemoDataLoader {
 								.setPermissions(Permission.WRITE)
 								.setStatus(Status.Accepted);
 
-						serviceGroup.createGroupMember(gm, null);
+						serviceGroup.createGroupMember(actor, gm, null);
 					}
 				}
 			}
@@ -155,6 +183,7 @@ public class DemoDataLoader {
 		} catch (Exception ex) {
 			LOGGER.error(() -> "Failed to generateLadders demo data", ex);
 		}
+		return list;
 	}
 
 	private void addUser(List<IUser> list, IUser user) {

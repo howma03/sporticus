@@ -2,7 +2,6 @@ package com.sporticus.services;
 
 import com.sporticus.domain.entities.Group;
 import com.sporticus.domain.entities.GroupMember;
-import com.sporticus.domain.entities.User;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.domain.interfaces.IGroupMember.Permission;
@@ -16,10 +15,14 @@ import com.sporticus.domain.repositories.IRepositoryUser;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceMail;
 import com.sporticus.interfaces.IServiceOrganisation;
+import com.sporticus.interfaces.IServiceOrganisation.ServiceOrganisationExceptionNotAllowed;
+import com.sporticus.interfaces.IServiceOrganisation.ServiceOrganisationExceptionNotFound;
 import com.sporticus.interfaces.IServicePasswordGenerator;
 import com.sporticus.interfaces.IServiceRegistration;
 import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.services.converters.Converter;
+import com.sporticus.services.dto.DtoGroupMember;
+import com.sporticus.services.dto.DtoList;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
 import org.apache.commons.collections.IteratorUtils;
@@ -30,7 +33,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -66,50 +69,106 @@ public class ServiceGroupImplRepository implements IServiceGroup {
     private IServiceMail mailService;
 
     /**
+     * Function construct the DtoGroupMember container
+     *
+     * @param gm
+     * @return DtoGroupMember
+     */
+    @Override
+    public DtoGroupMember convertToDtoGroupMember(final IGroupMember gm) {
+        final DtoGroupMember dtoGroupMember = new DtoGroupMember(gm);
+        final IUser u = repositoryUser.findOne(gm.getUserId());
+        if (u != null) {
+            dtoGroupMember.setEmail(u.getEmail());
+            dtoGroupMember.setUserName(u.getFirstName() + " " + u.getLastName());
+            dtoGroupMember.setFirstName(u.getFirstName());
+            dtoGroupMember.setLastName(u.getLastName());
+        }
+        final IGroup g = repositoryGroup.findOne(gm.getGroupId());
+        if (g != null) {
+            dtoGroupMember.setGroupName(g.getName());
+            dtoGroupMember.setGroupDescription(g.getDescription());
+        }
+        return dtoGroupMember;
+    }
+
+    @Override
+    public DtoList<DtoGroupMember> convertToDtoGroupMembers(final List<IGroupMember> list) {
+        final DtoList<DtoGroupMember> out = new DtoList<>();
+        list.forEach(gm -> out.add(convertToDtoGroupMember(gm)));
+        return out;
+    }
+
+    /**
      * CRUD operations for Groups
      */
 
     @Override
-    public IGroup createGroup(final IOrganisation organisation, final IGroup group) {
-        final IOrganisation foundOrganisation = this.serviceOrganisation.readOrganisation(organisation.getId());
-        if(foundOrganisation == null) {
-            LOGGER.warn(() -> "Failed to find organisation - id=" + organisation.getId());
-            return null;
-        }
-        final IGroup newGroup = new Group();
-        IGroup.COPY(group, newGroup);
+    public IGroup createGroup(final IUser actor, final IOrganisation organisation, final IGroup group) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
+        try {
+            final IOrganisation foundOrganisation = this.serviceOrganisation.readOrganisation(actor, organisation.getId());
+            final IGroup newGroup = new Group();
+            IGroup.COPY(group, newGroup);
 
-        final IGroup added = this.repositoryGroup.save((Group) newGroup);
-        LOGGER.info(() -> "Created new Group " + added);
-        return added;
+            final IGroup added = this.repositoryGroup.save((Group) newGroup);
+            LOGGER.info(() -> "Created new Group " + added);
+            return added;
+
+        } catch (ServiceOrganisationExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Operation limited to organisation owner - id=" + organisation.getId());
+            throw new ServiceGroupExceptionNotAllowed(ex.getMessage(), ex);
+        } catch (ServiceOrganisationExceptionNotFound ex) {
+            LOGGER.warn(() -> "Failed to find organisation - id=" + organisation.getId());
+            throw new ServiceGroupExceptionNotFound(ex.getMessage(), ex);
+        }
     }
 
     @Override
-    public List<IGroup> readAllGroups() {
+    public List<IGroup> readAllGroups(final IUser actor) throws ServiceGroupExceptionNotAllowed {
+        if (!actor.isAdmin()) {
+            throw new ServiceGroupExceptionNotAllowed("Only administrators can read all groups");
+        }
         return IteratorUtils.toList(this.repositoryGroup.findAll().iterator());
     }
 
+    // TODO: Only owner of the group's organisation or members of the group can read the group
+    private void validate(IUser actor, IGroup group) throws ServiceGroupExceptionNotAllowed {
+
+    }
+
     @Override
-    public Optional<IGroup> readGroup(final Long groupId) {
+    public IGroup readGroup(IUser actor, final Long groupId) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
         final IGroup group = this.repositoryGroup.findOne(groupId);
         if(group == null) {
-            LOGGER.warn(() -> "Failed to find group - id=" + groupId);
-            return Optional.empty();
+            String message = "Failed to find group - id=" + groupId;
+            LOGGER.warn(() -> message);
+            throw new ServiceGroupExceptionNotFound(message);
         }
-        return Optional.of(group);
+        validate(actor, group);
+        return group;
     }
 
     @Override
-    public List<IGroup> readGroups(final IOrganisation organisation) {
-        if(organisation == null) {
-            LOGGER.warn(() -> "Cannot read groups for null organisation");
-            return new ArrayList<>();
+    public List<IGroup> readGroups(IUser actor, final IOrganisation organisation) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
+        try {
+            final IOrganisation foundOrganisation = this.serviceOrganisation.readOrganisation(actor, organisation.getId());
+            return this.repositoryGroup.findByOwnerOrganisationId(organisation.getId());
+
+        } catch (ServiceOrganisationExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Operation limited to organisation owner - id=" + organisation.getId());
+            throw new ServiceGroupExceptionNotAllowed(ex.getMessage(), ex);
+        } catch (ServiceOrganisationExceptionNotFound ex) {
+            LOGGER.warn(() -> "Failed to find organisation - id=" + organisation.getId());
+            throw new ServiceGroupExceptionNotFound(ex.getMessage(), ex);
         }
-        return new Converter<Group, IGroup>().convert(this.repositoryGroup.findByOwnerOrganisationId(organisation.getId()));
     }
 
     @Override
-    public List<IGroup> readGroups(final IGroupMember.IGroupMemberFilter groupMemberFilter) {
+    public List<IGroup> readGroups(IUser actor, final IGroupMember.IGroupMemberFilter groupMemberFilter) throws ServiceGroupExceptionNotAllowed {
+        // FIXME: we need to add an additional filter that limits the groups to membership (if not an admin)
         return new Converter<GroupMember, IGroupMember>().convert(this.repositoryGroupMember.findAll())
                 .stream()
                 .filter(gm -> groupMemberFilter.match(gm))
@@ -118,13 +177,15 @@ public class ServiceGroupImplRepository implements IServiceGroup {
     }
 
     @Override
-    public List<IGroup> readGroupsManagedByUser(final Long userId) {
-        return this.readGroups(gm -> (gm.getUserId().equals(userId) &&
+    public List<IGroup> readGroupsManagedByUser(IUser actor, final Long userId) throws ServiceGroupExceptionNotAllowed {
+        // FIXME: we need to add an additional filter that limits the groups to membership (if not an admin)
+        return this.readGroups(actor, gm -> (gm.getUserId().equals(userId) &&
                 gm.getPermissions() == IGroupMember.Permission.ADMIN));
     }
 
     @Override
-    public List<IUser> readGroupAdmins(final long groupId) {
+    public List<IUser> readGroupAdmins(IUser actor, final long groupId) throws ServiceGroupExceptionNotAllowed {
+        // FIXME: we need to add an additional filter that limits the groups to membership (if not an admin)
         return this.repositoryGroupMember.findByGroupId(groupId)
                 .stream()
                 .filter(gm -> gm.getPermissions().equals(IGroupMember.Permission.ADMIN))
@@ -133,7 +194,8 @@ public class ServiceGroupImplRepository implements IServiceGroup {
     }
 
     @Override
-    public List<IUser> readGroupAdminsActive(final long groupId) {
+    public List<IUser> readGroupAdminsActive(IUser actor, final long groupId) throws ServiceGroupExceptionNotAllowed {
+        // FIXME: we need to add an additional filter that limits the groups to membership (if not an admin)
         return this.repositoryGroupMember.findByGroupId(groupId)
                 .stream()
                 .filter(gm -> gm.getPermissions().equals(IGroupMember.Permission.ADMIN))
@@ -143,18 +205,16 @@ public class ServiceGroupImplRepository implements IServiceGroup {
     }
 
     @Override
-    public boolean isActiveGroupAdmin(final Long groupId, final IUser user) {
-        return this.readGroupAdminsActive(groupId).contains(user);
+    public boolean isActiveGroupAdmin(IUser actor, final Long groupId, final IUser user) {
+        return this.readGroupAdminsActive(actor, groupId).contains(user);
     }
 
     @Override
-    public IGroup updateGroup(final IGroup group) {
+    public IGroup updateGroup(IUser actor, final IGroup group) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
         LOGGER.info(() -> "Updating a Group - " + group);
-        final IGroup found = this.repositoryGroup.findOne(group.getId());
-        if(found == null) {
-            LOGGER.error(() -> "Failed to find group - " + group);
-            return null;
-        }
+        final IGroup found = this.readGroup(actor, group.getId());
+
         // Ensure created time remains unchanged
         group.setCreated(found.getCreated());
         IGroup.COPY(group, found);
@@ -163,15 +223,12 @@ public class ServiceGroupImplRepository implements IServiceGroup {
     }
 
     @Override
-    public void deleteGroup(final Long id) {
+    public void deleteGroup(IUser actor, final Long id) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
         LOGGER.info(() -> "Deleting a group - " + id);
+        final IGroup found = this.readGroup(actor, id);
         // TODO: Need to consider the operations when we delete a group
-        // TODO: perhaps we simply disable it? - should we orphan user's achievements?
-        final IGroup found = this.repositoryGroup.findOne(id);
-        if(found == null) {
-            LOGGER.error(() -> "Failed to find group - id=" + id);
-            return;
-        }
+        // TODO: for now we simply disable it
         found.setEnabled(false);
         repositoryGroup.save((Group) found);
     }
@@ -183,18 +240,18 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return IOrganisation
      */
     @Override
-    public IOrganisation getGroupOwner(final Long groupId) {
-        final IGroup found = this.repositoryGroup.findOne(groupId);
-        if(found == null) {
-            LOGGER.error(() -> "Failed to find group - " + groupId);
-            return null;
+    public IOrganisation getGroupOwner(IUser actor, final Long groupId) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
+        final IGroup found = this.readGroup(actor, groupId);
+        try {
+            return this.serviceOrganisation.readOrganisation(actor, found.getOwnerOrganisationId());
+        } catch (ServiceOrganisationExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Operation limited to organisation owner - organisationId=" + found.getOwnerOrganisationId());
+            throw new ServiceGroupExceptionNotAllowed(ex.getMessage(), ex);
+        } catch (ServiceOrganisationExceptionNotFound ex) {
+            LOGGER.warn(() -> "Failed to find organisation - organisationId=" + found.getOwnerOrganisationId());
+            throw new ServiceGroupExceptionNotFound(ex.getMessage(), ex);
         }
-        final IOrganisation foundOrganisation = this.serviceOrganisation.readOrganisation(found.getOwnerOrganisationId());
-        if(foundOrganisation == null) {
-            LOGGER.error(() -> "Failed to find group owner organisation - groupId=" + groupId);
-            return null;
-        }
-        return foundOrganisation;
     }
 
     /**
@@ -204,12 +261,9 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @param organisation
      */
     @Override
-    public void setGroupOwner(final Long groupId, final IOrganisation organisation) {
-        final IGroup found = this.repositoryGroup.findOne(groupId);
-        if(found == null) {
-            LOGGER.error(() -> "Failed to find group - " + groupId);
-            return;
-        }
+    public void setGroupOwnerOrganisation(IUser actor, final Long groupId, final IOrganisation organisation) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
+        final IGroup found = this.readGroup(actor, groupId);
         found.setOwnerOrganisationId(organisation.getId());
         this.repositoryGroup.save((Group) found);
         LOGGER.info(() -> "Save Group Owner - " + found);
@@ -221,35 +275,31 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return IGroupMember
      */
     @Override
-    public IGroupMember createGroupMember(final IGroupMember groupMember, IUser inviter) throws ServiceGroupException {
+    public IGroupMember createGroupMember(IUser actor, final IGroupMember groupMember, IUser inviter) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
 
-        // Validate the group - does it exist?
-
-        final IGroup group = this.repositoryGroup.findOne(groupMember.getGroupId());
-        if(group == null) {
-            LOGGER.warn(() -> "Cannot create membership - group not known - " + groupMember);
-            throw new ServiceGroupException("Group cannot be found");
-        }
+        final IGroup group = this.readGroup(actor, groupMember.getGroupId());
 
         // TODO: Implement a limit on the number of members in the group - this will be paid for accounts vs free ones
 
         IUser user = repositoryUser.findOne(groupMember.getUserId());
-        if(user == null) {
-            LOGGER.warn(() -> "User is not known - id="+groupMember.getUserId());
-            throw new ServiceGroupException("User is not known - id="+groupMember.getUserId());
+        if (user == null) {
+            String message = "User is not known - id=" + groupMember.getUserId();
+            LOGGER.warn(() -> message);
+            throw new ServiceGroupExceptionNotAllowed(message);
         }
 
         // Check to see if the user already has a membership for the group - only 1 per user is allowed
-        final List<GroupMember> groupMembers = this.repositoryGroupMember.findByGroupIdAndUserId(group.getId(), user.getId());
-        if(groupMembers.size() > 0) {
-            LOGGER.warn(() -> "User is already member of group - can only be member once");
-            throw new ServiceGroupException("user already a member of the group");
+        if (this.repositoryGroupMember.findByGroupIdAndUserId(group.getId(), user.getId()).size() > 0) {
+            String message = "User is already member of group - can only be member once";
+            LOGGER.warn(() -> message);
+            throw new ServiceGroupExceptionNotAllowed(message);
         }
 
-        try{
+        try {
             mailService.sendVerificationEmailForInvitation(user, inviter, group);
-        }catch(Exception ex){
-            LOGGER.error(()->"Failed to send email",ex);
+        } catch (Exception ex) {
+            LOGGER.error(() -> "Failed to send email", ex);
         }
 
         IGroupMember newGroupMember = new GroupMember();
@@ -260,21 +310,25 @@ public class ServiceGroupImplRepository implements IServiceGroup {
     }
 
     @Override
-    public IGroupMember createGroupMember(IGroup group,
+    public IGroupMember createGroupMember(IUser actor,
+                                          IGroup group,
                                           IUser newUser,
                                           Permission permissions,
-                                          IUser inviter) throws ServiceGroupException {
+                                          IUser inviter) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
 
         // Validate the group - does it exist?
 
         if(group == null) {
             LOGGER.warn(() -> "Cannot create membership - group cannot be null");
-            throw new ServiceGroupException("Group cannot be null");
+            throw new ServiceGroupExceptionNotAllowed("Group cannot be null");
         }
         if(newUser == null) {
             LOGGER.warn(() -> "Cannot create membership - user cannot be null");
-            throw new ServiceGroupException("User cannot be null");
+            throw new ServiceGroupExceptionNotAllowed("User cannot be null");
         }
+
+        validate(actor, group);
 
         // TODO: Implement a limit on the number of members in the group - this will be paid for accounts vs free ones
 
@@ -288,15 +342,16 @@ public class ServiceGroupImplRepository implements IServiceGroup {
 
             // Register the user - send an email for membership invitation
 
-            user = serviceRegistration.registerWithInvitation(user, inviter, group);
+            user = serviceRegistration.registerWithInvitation(actor, user, inviter, group);
 
         } else {
 
             // Check to see if the user already has a membership for the group - only 1 per user is allowed
             final List<GroupMember> groupMembers = this.repositoryGroupMember.findByGroupIdAndUserId(group.getId(), user.getId());
             if(groupMembers.size() > 0) {
-                LOGGER.warn(() -> "User is already member of group - can only be member once");
-                throw new ServiceGroupException("user already a member of the group");
+                String message = "User is already member of group - can only be member once";
+                LOGGER.warn(() -> message);
+                throw new ServiceGroupExceptionNotAllowed(message);
             }
 
             try {
@@ -323,25 +378,26 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return
      */
     @Override
-    public IGroupMember resendInvitation(IUser actor, Long id) {
+    public IGroupMember resendInvitation(IUser actor, Long id) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
         try {
             GroupMember groupMember = this.repositoryGroupMember.findOne(id);
             if(groupMember == null) {
-                throw new ServiceGroupException("Cannot resend membership invitation - group membership not known - id=" + id);
+                throw new ServiceGroupExceptionNotFound("Cannot resend membership invitation - group membership not known - id=" + id);
             }
             Group group = this.repositoryGroup.findOne(groupMember.getGroupId());
             if(group == null) {
-                throw new ServiceGroupException("Cannot resend membership invitation - group not known - GroupId=" + groupMember.getGroupId());
+                throw new ServiceGroupExceptionNotFound("Cannot resend membership invitation - group not known - GroupId=" + groupMember.getGroupId());
             }
             IUser user = serviceUser.findOne(groupMember.getUserId());
             if(user == null) {
-                throw new ServiceGroupException("Cannot resend membership invitation - user not known - userId=" + groupMember.getUserId());
+                throw new ServiceGroupExceptionNotFound("Cannot resend membership invitation - user not known - userId=" + groupMember.getUserId());
             }
             mailService.sendVerificationEmailForInvitation(user, actor, group);
 
             return groupMember;
 
-        }catch(ServiceGroupException ex){
+        } catch (ServiceGroupExceptionNotAllowed | ServiceGroupExceptionNotFound ex) {
             LOGGER.warn(() -> ex.getMessage());
             throw ex;
         }
@@ -354,19 +410,14 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return List<IGroup>
      */
     @Override
-    public List<IGroup> getMembershipGroupsForUser(final Long userId) {
-        final List<IGroup> list = new ArrayList<>();
-        repositoryGroupMember
+    public List<IGroup> getMembershipGroupsForUser(IUser actor, final Long userId) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
+        return repositoryGroupMember
                 .findByUserId(userId)
                 .stream()
-                .forEach(gm -> {
-                            final Group g = repositoryGroup.findOne(gm.getGroupId());
-                            if(g != null) {
-                                list.add(g);
-                            }
-                        }
-                );
-        return list;
+                .map(gm -> repositoryGroup.findOne(gm.getGroupId()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     /***
@@ -376,21 +427,15 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return List<IUser>
      */
     @Override
-    public List<IUser> getMembershipUsersForGroup(final Long groupId, final Predicate<IGroupMember> filter) {
-        final List<IUser> list = new ArrayList<>();
-        repositoryGroupMember
+    public List<IUser> getMembershipUsersForGroup(IUser actor, final Long groupId, final Predicate<IGroupMember> filter) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
+        return repositoryGroupMember
                 .findByGroupId(groupId)
                 .stream()
-                .forEach(gm -> {
-                            if(filter != null && !filter.test(gm)) return;
-
-                            final User u = repositoryUser.findOne(gm.getUserId());
-                            if(u != null) {
-                                list.add(u);
-                            }
-                        }
-                );
-        return list;
+                .filter(gm -> filter == null || filter.test(gm))
+                .map(gm -> repositoryUser.findOne(gm.getUserId()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     /***
@@ -399,7 +444,8 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return List<IGroupMember>
      */
     @Override
-    public List<IGroupMember> getGroupMembershipsForUser(final Long userId) {
+    public List<IGroupMember> getGroupMembershipsForUser(IUser actor, final Long userId) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
         final List<IGroupMember> list = new ArrayList<>();
         repositoryGroupMember
                 .findByUserId(userId)
@@ -414,7 +460,8 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return IGroupMember
      */
     @Override
-    public IGroupMember getGroupMembershipsForUser(final Long userId, final Long groupId) {
+    public IGroupMember getGroupMembershipsForUser(IUser actor, final Long userId, final Long groupId) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
         final List<GroupMember> list = repositoryGroupMember.findByGroupIdAndUserId(groupId, userId);
         if(list == null || list.size() == 0) {
             return null;
@@ -428,7 +475,8 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return List<IGroupMember>
      */
     @Override
-    public List<IGroupMember> getGroupMembershipsForGroup(final Long groupId) {
+    public List<IGroupMember> getGroupMembershipsForGroup(IUser actor, final Long groupId) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
         final List<IGroupMember> list = new ArrayList<>();
         repositoryGroupMember
                 .findByGroupId(groupId)
@@ -442,7 +490,8 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return IGroupMember
      */
     @Override
-    public IGroupMember getMembership(final Long groupMembershipId) {
+    public IGroupMember getMembership(IUser actor, final Long groupMembershipId) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
         final IGroupMember gm = this.repositoryGroupMember.findOne(groupMembershipId);
         if(gm == null) {
             LOGGER.warn(() -> "Cannot find group membership - not found - " + groupMembershipId);
@@ -457,12 +506,13 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return Boolena
      */
     @Override
-    public boolean isAllowedAccess(IUser user, IGroup group){
+    public boolean isAllowedAccess(IUser actor, IUser user, IGroup group) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
         if(user.isAdmin()){
             return true;
         }
         // If the user is an admin for the group then allow the operation
-        final List<IUser> allowed = this.readGroupAdmins(group.getId());
+        final List<IUser> allowed = this.readGroupAdmins(actor, group.getId());
         final IOrganisation organisation = this.repositoryOrganisation.findOne(group.getOwnerOrganisationId());
         allowed.add(this.serviceUser.findOne(organisation.getOwnerId()));
         return allowed.contains(user);
@@ -476,7 +526,8 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * @return IGroupMember
      */
     @Override
-    public IGroupMember updateGroupMember(final GroupMember groupMember) {
+    public IGroupMember updateGroupMember(IUser actor, final GroupMember groupMember) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
         LOGGER.info(() -> "Updating a Group Member - " + groupMember);
         final IGroupMember found = this.repositoryGroupMember.findOne(groupMember.getId());
         if(found == null) {
@@ -493,20 +544,28 @@ public class ServiceGroupImplRepository implements IServiceGroup {
         return repositoryGroupMember.save((GroupMember) found);
     }
 
-
     /***
      * Function accept an invitation
      *
      * @param id
      * @return IGroupMember
-     * @throws ServiceGroupException
+     * @throws ServiceGroupExceptionNotAllowed, ServiceGroupExceptionNotFound
      */
     @Override
-    public IGroupMember acceptInvitation(final Long id) throws ServiceGroupException {
+    public IGroupMember acceptInvitation(IUser actor, final Long id) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
         final IGroupMember found = this.repositoryGroupMember.findOne(id);
         if(found == null) {
-            LOGGER.error(() -> "Failed to find group member - id=" + id);
-            return null;
+            String message = "Failed to find group member - id=" + id;
+            LOGGER.error(() -> message);
+            throw new ServiceGroupExceptionNotFound(message);
+        }
+        if (!actor.isAdmin()) {
+            if (!found.getUserId().equals(actor.getId())) {
+                String message = "User attempting to accept an invitation not their own";
+                LOGGER.warn(() -> message);
+                throw new ServiceGroupExceptionNotAllowed(message);
+            }
         }
         found.setStatus(IGroupMember.Status.Accepted);
         found.setAcceptedOrRejectedDate(new Date());
@@ -517,14 +576,16 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * Function to decline (or reject) and invitation
      * @param id
      * @return IGroupMember
-     * @throws ServiceGroupException
+     * @throws ServiceGroupExceptionNotAllowed, ServiceGroupExceptionNotFound
      */
     @Override
-    public IGroupMember declineInvitation(final Long id) throws ServiceGroupException {
+    public IGroupMember declineInvitation(IUser actor, final Long id) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
         final IGroupMember found = this.repositoryGroupMember.findOne(id);
         if(found == null) {
-            LOGGER.error(() -> "Failed to find group member - id=" + id);
-            return null;
+	        String message = "Failed to find group membership - id=" + id;
+	        LOGGER.error(() -> message);
+	        throw new ServiceGroupExceptionNotFound(message);
         }
         found.setStatus(IGroupMember.Status.Declined);
         found.setEnabled(false);
@@ -532,18 +593,23 @@ public class ServiceGroupImplRepository implements IServiceGroup {
         return repositoryGroupMember.save((GroupMember) found);
     }
 
-    /***
-     * Function to delete a Group Membership - we will not implement this function yet; we will simply mark the membership as disabled
-     * @param groupMemberId
-     * @return IGroupMember
-     */
-    public IGroupMember deleteGroupMember(final Long groupMemberId) throws ServiceGroupException {
-        final IGroupMember gm = this.repositoryGroupMember.findOne(groupMemberId);
-        if(gm == null) {
-            LOGGER.warn(() -> "Cannot delete group membership - not found - " + groupMemberId);
-            throw new ServiceGroupException("Group Membership cannot be found");
-        }
-        gm.setEnabled(false);
-        return this.repositoryGroupMember.save((GroupMember) gm);
-    }
+	/**
+	 * Function to delete a group membership
+	 *
+	 * @param actor
+	 * @param groupMemberId
+	 */
+	@Override
+	public void deleteGroupMember(IUser actor, final Long groupMemberId) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound {
+		final IGroupMember found = this.repositoryGroupMember.findOne(groupMemberId);
+		if (found == null) {
+			String message = "Failed to find group membership - id=" + groupMemberId;
+			LOGGER.error(() -> message);
+			throw new ServiceGroupExceptionNotFound(message);
+		}
+		repositoryGroupMember.delete(groupMemberId);
+	}
+
+
 }

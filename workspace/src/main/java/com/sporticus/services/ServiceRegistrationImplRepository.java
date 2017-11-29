@@ -47,7 +47,50 @@ public class ServiceRegistrationImplRepository implements IServiceRegistration {
     }
 
     @Override
-    public IUser register(final IUser userIn) throws ExceptionRegistrationFailure {
+    public boolean completeUserVerification(final IUser actor,
+                                            final String emailAddress,
+                                            final UUID verificationCode,
+                                            final boolean decline) {
+	    final IUser user = userService.findUserByEmail(emailAddress);
+	    if (user == null) {
+		    LOGGER.warn(() -> String.format("Cannot locate user for verification process - email=[%s]", emailAddress));
+		    return false;
+	    }
+
+	    if (!verificationCode.toString().equals(user.getVerificationCode())) {
+		    LOGGER.warn(() -> String.format("Provided verification code [%s] does not match user's [%s] code [%s]",
+				    verificationCode, user.getEmail(), user.getVerificationCode()));
+		    return false;
+	    }
+
+	    if (decline) {
+		    LOGGER.info(() -> "Registration - invitation has been declined - user=" + emailAddress);
+		    user.setVerified(true);
+		    user.setEnabled(false);
+
+		    serviceGroup.getGroupMembershipsForUser(actor, user.getId()).forEach(i -> {
+			    serviceGroup.declineInvitation(actor, i.getId());
+			    LOGGER.info(() -> "Registration - group invitation has been declined - invitationId=" + i.getId());
+		    });
+
+	    } else {
+		    LOGGER.info(() -> "Registration - invitation has been accepted - user=" + emailAddress);
+		    serviceGroup.getGroupMembershipsForUser(actor, user.getId()).forEach(i -> {
+			    serviceGroup.acceptInvitation(actor, i.getId());
+			    LOGGER.info(() -> "Registration - group invitation has been accepted - invitationId=" + i.getId());
+		    });
+
+		    user.setVerified(true);
+		    user.setEnabled(true);
+	    }
+	    userService.updateUser(user);
+
+	    return true;
+    }
+
+	@Override
+	public IUser register(final IUser actor,
+	                      final IUser userIn) throws ExceptionRegistrationFailure {
 
         final IUser foundUser = userService.findUserByEmail(userIn.getEmail());
         if(foundUser != null) {
@@ -73,7 +116,10 @@ public class ServiceRegistrationImplRepository implements IServiceRegistration {
     }
 
     @Override
-    public IUser registerWithInvitation(final IUser userIn, final IUser inviter, final IGroup group) throws ExceptionRegistrationFailure {
+    public IUser registerWithInvitation(final IUser actor,
+                                        final IUser userIn,
+                                        final IUser inviter,
+                                        final IGroup group) throws ExceptionRegistrationFailure {
 
         final IUser foundUser = userService.findUserByEmail(userIn.getEmail());
         if(foundUser != null) {
@@ -99,48 +145,23 @@ public class ServiceRegistrationImplRepository implements IServiceRegistration {
     }
 
     @Override
-    public boolean completeUserVerification(final String emailAddress,
-                                            final UUID verificationCode,
-                                            final boolean decline) {
-        final IUser user = userService.findUserByEmail(emailAddress);
+    public boolean requestVerificationCode(final IUser actor,
+                                           final String emailAddress) {
+	    final IUser user = this.userService.findUserByEmail(emailAddress);
+
         if(user == null) {
-            LOGGER.warn(() -> String.format("Cannot locate user for verification process - email=[%s]", emailAddress));
-            return false;
+	        LOGGER.warn(() -> "Cannot send verification code reminder; user not found - " + emailAddress);
+	        return false;
         }
 
-        if(!verificationCode.toString().equals(user.getVerificationCode())) {
-            LOGGER.warn(() -> String.format("Provided verification code [%s] does not match user's [%s] code [%s]",
-                    verificationCode, user.getEmail(), user.getVerificationCode()));
-            return false;
-        }
-
-        if(decline) {
-            LOGGER.info(() -> "Registration - invitation has been declined - user=" + emailAddress);
-            user.setVerified(true);
-            user.setEnabled(false);
-
-            serviceGroup.getGroupMembershipsForUser(user.getId()).forEach(i -> {
-                serviceGroup.declineInvitation(i.getId());
-                LOGGER.info(() -> "Registration - group invitation has been declined - invitationId=" + i.getId());
-            });
-
-        } else {
-            LOGGER.info(() -> "Registration - invitation has been accepted - user=" + emailAddress);
-            serviceGroup.getGroupMembershipsForUser(user.getId()).forEach(i -> {
-                serviceGroup.acceptInvitation(i.getId());
-                LOGGER.info(() -> "Registration - group invitation has been accepted - invitationId=" + i.getId());
-            });
-
-            user.setVerified(true);
-            user.setEnabled(true);
-        }
-        userService.updateUser(user);
+	    mailService.sendVerificationEmail(user);
 
         return true;
     }
 
     @Override
-    public boolean resetPassword(final String emailAddress) {
+    public boolean resetPassword(final IUser actor,
+                                 final String emailAddress) {
         final IUser user = this.userService.findUserByEmail(emailAddress);
 
         if(user == null) {
@@ -154,20 +175,6 @@ public class ServiceRegistrationImplRepository implements IServiceRegistration {
         user.setPassword(ENCODER.encode(passwordGenerator.generate()));
         userRepository.save((User) user);
         mailService.sendPasswordResetEmail(user);
-
-        return true;
-    }
-
-    @Override
-    public boolean requestVerificationCode(final String emailAddress) {
-        final IUser user = this.userService.findUserByEmail(emailAddress);
-
-        if(user == null) {
-            LOGGER.warn(() -> "Cannot send verification code reminder; user not found - " + emailAddress);
-            return false;
-        }
-
-        mailService.sendVerificationEmail(user);
 
         return true;
     }

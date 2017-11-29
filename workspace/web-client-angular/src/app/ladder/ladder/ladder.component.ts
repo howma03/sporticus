@@ -1,9 +1,9 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {Ladder, LadderService, LadderUser} from "../../services/ladder.service";
 import {Subscription} from "rxjs/Subscription";
 import {ChallengeDialogComponent} from "../../challenge/challenge-dialog/challenge-dialog.component";
-import {MatDialog} from "@angular/material";
+import {MatDialog, MatMenuTrigger} from "@angular/material";
 import {ChallengeService} from "../../services/challenge.service";
 import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
 import {AuthService} from '../../auth/auth.service';
@@ -25,6 +25,8 @@ export class LadderComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private datePipe: DatePipe) {
   }
+
+  @ViewChild(MatMenuTrigger) dayMenu: MatMenuTrigger;
 
   public ladderUsers: LadderUser[] = [];
   private subscription: Subscription;

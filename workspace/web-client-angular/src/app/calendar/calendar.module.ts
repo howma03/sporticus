@@ -5,7 +5,7 @@ import {FullCalendarModule} from "ng-fullcalendar";
 import {CalendarEventListComponent} from './calendar-event-list/calendar-event-list.component';
 import {
   MatIconModule, MatMenu, MatMenuModule, MatTabsModule, MatProgressSpinnerModule,
-  MatFormFieldModule, MatInputModule
+  MatFormFieldModule, MatInputModule, MatCheckboxModule
 } from "@angular/material";
 import {CalendarMainComponent} from './calendar-main/calendar-main.component';
 import {ServicesModule} from "../services/services.module";
@@ -23,6 +23,7 @@ import { UnavailableFormComponent } from './unavailable-form/unavailable-form.co
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatCheckboxModule,
     MatMenuModule,
     MatProgressSpinnerModule,
     MatTabsModule,

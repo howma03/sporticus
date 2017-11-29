@@ -22,6 +22,15 @@ export class ChallengeService extends BaseCrudService<Challenge> {
   public putChallenge(challenge : Challenge) {
     return this.http.put<Challenge>(this.url + "/" + challenge.id, challenge);
   }
+
+  public getAvailableChallenges() {
+    return this.http.get<LadderNode[]>(this.url);
+  }
+}
+
+export interface LadderNode extends Ladder {
+  above: LadderUser[],
+  below: LadderUser[]
 }
 
 export interface Challenge {

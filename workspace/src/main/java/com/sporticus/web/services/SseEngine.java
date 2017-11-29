@@ -6,13 +6,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class SseEngine {
 
-	private static Logger logger = LogFactory.getLogger(SseEngine.class.getName());
+	private static Logger LOGGER = LogFactory.getLogger(SseEngine.class.getName());
 
 	private static long TIMEOUT = 30000L;
 
@@ -27,9 +28,19 @@ public class SseEngine {
 	}
 
 	public SseEmitter getEmitterByUserId(long userId) {
-		SseEmitter sseEmitter = emitters.get(userId);
-		return sseEmitter;
+		return emitters.get(userId);
 	}
+
+	public void send(long id, Object data) throws IOException {
+		SseEmitter emitter = emitters.get(id);
+		if (emitter == null) {
+			LOGGER.warn(() -> "Failed to locate emitter - id=" + id);
+		} else {
+			emitter.send(data);
+			LOGGER.info(() -> "Sent data via emitter - id=" + id);
+		}
+	}
+
 
 	public long getTimeout() {
 		return TIMEOUT;

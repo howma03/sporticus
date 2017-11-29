@@ -58,27 +58,6 @@ public class RestControllerNotification extends ControllerAbstract {
         return new ResponseEntity<>(new DtoList(serviceNotification.findAllOwnedBy(this.getLoggedInUserId()).stream().map(n->new DtoNotification(n)).collect(Collectors.toList())), HttpStatus.OK);
     }
 
-	/**
-	 * Function to delete a notification -
-	 * Only the owner of the notification or an administrators can perform this operation
-	 *
-	 * @param id
-	 * @return HttpStatus
-	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteOne(@PathVariable("id") final long id) {
-		try {
-			serviceNotification.deleteNotification(getLoggedInUser(), id);
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (ServiceNotificationExceptionNotAllowed ex) {
-			LOGGER.warn(() -> "Delete not allowed - id=" + id);
-			return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
-		} catch (ServiceNotificationExceptionNotFound ex) {
-			LOGGER.warn(() -> "Failed to delete, not found - id=" + id);
-			return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
-		}
-	}
-
     /**
      * Function returns a notification given an identifier
      *
@@ -121,4 +100,26 @@ public class RestControllerNotification extends ControllerAbstract {
 	        return new ResponseEntity<>(ex, HttpStatus.NOT_ACCEPTABLE);
         }
     }
+
+	/**
+	 * Function to delete a notification -
+	 * Only the owner of the notification or an administrators can perform this operation
+	 *
+	 * @param id
+	 * @return HttpStatus
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteOne(@PathVariable("id") final long id) {
+		try {
+			serviceNotification.deleteNotification(getLoggedInUser(), id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (ServiceNotificationExceptionNotAllowed ex) {
+			LOGGER.warn(() -> "Delete not allowed - id=" + id);
+			return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+		} catch (ServiceNotificationExceptionNotFound ex) {
+			LOGGER.warn(() -> "Failed to delete, not found - id=" + id);
+			return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+		}
+	}
+
 }

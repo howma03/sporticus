@@ -1,6 +1,5 @@
 import {
-  ChangeDetectorRef, Component, EventEmitter, OnInit, QueryList, ViewChild, ViewChildren,
-  ViewEncapsulation
+  Component, OnInit, QueryList, ViewChild, ViewChildren
 } from '@angular/core';
 import {CalendarComponent} from 'ng-fullcalendar';
 import {Options} from 'fullcalendar';
@@ -8,6 +7,9 @@ import {Event, EventService} from '../../services/event.service';
 import {MatDialog, MatMenuTrigger} from '@angular/material';
 import {NavItem} from '../nav-item';
 import {UnavailableDialogComponent} from '../unavailable-dialog/unavailable-dialog.component';
+import {ChallengeService, LadderNode} from '../../services/challenge.service';
+import {User} from '../../services/users.service';
+import {LadderUser} from '../../services/ladder.service';
 
 @Component({
   selector: 'app-calendar-wrapper',
@@ -47,9 +49,9 @@ export class CalendarWrapperComponent implements OnInit {
   @ViewChild('dynamicMenuTrigger') dynamicMenu: MatMenuTrigger;
 
   constructor(
+    private challengeService : ChallengeService,
     private eventService : EventService,
-    private dialog: MatDialog,
-    private ref: ChangeDetectorRef
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -74,6 +76,52 @@ export class CalendarWrapperComponent implements OnInit {
           events: calenderEvents
         };
       });
+
+
+    // Get the available challenges in order to generate a challenge menu
+    this.challengeService.getAvailableChallenges()
+      .subscribe((ladders : LadderNode[]) => {
+        let menuPart = ladders.map(ladder => {
+
+          let childrenAbove = ladder.above.map(user => this.userToMenu(user));
+          let childrenBelow = ladder.below.map(user => this.userToMenu(user));
+
+          return {
+            displayName: ladder.name,
+            iconName: 'group',
+            children: childrenAbove.concat(childrenBelow)
+          };
+        });
+
+        this.navItems = [
+          {
+            displayName: 'Register Unavailable Times',
+            iconName: 'group',
+            command: () => this.registerUnavailable()
+          },
+          {
+            displayName: 'Schedule Match',
+            iconName: 'games',
+            children: menuPart
+          }
+        ];
+      });
+  }
+
+  /**
+   * Create a user selection item from a user
+   * @param {User} user
+   * @returns {{displayName: string; iconName: string; route: any}}
+   */
+  private userToMenu(user : LadderUser) {
+    {
+      let position = (user.position > 0) ? "above" : "below";
+      return {
+        displayName: `${user.userName} (${Math.abs(user.position)} ${position})`,
+        iconName: 'person',
+        route: null
+      }
+    }
   }
 
   clickButton(model: any) {
@@ -90,7 +138,7 @@ export class CalendarWrapperComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(challenge => {
-//      this.reload();
+      //this.reload();
     });
   }
 
@@ -106,7 +154,6 @@ export class CalendarWrapperComponent implements OnInit {
     this.menuLeft = jsEvent.clientX + 'px';
     let mt = this.menuTriggers;
     mt.first.openMenu();
-//    mt.last.openMenu();
   }
 
   unavailableClicked() {
@@ -152,62 +199,13 @@ export class CalendarWrapperComponent implements OnInit {
 
   navItems: NavItem[] = [
     {
-      displayName: 'Ladder1',
-      iconName: 'group',
-      children: [
-        {
-          displayName: 'Bob Tarling (2 above)',
-          iconName: 'person',
-          route: null
-        },
-        {
-          displayName: 'Thomas Hardwick (1 above)',
-          iconName: 'person',
-          route: null
-        },
-        {
-          displayName: 'James nurse (1 below)',
-          iconName: 'person',
-          route: 'mike-brocchi',
-        }
-      ]
-    },
-    {
-      displayName: 'Ladder2',
-      iconName: 'group',
-      children: [
-        {
-          displayName: 'Bob Tarling (2 above)',
-          iconName: 'person',
-          command: () => {
-            alert("Bob Clicked");
-          },
-          route: null
-        },
-        {
-          displayName: 'Thomas Hardwick (1 above)',
-          iconName: 'person',
-          route: null
-        },
-        {
-          displayName: 'James nurse (1 below)',
-          iconName: 'person',
-          route: 'mike-brocchi',
-        }
-      ]
-    }
-  ];
-
-  navItems2: NavItem[] = [
-    {
       displayName: 'Register Unavailable Times',
       iconName: 'group',
       command: () => this.registerUnavailable()
     },
     {
       displayName: 'Schedule Match',
-      iconName: 'games',
-      children: this.navItems
+      iconName: 'games'
     }
   ];
 }

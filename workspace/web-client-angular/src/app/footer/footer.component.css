@@ -1,4 +1,4 @@
-#Footer {
+.footer {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -8,7 +8,7 @@
   background: #0c4751;
 }
 
-#Footer .logo {
+.footer .logo {
   background-size: 200px auto;
   height: 60px;
   max-width: 200px;
@@ -18,38 +18,38 @@
   overflow: hidden;
 }
 
-#Footer ul {
+.footer ul {
   padding-bottom: 0;
   padding-left: 0;
 }
 
-#Footer li {
+.footer li {
   font-size: .702em;
   list-style-type: none;
   padding-bottom: 0;
 }
 
-#Footer li a {
+.footer li a {
   color: #f0f7ff;
 }
 
-#Footer li a:active,#Footer li a:focus,#Footer li a:hover {
+.footer li a:active, .footer li a:focus, .footer li a:hover {
   color: #fff;
   text-decoration: underline!important;
 }
 
-#Footer .social {
+.footer .social {
   max-width: 165px;
 }
 
-#Footer .social li {
+.footer .social li {
   float: left;
   display: block;
   padding: 0 0 5px 5px;
   padding-left: 5px!important;
 }
 
-#Footer .social li a {
+.footer .social li a {
   text-align: center;
   display: block;
   height: 25px;
@@ -63,27 +63,27 @@
   transition: background-color .25s ease-in-out;
 }
 
-#Footer .social li a span {
+.footer .social li a span {
   color: inherit;
 }
 
-#Footer .social li a:active,#Footer .social li a:focus,#Footer .social li a:hover {
+.footer .social li a:active, .footer .social li a:focus, .footer .social li a:hover {
   background: #fff;
 }
 
-#Footer .social li a svg {
+.footer .social li a svg {
   fill: #236bad;
 }
 
-#Footer .col-custom {
+.footer .col-custom {
   padding: 15px;
 }
 
-#Footer .bg-primary-dark {
+.footer .bg-primary-dark {
   margin-top: 40px;
 }
 
-#Footer .bg-primary-dark p {
+.footer .bg-primary-dark p {
   margin-top: 0;
   margin-bottom: 0;
   padding: 0 15px;
@@ -92,13 +92,13 @@
   color: #f0f7ff;
 }
 
-#Footer .copyright-link {
+.footer .copyright-link {
   text-decoration: underline;
   color: #6eaae2;
 }
 
 @media only screen and (min-width:768px) {
-  #Footer .col-custom.sm {
+  .footer .col-custom.sm {
     float: left;
     width: 23%;
     padding-top: 30px;
@@ -107,37 +107,37 @@
 }
 
 @media only screen and (min-width:992px) {
-  #Footer .col-custom {
+  .footer .col-custom {
     padding: 0;
   }
 
-  #Footer .col-custom.md {
+  .footer .col-custom.md {
     float: left;
     width: 21%;
     clear: none;
   }
 
-  #Footer .col-custom.md:first-child {
+  .footer .col-custom.md:first-child {
     padding-top: 0;
   }
 
-  #Footer .col-custom.md:last-child {
+  .footer .col-custom.md:last-child {
     padding-top: 30px;
   }
 
-  #Footer .col-custom.sm {
+  .footer .col-custom.sm {
     width: 16.25%;
   }
 
-  #Footer .col-custom:nth-child(2) {
+  .footer .col-custom:nth-child(2) {
     width: 14%;
   }
 
-  #Footer .col-custom:nth-child(3) {
+  .footer .col-custom:nth-child(3) {
     width: 18%;
   }
 
-  #Footer .col-custom:nth-child(4) {
+  .footer .col-custom:nth-child(4) {
     width: 14%;
   }
 }

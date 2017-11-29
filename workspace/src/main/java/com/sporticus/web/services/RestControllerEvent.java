@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,20 +43,27 @@ public class RestControllerEvent extends ControllerAbstract {
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody final DtoEvent event) {
         LOGGER.debug(() -> "Creating Event " + event.getName());
-        return new ResponseEntity<>(new DtoEvent(serviceEvent.create(event, getLoggedInUser())), HttpStatus.OK);
+        return new ResponseEntity<>(new DtoEvent(serviceEvent.create(getLoggedInUser(), event)), HttpStatus.OK);
     }
 
     /**
-     * Function to read all Future events for logged-in user
+     * Function to delete an event
      *
-     * @return ResponseEntity<DtoEvent>
+     * @param id
+     * @return ResponseEntity<?>
      */
-    @RequestMapping(value = "agenda", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DtoList<DtoEvent>> readAgenda() {
-        final List<DtoEvent> list = this.serviceEvent.getAgenda(this.getLoggedInUserId(), getLoggedInUser())
-                .stream()
-                .map(e -> new DtoEvent(e)).collect(Collectors.toList());
-        return new ResponseEntity<>(new DtoList<>(list), HttpStatus.OK);
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> delete(@PathVariable("id") final long id) {
+        try {
+            serviceEvent.delete(getLoggedInUser(), id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ServiceEventExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Delete not allowed - id=" + id);
+            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+        } catch (ServiceEventExceptionNotFound ex) {
+            LOGGER.warn(() -> "Event not found - id=" + id);
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -70,7 +76,7 @@ public class RestControllerEvent extends ControllerAbstract {
     public ResponseEntity<?> read(@PathVariable("id") final long id) {
         LOGGER.debug(() -> "Reading Event with id " + id);
         try {
-            IEvent found = serviceEvent.readEvent(id, getLoggedInUser());
+            IEvent found = serviceEvent.readEvent(getLoggedInUser(), id);
             return new ResponseEntity<>(new DtoEvent(found), HttpStatus.OK);
         } catch (ServiceEventExceptionNotAllowed ex) {
             LOGGER.warn(() -> "Read not allowed - id=" + id);
@@ -82,15 +88,36 @@ public class RestControllerEvent extends ControllerAbstract {
     }
 
     /**
+     * Function to read all Future events for logged-in user
+     *
+     * @return ResponseEntity<DtoEvent>
+     */
+    @RequestMapping(value = "agenda", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> readAgenda() {
+        try {
+            return new ResponseEntity<>(new DtoList<>(this.serviceEvent.getAgenda(getLoggedInUser(), getLoggedInUserId())
+                    .stream()
+                    .map(e -> new DtoEvent(e))
+                    .collect(Collectors.toList())), HttpStatus.OK);
+        } catch (ServiceEventExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Agenda Read not allowed");
+            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+        } catch (ServiceEventExceptionNotFound ex) {
+            LOGGER.warn(() -> "Agenda not found");
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
      * Function returns all events for the logged-in user
      * @return ResponseEntity<?>
      */
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DtoList<DtoEvent>> readAll() {
-        final List<DtoEvent> list = this.serviceEvent.readAll(this.getLoggedInUserId(), this.getLoggedInUser())
+    public ResponseEntity<?> readAll() {
+        return new ResponseEntity<>(new DtoList<>(this.serviceEvent.readAll(this.getLoggedInUser(), this.getLoggedInUserId())
                 .stream()
-                .map(e -> new DtoEvent(e)).collect(Collectors.toList());
-        return new ResponseEntity<>(new DtoList<>(list), HttpStatus.OK);
+                .map(e -> new DtoEvent(e))
+                .collect(Collectors.toList())), HttpStatus.OK);
     }
 
     /**
@@ -103,34 +130,14 @@ public class RestControllerEvent extends ControllerAbstract {
     public ResponseEntity<?> update(@PathVariable("id") final long id,
                                     @RequestBody final DtoEvent event) {
         try {
-            final IEvent updated = serviceEvent.update(event, getLoggedInUser());
+            final IEvent updated = serviceEvent.update(getLoggedInUser(), event);
             LOGGER.info(() -> "Updated Event with id " + id);
             return new ResponseEntity<>(new DtoEvent(updated), HttpStatus.OK);
         } catch (ServiceEventExceptionNotAllowed ex) {
-            LOGGER.warn(() -> "Delete not allowed - id=" + id);
+            LOGGER.warn(() -> "Updated not allowed - id=" + id);
             return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
         } catch (ServiceEventExceptionNotFound ex) {
-            LOGGER.warn(() -> "Event not found - id=" + id);
-            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
-        }
-    }
-
-    /**
-     * Function to delete an event
-     *
-     * @param id
-     * @return ResponseEntity<?>
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@PathVariable("id") final long id) {
-        try {
-            serviceEvent.delete(id, getLoggedInUser());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (ServiceEventExceptionNotAllowed ex) {
-            LOGGER.warn(() -> "Delete not allowed - id=" + id);
-            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
-        } catch (ServiceEventExceptionNotFound ex) {
-            LOGGER.warn(() -> "Event not found - id=" + id);
+            LOGGER.warn(() -> "Updated failed - not found - id=" + id);
             return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
         }
     }

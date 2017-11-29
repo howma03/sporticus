@@ -2,7 +2,10 @@ package com.sporticus.web.services;
 
 import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IUser;
+import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceOrganisation;
+import com.sporticus.interfaces.IServiceOrganisation.ServiceOrganisationExceptionNotAllowed;
+import com.sporticus.interfaces.IServiceOrganisation.ServiceOrganisationExceptionNotFound;
 import com.sporticus.services.dto.DtoList;
 import com.sporticus.services.dto.DtoOrganisation;
 import com.sporticus.util.logging.LogFactory;
@@ -16,13 +19,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.websocket.server.PathParam;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,17 +31,37 @@ public class RestControllerOrganisation extends ControllerAbstract {
 
     private final static Logger LOGGER = LogFactory.getLogger(RestControllerOrganisation.class.getName());
 
+    @Autowired
     private IServiceOrganisation serviceOrganisation;
 
     @Autowired
-    public RestControllerOrganisation(final IServiceOrganisation serviceOrganisation) {
-        this.serviceOrganisation = serviceOrganisation;
+    private IServiceGroup serviceGroup;
+
+    public RestControllerOrganisation() {
+
     }
 
-    private DtoOrganisation convertToDtoOrganisation(final IOrganisation o) {
-        final DtoOrganisation dtoOrganisation = new DtoOrganisation(o);
-        // Now determine the number of groups the user is a member of
+    /**
+     * Function to create an Organisation
+     * Only a system administrator can create an Organisation
+     *
+     * @param organisation
+     * @return ResponseEntity<DtoOrganisation>
+     */
+    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> create(@RequestBody final DtoOrganisation organisation) {
+        LOGGER.debug(() -> "Creating Organisation " + organisation.getName());
+        try {
+            return new ResponseEntity<>(convertToDtoOrganisation(serviceOrganisation.createOrganisation(getLoggedInUser(), organisation)), HttpStatus.OK);
+        } catch (ServiceOrganisationExceptionNotAllowed ex) {
+            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+        }
+    }
 
+	protected DtoOrganisation convertToDtoOrganisation(final IOrganisation o) {
+		final DtoOrganisation dtoOrganisation = new DtoOrganisation(o);
+
+        // Now determine the number of groups the user is a member of
         if(o.getOwnerId() != null) {
             final IUser owner = this.serviceUser.findOne(o.getOwnerId());
             if(owner != null) {
@@ -51,89 +70,12 @@ public class RestControllerOrganisation extends ControllerAbstract {
         }
 
         final Set<IUser> orgUsers = new LinkedHashSet<>();
+        // TODO: find the organisation's membership group - then count the associated members
         dtoOrganisation.setCountUser(Long.valueOf(orgUsers.size()));
 
         return dtoOrganisation;
     }
 
-    /**
-     * Function to create an Organisation
-     * Only a system administrator cna create an Organisation
-     *
-     * @param organisation
-     * @return ResponseEntity<DtoOrganisation>
-     */
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DtoOrganisation> create(@RequestBody final DtoOrganisation organisation) {
-        LOGGER.debug(() -> "Creating Organisation " + organisation.getName());
-
-        if(!this.getLoggedInUser().isAdmin()) {
-            LOGGER.error(() -> "Organisations can only be created by system administrators");
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
-        if(organisation.getOwnerId()==null){
-            LOGGER.warn(() -> "Preventing an organisation being created without an owner");
-            organisation.setOwnerId(this.getLoggedInUserId());
-        }
-
-        return new ResponseEntity<>(convertToDtoOrganisation(serviceOrganisation.createOrganisation(organisation)), HttpStatus.OK);
-    }
-
-    /**
-     * Function to read all organisations
-     *
-     * @return ResponseEntity<DtoOrganisations>
-     */
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DtoList<DtoOrganisation>> readAll() {
-
-        // organisation owners to are allowed to read their owned organisations
-
-        final List<DtoOrganisation> list = new ArrayList<>();
-
-        this.serviceOrganisation.getOrganisationsOwnedByUser(this.getLoggedInUserId())
-                .forEach(o -> list.add(convertToDtoOrganisation(o)));
-
-        if(list.size() == 0) {
-            if(!this.getLoggedInUser().isAdmin()) {
-                LOGGER.error(() -> "Organisations can only be read by system administrators or owners");
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            }
-
-            /**
-             * As well as the standard organisation data we want to include statistics for number of users and groups
-             * (as well as number of open invitations) - this is performed by the converter
-             */
-            list.addAll(this.serviceOrganisation.readAllOrganisations().stream()
-                    .map(o -> convertToDtoOrganisation(o)).collect(Collectors.toList()));
-        }
-
-        return new ResponseEntity<>(new DtoList<>(list), HttpStatus.OK);
-    }
-
-    /**
-     * Return a organisation given an identifier
-     *
-     * @param id
-     * @return ResponseEntity<DtoOrganisation>
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DtoOrganisation> read(@PathVariable("id") final long id) {
-        if(!this.getLoggedInUser().isAdmin()) {
-            LOGGER.error(() -> "Organisations can only be read by system administrators");
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
-        LOGGER.debug(() -> "Reading Organisation with id " + id);
-        final IOrganisation found = serviceOrganisation.readOrganisation(id);
-        if(found == null) {
-            LOGGER.warn(() -> "Organisation not found - id=" + id);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(convertToDtoOrganisation(found), HttpStatus.OK);
-    }
 
     /**
      * Function to find an organisation given a url fragment
@@ -141,64 +83,98 @@ public class RestControllerOrganisation extends ControllerAbstract {
      * @return ResponseEntity<DtoOrganisations>
      */
     @RequestMapping(value = "findByUrlFragment/{urlFragment}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DtoOrganisation> findByUrlFragment(@PathVariable ("urlFragment") final String urlFragment) {
-        IOrganisation organisation = this.serviceOrganisation.findByUrlFragment(urlFragment);
-        if(organisation == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> findByUrlFragment(@PathVariable("urlFragment") final String urlFragment) {
+        try {
+            return new ResponseEntity<>(convertToDtoOrganisation(this.serviceOrganisation.findByUrlFragment(getLoggedInUser(), urlFragment)),
+                    HttpStatus.OK);
+        } catch (ServiceOrganisationExceptionNotAllowed ex) {
+            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+        } catch (ServiceOrganisationExceptionNotFound ex) {
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(convertToDtoOrganisation(organisation), HttpStatus.OK);
     }
 
     /**
-     * Function to update a group - only owners (or administrators) should be allowed to update the group
+     * Return an organisation given an identifier
+     * Only the owner or an admin should be able to read the organisation
      *
      * @param id
-     * @param organisation
      * @return ResponseEntity<DtoOrganisation>
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> read(@PathVariable("id") final long id) {
+        try {
+            return new ResponseEntity<>(convertToDtoOrganisation(serviceOrganisation.readOrganisation(getLoggedInUser(), id)),
+                    HttpStatus.OK);
+        } catch (ServiceOrganisationExceptionNotAllowed ex) {
+            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+        } catch (ServiceOrganisationExceptionNotFound ex) {
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+        }
+    }
+
+	/**
+	 * Function to delete a organisation
+	 * Only the owner of an Organisation or an admin can delete a Organisation
+	 *
+	 * @param id
+	 * @return ResponseEntity<DtoOrganisation>
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteOne(@PathVariable("id") final long id) {
+		try {
+			serviceOrganisation.deleteOrganisation(getLoggedInUser(), id);
+			LOGGER.info(() -> "Deleted Organisation with id " + id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (ServiceOrganisationExceptionNotAllowed ex) {
+			return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+		} catch (ServiceOrganisationExceptionNotFound ex) {
+			return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+		}
+	}
+
+    /**
+     * Function to read all organisations - owned by logged-in user
+     *
+     * @return ResponseEntity<DtoOrganisations>
+     */
+    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> readAll() {
+        try {
+            return new ResponseEntity<>(new DtoList<>(this.serviceOrganisation
+                    .readAllOrganisations(this.getLoggedInUser())
+                    .stream()
+		            .map(this::convertToDtoOrganisation)
+		            .collect(Collectors.toList())), HttpStatus.OK);
+        } catch (ServiceOrganisationExceptionNotAllowed ex) {
+            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+        } catch (ServiceOrganisationExceptionNotFound ex) {
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+        }
+    }
+
+	/**
+	 * Function to update an organisation
+	 *
+	 * Only owners (or administrators) should be allowed to update the group
+	 *
+	 * @param id - organisation's identifier
+	 * @param organisation - organisation details
+	 * @return ResponseEntity<DtoOrganisation>
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<DtoOrganisation> update(@PathVariable("id") final long id, @RequestBody final DtoOrganisation organisation) {
-        if(!this.getLoggedInUser().isAdmin()) {
-            LOGGER.error(() -> "Organisations can only be updated by system managers");
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    public ResponseEntity<?> update(@PathVariable("id") final long id,
+                                    @RequestBody final DtoOrganisation organisation) {
+        try {
+            organisation.setId(id);
+            final IOrganisation updated = serviceOrganisation.updateOrganisation(getLoggedInUser(), organisation);
+            LOGGER.info(() -> "Updated organisation with id " + id);
+            return new ResponseEntity<>(convertToDtoOrganisation(updated), HttpStatus.OK);
+        } catch (ServiceOrganisationExceptionNotAllowed ex) {
+            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+        } catch (ServiceOrganisationExceptionNotFound ex) {
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
         }
-
-        LOGGER.debug(() -> "Updating Organisation " + id);
-        final IOrganisation found = serviceOrganisation.readOrganisation(id);
-        if(found == null) {
-            LOGGER.warn(() -> "Organisation with id " + id + " not found");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        final IOrganisation updated = serviceOrganisation.updateOrganisation(organisation);
-        LOGGER.info(() -> "Updated organisation with id " + id);
-        return new ResponseEntity<>(convertToDtoOrganisation(updated), HttpStatus.OK);
     }
 
-    //------------------- Delete a Organisation --------------------------------------------------------
-
-    /**
-     * Function to delete a group - Only the owner of an Organisation can delete groups
-     *
-     * @param id
-     * @return ResponseEntity<DtoOrganisation>
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<DtoOrganisation> deleteOne(@PathVariable("id") final long id) {
-        if(!this.getLoggedInUser().isAdmin()) {
-            LOGGER.error(() -> "Organisations can only be deleted by system administrators");
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
-        LOGGER.debug(() -> "Deleting Organisation with id " + id);
-        IOrganisation found = serviceOrganisation.readOrganisation(id);
-        if(found == null) {
-            LOGGER.warn(() -> "Organisation with id " + id + " not found");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        found = serviceOrganisation.deleteOrganisation(id);
-        LOGGER.warn(() -> "Deleted Organisation with id " + id);
-        return new ResponseEntity<>(convertToDtoOrganisation(found), HttpStatus.OK);
-    }
 }

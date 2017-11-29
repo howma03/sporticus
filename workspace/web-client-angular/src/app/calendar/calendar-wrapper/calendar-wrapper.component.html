@@ -8,7 +8,7 @@
   <div #dynamicMenuTrigger [style.left]="menuLeft" [style.top]="menuTop" class="position-menu" mat-button [matMenuTriggerFor]="dynamicMenu"></div>
   <div class="basic-container">
     <mat-menu #dynamicMenu>
-      <span *ngFor="let item of navItems2">
+      <span *ngFor="let item of navItems">
         <!-- Handle branch node buttons here -->
         <span *ngIf="item.children && item.children.length > 0">
           <button mat-menu-item color="primary" [matMenuTriggerFor]="menu.childMenu">

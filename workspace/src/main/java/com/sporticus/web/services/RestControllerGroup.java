@@ -5,6 +5,8 @@ import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryOrganisation;
+import com.sporticus.interfaces.IServiceEvent.ServiceEventExceptionNotAllowed;
+import com.sporticus.interfaces.IServiceEvent.ServiceEventExceptionNotFound;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.services.dto.DtoGroup;
 import com.sporticus.services.dto.DtoList;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/group")
@@ -40,18 +41,25 @@ public class RestControllerGroup extends ControllerAbstract {
         this.repositoryOrganisation = repositoryOrganisation;
     }
 
-    private DtoGroup convertToDtoGroup(final IGroup g) {
-        final DtoGroup dtoGroup = new DtoGroup(g);
-        final List<IUser> users = serviceGroup.getMembershipUsersForGroup(g.getId(), null);
-        dtoGroup.setCountMembers(Long.valueOf(users.size()));
-        final Long ownerOrganisationId = g.getOwnerOrganisationId();
-        if(ownerOrganisationId != null) {
-            final IOrganisation owner = repositoryOrganisation.findOne(ownerOrganisationId);
-            if(owner != null) {
-                dtoGroup.setOwnerOrganisationName(owner.getName());
-            }
+    /**
+     * Function returns a group given an identifier
+     *
+     * @param id
+     * @return ResponseEntity<DtoGroup>
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> read(@PathVariable("id") final long id) {
+        LOGGER.debug(() -> "Reading Group with id " + id);
+        try {
+            IGroup found = serviceGroup.readGroup(getLoggedInUser(), id);
+            return new ResponseEntity<>(new DtoGroup(found), HttpStatus.OK);
+        } catch (ServiceEventExceptionNotAllowed ex) {
+            LOGGER.warn(() -> "Read not allowed - id=" + id);
+            return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+        } catch (ServiceEventExceptionNotFound ex) {
+            LOGGER.warn(() -> "Not found - id=" + id);
+            return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
         }
-        return dtoGroup;
     }
 
     /**
@@ -65,7 +73,7 @@ public class RestControllerGroup extends ControllerAbstract {
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoList<DtoGroup>> readAll() {
         final DtoList<DtoGroup> list = new DtoList();
-        this.serviceGroup.readGroups(gm -> {
+        this.serviceGroup.readGroups(getLoggedInUser(), gm -> {
             if(gm.getUserId().equals(getLoggedInUserId())) {
                 if(gm.getStatus().equals(IGroupMember.Status.Accepted)) {
                     if(gm.isEnabled()) {
@@ -83,24 +91,17 @@ public class RestControllerGroup extends ControllerAbstract {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    /**
-     * Function returns a group given an identifier
-     *
-     * @param id
-     * @return ResponseEntity<DtoGroup>
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DtoGroup> read(@PathVariable("id") final long id) {
-        if(id == -1) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    private DtoGroup convertToDtoGroup(final IGroup g) {
+        final DtoGroup dtoGroup = new DtoGroup(g);
+        final List<IUser> users = serviceGroup.getMembershipUsersForGroup(getLoggedInUser(), g.getId(), null);
+        dtoGroup.setCountMembers(Long.valueOf(users.size()));
+        final Long ownerOrganisationId = g.getOwnerOrganisationId();
+        if (ownerOrganisationId != null) {
+            final IOrganisation owner = repositoryOrganisation.findOne(ownerOrganisationId);
+            if (owner != null) {
+                dtoGroup.setOwnerOrganisationName(owner.getName());
+            }
         }
-        LOGGER.debug(() -> "Reading Group with id " + id);
-        final Optional<IGroup> found = serviceGroup.readGroup(id);
-        if(!found.isPresent()) {
-            LOGGER.warn(() -> "Group not found - id=" + id);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        // TODO: limit who can read the group - perhaps on those listed as admins?
-        return new ResponseEntity<>(convertToDtoGroup(found.get()), HttpStatus.OK);
+        return dtoGroup;
     }
 }
