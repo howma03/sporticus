@@ -13,7 +13,7 @@ export class LadderService extends BaseCrudService<Ladder> {
   url = '/api/ladder';
 
   challengeAbove : number = 2;
-  challengeBelow : number = 1;
+  challengeBelow : number = 2;
 
   constructor(public http: HttpClient, private authService : AuthService) {
     super(http);
