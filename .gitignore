@@ -23,3 +23,6 @@ hs_err_pid*
 
 # Ignore any IDE files
 .idea/
+
+#Include gradle wrapper jar
+!**/gradle/wrapper/gradle-wrapper.jar
