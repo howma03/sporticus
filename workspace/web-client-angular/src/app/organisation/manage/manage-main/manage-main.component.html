@@ -1,5 +1,5 @@
 <mat-form-field>
-  <mat-select [value]="organisationId">
+  <mat-select [value]="organisationId" (change)="onOrganisationSelect($event)">
     <mat-option *ngFor="let organisation of organisations" [value]="organisation.id">
       {{organisation.name}}
     </mat-option>
