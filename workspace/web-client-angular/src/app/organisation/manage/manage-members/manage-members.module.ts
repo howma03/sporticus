@@ -16,6 +16,7 @@ import {
 } from '@angular/material';
 import {ServicesModule} from '../../../services/services.module';
 import {SendInviteDialogComponent} from './send-invite-dialog/send-invite-dialog.component';
+import {OrganisationUsersService} from "./organisation-users.service";
 
 @NgModule({
   imports: [
@@ -35,6 +36,7 @@ import {SendInviteDialogComponent} from './send-invite-dialog/send-invite-dialog
   ],
   exports: [ManageMembershipsComponent],
   entryComponents: [SendInviteDialogComponent],
+  providers: [OrganisationUsersService],
   declarations: [ManageMembershipsComponent, SendInviteComponent, ViewRequestsComponent, SendInviteDialogComponent]
 })
 export class ManageMembersModule {

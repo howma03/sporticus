@@ -1,6 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {User} from '../../../../services/users.service';
+import {OrganisationUsersService} from '../organisation-users.service';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/forkJoin';
 
 @Component({
   selector: 'app-send-invite',
@@ -31,7 +34,7 @@ export class SendInviteComponent implements OnInit {
     return this.inviteForm.get('email');
   }
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private memeberService: OrganisationUsersService) {
     this.inviteForm = this.fb.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
@@ -83,7 +86,8 @@ export class SendInviteComponent implements OnInit {
   }
 
   send() {
-    this.done.emit();
+    Observable.forkJoin(...this.users.map(user => this.memeberService.inviteUser(this.organisationId, user)))
+      .subscribe(() => this.done.emit());
   }
 
 

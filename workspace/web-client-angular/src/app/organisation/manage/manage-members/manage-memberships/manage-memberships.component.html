@@ -3,6 +3,35 @@
   <button mat-menu-item> View Applications</button>
 </mat-menu>
 
-<button mat-fab color="primary" [matMenuTriggerFor]="addMenu">
-  <mat-icon aria-label="Add Member">add</mat-icon>
+<button class="btn button-primary" [matMenuTriggerFor]="addMenu">
+  <span class="hpe-icon hpe-deployment" aria-hidden="true"></span> Add Member
 </button>
+
+<br/>
+
+<div class="user__list" *ngIf="!users || !users.length">
+  <p>No Members</p>
+</div>
+
+
+<div class="user__list" *ngIf="users.length">
+  <table class="table table-hover">
+    <thead>
+    <tr class="table-header-dark">
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="hover-action-container" *ngFor="let item of users" uxHoverActionContainer>
+      <td>{{ item.firstName }}</td>
+      <td>{{ item.lastName }}</td>
+      <td>
+        <i class="hpe-icon hpe-trash hover-action-icon" (click)="openDeleteDialog(item)" tooltip="Remove User"
+           uxHoverAction></i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
