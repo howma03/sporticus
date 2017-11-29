@@ -1,27 +1,34 @@
 <h2>Send invitations to join your organisation</h2>
 <form (ngSubmit)="send()" [formGroup]="inviteForm">
   <mat-chip-list #chipList>
-    <mat-chip *ngFor="let email of emails" [selectable]="selectable"
-              [removable]="removable" (remove)="remove(email)">
-      {{email}}
+    <mat-chip *ngFor="let user of users" [selectable]="selectable"
+              [removable]="removable" (remove)="remove(user)">
+      {{user.firstName}} {{user.lastName}}
       <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
   </mat-chip-list>
   <br/>
+  <mat-form-field class="name-field">
+    <input matInput name="firstName"
+           placeholder="First Name"
+           formControlName="firstName"/>
+  </mat-form-field>
+  <mat-form-field class="name-field">
+    <input matInput name="lastName"
+           placeholder="Surname"
+           formControlName="lastName"/>
+  </mat-form-field>
   <mat-form-field class="email-field">
-    <input matInput class="email-field" name="email"
+    <input matInput name="email"
            type="email"
            placeholder="Email"
            formControlName="email"
-           [matChipInputFor]="chipList"
-           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-           [matChipInputAddOnBlur]="addOnBlur"
-           (matChipInputTokenEnd)="add()"/>
+           (keyup.enter)="add()"/>
     <mat-icon matSuffix (click)="add()">add</mat-icon>
     <mat-hint>Tip: You can press return to quickly add an email address</mat-hint>
     <mat-error *ngIf="emailInput.hasError('email')">Please enter a valid email address</mat-error>
     <mat-error *ngIf="emailInput.hasError('alreadyIn')">You have already entered that email address</mat-error>
   </mat-form-field>
   <br/>
-  <button mat-raised-button type="submit" [disabled]="emails.length === 0" (click)="send()">Send</button>
+  <button mat-raised-button type="submit" [disabled]="users.length === 0" (click)="send()">Send</button>
 </form>

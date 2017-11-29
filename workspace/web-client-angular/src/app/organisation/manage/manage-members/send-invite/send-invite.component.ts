@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {User} from '../../../../services/users.service';
 
 @Component({
   selector: 'app-send-invite',
@@ -13,12 +13,19 @@ export class SendInviteComponent implements OnInit {
   organisationId: number;
   removable = true;
   selectable = true;
-  addOnBlur = false;
-  separatorKeysCodes = [ENTER, COMMA];
-  emails: string[] = [];
+  users: User[] = [];
+
   @Output()
   done = new EventEmitter<any>();
   inviteForm: FormGroup;
+
+  get firstNameInput() {
+    return this.inviteForm.get('firstName');
+  }
+
+  get lastNameInput() {
+    return this.inviteForm.get('lastName');
+  }
 
   get emailInput() {
     return this.inviteForm.get('email');
@@ -26,12 +33,14 @@ export class SendInviteComponent implements OnInit {
 
   constructor(private fb: FormBuilder) {
     this.inviteForm = this.fb.group({
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
       email: ['', [Validators.email, this.alreadyIn.bind(this)]]
     });
   }
 
   alreadyIn(emailInput: FormControl) {
-    return this.emails.indexOf(emailInput.value) < 0 ? null : {
+    return this.users.findIndex(user => user.email === emailInput.value) < 0 ? null : {
       alreadyIn: {
         value: emailInput.value
       }
@@ -43,28 +52,33 @@ export class SendInviteComponent implements OnInit {
 
 
   add(): void {
-    const input = this.emailInput;
-    const value = input.value;
-    input.markAsTouched();
-    input.updateValueAndValidity();
-    if (input.valid) {
-      if ((value || '').trim()) {
-        this.emails.push(value);
-      }
 
-      // Reset the input value
-      if (input) {
-        input.reset('');
-      }
+    this.emailInput.markAsTouched();
+    this.emailInput.updateValueAndValidity();
+
+    if (this.emailInput.valid && this.firstNameInput.valid && this.lastNameInput.valid) {
+      const email = this.emailInput.value.trim();
+      const firstName = this.firstNameInput.value.trim();
+      const lastName = this.lastNameInput.value.trim();
+
+      this.users.push({
+        firstName,
+        lastName,
+        email
+      });
+
+      this.emailInput.reset('');
+      this.firstNameInput.reset('');
+      this.lastNameInput.reset('');
     }
   }
 
 
-  remove(email: string): void {
-    const index = this.emails.indexOf(email);
+  remove(user: User): void {
+    const index = this.users.indexOf(user);
 
     if (index >= 0) {
-      this.emails.splice(index, 1);
+      this.users.splice(index, 1);
     }
   }
 
