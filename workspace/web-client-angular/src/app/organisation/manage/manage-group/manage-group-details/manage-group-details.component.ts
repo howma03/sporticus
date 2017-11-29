@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {Group, OrganisationGroupsService} from "../../../../services/organisation-groups.service";
 
 @Component({
   selector: 'app-manage-group-details',
@@ -8,7 +9,7 @@ import {Component, Input, OnInit} from '@angular/core';
 export class ManageGroupDetailsComponent implements OnInit {
 
   @Input()
-  public group;
+  public group: Group;
 
   constructor() {
   }

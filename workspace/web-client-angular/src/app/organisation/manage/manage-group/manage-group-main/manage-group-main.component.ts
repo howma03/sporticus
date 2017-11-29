@@ -11,7 +11,10 @@ export class ManageGroupMainComponent implements OnInit {
   @Input()
   public organisationId: number;
 
-  selectedGroup;
+  selectedGroup: Group = <Group> {
+    id: -1,
+    name: 'carrot'
+  };
 
   groups: Group[] = [];
   groupId: number = null;
