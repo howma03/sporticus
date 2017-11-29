@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-manage-group-members',
@@ -6,6 +6,9 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./manage-group-members.component.css']
 })
 export class ManageGroupMembersComponent implements OnInit {
+
+  @Input()
+  public group;
 
   constructor() {
   }

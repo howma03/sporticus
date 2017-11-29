@@ -8,12 +8,26 @@
 
 
 <mat-tab-group>
-  <mat-tab label="One">
-    <h1>Some tab content</h1>
-    <p>...</p>
+
+  <mat-tab label="Details">
+    <div class="inner">
+      <app-manage-group-details class="inner" [group]="selectedGroup">
+      </app-manage-group-details>
+    </div>
+
   </mat-tab>
-  <mat-tab label="Two">
-    <h1>Some more tab content</h1>
-    <p>...</p>
+  <mat-tab label="Members">
+    <div class="inner">
+      <app-manage-group-members class="inner" [group]="selectedGroup">
+      </app-manage-group-members>
+    </div>
+
   </mat-tab>
+  <mat-tab label="Events">
+    <div class="inner">
+      <app-manage-group-events class="inner" [group]="selectedGroup">
+      </app-manage-group-events>
+    </div>
+  </mat-tab>
+
 </mat-tab-group>

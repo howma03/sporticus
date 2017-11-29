@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Groups, OrganisationGroupsService} from "../../../../services/organisation-groups.service";
+import {Group, OrganisationGroupsService} from "../../../../services/organisation-groups.service";
 
 @Component({
   selector: 'app-manage-group-main',
@@ -11,7 +11,9 @@ export class ManageGroupMainComponent implements OnInit {
   @Input()
   public organisationId: number;
 
-  groups: Groups[] = [];
+  selectedGroup;
+
+  groups: Group[] = [];
   groupId: number = null;
 
 
@@ -21,16 +23,17 @@ export class ManageGroupMainComponent implements OnInit {
   }
 
   ngOnInit() {
-    /*this.organisationGroupsService.retrieveAll().subscribe(groups => {
+    this.organisationGroupsService.retrieveAll(this.organisationId).subscribe(groups => {
       this.groups = groups.data;
       if (this.groupId === null) {
         this.groupId = this.groups[0].id;
+        this.selectedGroup = this.groups[0];
       }
-    });*/
+    });
   }
 
-  onGroupSelect(a) {
-    var test = 'cat';
+  onGroupSelect(group) {
+    this.selectedGroup = group;
   }
 
 }
