@@ -1,20 +1,49 @@
 import { Injectable } from '@angular/core';
-import {BaseCrudService} from "./base-crud.service";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
+import {Observable} from "rxjs/Observable";
+import {List} from "./list";
 
 @Injectable()
-export class OrganisationGroupsService extends BaseCrudService<Groups> {
+export class OrganisationGroupsService {
 
-  constructor(http: HttpClient) {
-    super(http);
+  constructor(private http: HttpClient) {
   }
 
-  //TODO - This shouldn't use base crud as should support changing the organisation id.
-  url = '/api/admin/1';
+  baseUrl = '/api/admin/organisation';
 
+  public createOne(organisationId, item: Group): Observable<Group> {
+    const url = this.baseUrl + `/${organisationId}` + '/group';
+    return this.http.post<Group>(url, item);
+  }
+
+  public retrieveAll(organisationId): Observable<List<Group>> {
+    const url = this.baseUrl + `/${organisationId}` + '/group';
+    return this.http.get<List<Group>>(url);
+  }
+
+  public retrieveOne(groupId: number, organisationId: number): Observable<Group> {
+    const url = this.baseUrl + `/${organisationId}` + '/group' + `/${groupId}`;
+    return this.http.get<Group>(url, {
+      params: new HttpParams().set('id', groupId.toString(10))
+    });
+  }
+
+  public updateOne(groupId: number, organisationId: number, group: Group): Observable<Group> {
+    const url = this.baseUrl + `/${organisationId}` + '/group' + `/${groupId}`;
+    return this.http.put<Group>(url, group, {
+      params: new HttpParams().set('id', organisationId.toString(10))
+    });
+  }
+
+  public deleteOne(groupId: number, organisationId: number): Observable<any> {
+    const url = this.baseUrl + `/${organisationId}` + '/group' + `/${groupId}`;
+    return this.http.delete(url, {
+      params: new HttpParams().set('id', groupId.toString(10))
+    });
+  }
 }
 
-export interface Groups {
+export interface Group {
   id: number;
   name?: string;
 }

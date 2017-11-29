@@ -56,6 +56,7 @@ export class ManageMainComponent implements OnInit {
 
   onOrganisationSelect(a) {
     this.organisationId = a.value;
+    this.updateRouter();
   }
 
   updateRouter() {
