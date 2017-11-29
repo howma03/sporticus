@@ -6,6 +6,7 @@ import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.domain.interfaces.IGroupMember.Permission;
 import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IUser;
+import com.sporticus.services.dto.DtoGroup;
 import com.sporticus.services.dto.DtoGroupMember;
 import com.sporticus.services.dto.DtoList;
 
@@ -26,6 +27,9 @@ public interface IServiceGroup {
 	DtoGroupMember convertToDtoGroupMember(final IGroupMember gm);
 
 	DtoList<DtoGroupMember> convertToDtoGroupMembers(final List<IGroupMember> list);
+
+	DtoGroup convertToDtoGroup(IUser actor, IGroup group);
+
 
 	/**
 	 * CRUD Operations

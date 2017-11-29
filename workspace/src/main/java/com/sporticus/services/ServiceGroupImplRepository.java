@@ -21,6 +21,7 @@ import com.sporticus.interfaces.IServicePasswordGenerator;
 import com.sporticus.interfaces.IServiceRegistration;
 import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.services.converters.Converter;
+import com.sporticus.services.dto.DtoGroup;
 import com.sporticus.services.dto.DtoGroupMember;
 import com.sporticus.services.dto.DtoList;
 import com.sporticus.util.logging.LogFactory;
@@ -97,6 +98,21 @@ public class ServiceGroupImplRepository implements IServiceGroup {
         final DtoList<DtoGroupMember> out = new DtoList<>();
         list.forEach(gm -> out.add(convertToDtoGroupMember(gm)));
         return out;
+    }
+
+    @Override
+    public DtoGroup convertToDtoGroup(IUser actor, IGroup group) {
+        final DtoGroup dtoGroup = new DtoGroup(group);
+        final List<IUser> users = this.getMembershipUsersForGroup(actor, group.getId(), null);
+        dtoGroup.setCountMembers(Long.valueOf(users.size()));
+        final Long ownerOrganisationId = group.getOwnerOrganisationId();
+        if (ownerOrganisationId != null) {
+            final IOrganisation owner = repositoryOrganisation.findOne(ownerOrganisationId);
+            if (owner != null) {
+                dtoGroup.setOwnerOrganisationName(owner.getName());
+            }
+        }
+        return dtoGroup;
     }
 
     /**

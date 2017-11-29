@@ -1,9 +1,11 @@
 package com.sporticus.web.services;
 
+import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceOrganisation;
 import com.sporticus.interfaces.IServiceOrganisation.ServiceOrganisationExceptionNotAllowed;
 import com.sporticus.interfaces.IServiceOrganisation.ServiceOrganisationExceptionNotFound;
+import com.sporticus.services.dto.DtoUser;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
 import com.sporticus.web.controllers.ControllerAbstract;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,6 +51,30 @@ public class RestControllerOrganisationMember extends ControllerAbstract {
 		try {
 			LOGGER.debug(() -> String.format("Adding Organisation Member - orgId=[%d] userId=[%d]", orgId, userId));
 			return new ResponseEntity<>(serviceGroup.convertToDtoGroupMember(serviceOrganisation.addMember(getLoggedInUser(), orgId, userId)), HttpStatus.OK);
+		} catch (ServiceOrganisationExceptionNotFound ex) {
+			return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
+		} catch (ServiceOrganisationExceptionNotAllowed ex) {
+			return new ResponseEntity<>(ex, HttpStatus.FORBIDDEN);
+		}
+	}
+
+	/**
+	 * Function to add a member to an organisation
+	 * <p>
+	 * Only a system administrator and organisation owners can perform this operation
+	 * <p>
+	 * TODO: We may allow group admins to perform this operation in the future
+	 *
+	 * @param orgId - the organisation's identifier
+	 * @param user  - the user
+	 * @return ResponseEntity
+	 */
+	@RequestMapping(value = "/{id}/member", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> add(@PathVariable("id") Long orgId, @RequestBody DtoUser user) {
+		try {
+			LOGGER.debug(() -> String.format("Adding Organisation Member - orgId=[%d] email=[%s]", orgId, user.getEmail()));
+			IUser actor = getLoggedInUser();
+			return new ResponseEntity<>(serviceGroup.convertToDtoGroupMember(serviceOrganisation.addMember(getLoggedInUser(), orgId, user)), HttpStatus.OK);
 		} catch (ServiceOrganisationExceptionNotFound ex) {
 			return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
 		} catch (ServiceOrganisationExceptionNotAllowed ex) {

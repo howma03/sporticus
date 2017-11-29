@@ -33,6 +33,8 @@ public interface IServiceOrganisation {
 
 	IGroupMember addMember(IUser loggedInUser, Long orgId, Long userId);
 
+	IGroupMember addMember(IUser loggedInUser, Long orgId, IUser user);
+
 	/**
 	 * Membership functions
 	 */

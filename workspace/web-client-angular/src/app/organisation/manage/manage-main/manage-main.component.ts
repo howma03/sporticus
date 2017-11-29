@@ -32,7 +32,6 @@ export class ManageMainComponent implements OnInit {
     this.updateRouter();
   }
 
-
   ngOnInit() {
     this.organisationService.retrieveAll().subscribe(organisations => {
       this.organisations = organisations.data;

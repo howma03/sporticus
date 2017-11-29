@@ -223,6 +223,26 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
 				Permission.WRITE,
 				actor);
 	}
+	@Override
+	public IGroupMember addMember(IUser actor, Long orgId, IUser inUser) {
+		LOGGER.debug(() -> String.format("Adding Organisation Member - orgId=[%d] email=[%s]", orgId, inUser.getEmail()));
+		IOrganisation organisation = this.readOrganisation(actor, orgId);
+		IUser user = serviceUser.findUserByEmail(inUser.getEmail());
+		if (user != null) {
+			return this.addMember(actor, orgId, user.getId());
+		}
+		Optional<IGroup> foundGroup = findOrganisationMemberGroup(actor, orgId);
+		if (!foundGroup.isPresent()) {
+			String message = "Organisation Membership Group not found - orgId=" + orgId;
+			LOGGER.warn(() -> message);
+			throw new ServiceOrganisationExceptionNotFound(message);
+		}
+		return serviceGroup.createGroupMember(actor,
+				foundGroup.get(),
+				inUser,
+				Permission.WRITE,
+				actor);
+	}
 
 	@Override
 	public void removeMember(IUser actor, Long orgId, Long userId) {

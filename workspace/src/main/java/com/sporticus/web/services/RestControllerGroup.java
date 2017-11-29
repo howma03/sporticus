@@ -2,7 +2,6 @@ package com.sporticus.web.services;
 
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
-import com.sporticus.domain.interfaces.IOrganisation;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryOrganisation;
 import com.sporticus.interfaces.IServiceEvent.ServiceEventExceptionNotAllowed;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/group")
@@ -72,6 +69,7 @@ public class RestControllerGroup extends ControllerAbstract {
      */
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DtoList<DtoGroup>> readAll() {
+        IUser actor = getLoggedInUser();
         final DtoList<DtoGroup> list = new DtoList();
         this.serviceGroup.readGroups(getLoggedInUser(), gm -> {
             if(gm.getUserId().equals(getLoggedInUserId())) {
@@ -87,21 +85,8 @@ public class RestControllerGroup extends ControllerAbstract {
             return false;
         })
                 .stream()
-                .forEach(g -> list.add(convertToDtoGroup(g)));
+                .forEach(g -> list.add(serviceGroup.convertToDtoGroup(actor, g)));
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    private DtoGroup convertToDtoGroup(final IGroup g) {
-        final DtoGroup dtoGroup = new DtoGroup(g);
-        final List<IUser> users = serviceGroup.getMembershipUsersForGroup(getLoggedInUser(), g.getId(), null);
-        dtoGroup.setCountMembers(Long.valueOf(users.size()));
-        final Long ownerOrganisationId = g.getOwnerOrganisationId();
-        if (ownerOrganisationId != null) {
-            final IOrganisation owner = repositoryOrganisation.findOne(ownerOrganisationId);
-            if (owner != null) {
-                dtoGroup.setOwnerOrganisationName(owner.getName());
-            }
-        }
-        return dtoGroup;
-    }
 }

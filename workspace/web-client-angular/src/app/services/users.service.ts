@@ -9,7 +9,7 @@ export class UsersService extends BaseCrudService<User> {
     super(http);
   }
 
-  url = '/api/management/user';
+  url = '/api/admin/user';
 
 }
 

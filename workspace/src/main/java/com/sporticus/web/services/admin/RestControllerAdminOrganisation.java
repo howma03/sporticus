@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/management/organisation")
+@RequestMapping("/api/admin/organisation")
 public class RestControllerAdminOrganisation extends ControllerAbstract {
 
 	private final static Logger LOGGER = LogFactory.getLogger(RestControllerAdminOrganisation.class.getName());
@@ -39,11 +39,11 @@ public class RestControllerAdminOrganisation extends ControllerAbstract {
 
 	/**
 	 * Function to create an Organisation
-	 * <p>
+	 *
 	 * Only a system administrator cna create an Organisation
 	 *
 	 * @param organisation
-	 * @return ResponseEntity<DtoOrganisation>
+	 * @return ResponseEntity
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> create(@RequestBody final DtoOrganisation organisation) {
@@ -68,7 +68,7 @@ public class RestControllerAdminOrganisation extends ControllerAbstract {
 	 * Function to delete an organisation - only the owner of an Organisation can delete it
 	 *
 	 * @param id
-	 * @return ResponseEntity<?>
+	 * @return ResponseEntity
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteOne(@PathVariable("id") final long id) {
@@ -87,7 +87,7 @@ public class RestControllerAdminOrganisation extends ControllerAbstract {
 	 * Return an organisation given an identifier
 	 *
 	 * @param id
-	 * @return ResponseEntity<DtoOrganisation>
+	 * @return ResponseEntity
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> read(@PathVariable("id") final long id) {
@@ -106,7 +106,7 @@ public class RestControllerAdminOrganisation extends ControllerAbstract {
 	/**
 	 * Function to read all organisations
 	 *
-	 * @return ResponseEntity<DtoOrganisations>
+	 * @return ResponseEntity
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> readAll() {
@@ -123,14 +123,12 @@ public class RestControllerAdminOrganisation extends ControllerAbstract {
 		}
 	}
 
-	//------------------- Delete a Organisation --------------------------------------------------------
-
 	/**
 	 * Function to update an organisation - only owners (or administrators) should be allowed to update the organisation
 	 *
 	 * @param id
 	 * @param organisation
-	 * @return ResponseEntity<?>
+	 * @return ResponseEntity
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> update(@PathVariable("id") final long id, @RequestBody final DtoOrganisation organisation) {

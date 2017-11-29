@@ -25,7 +25,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/api/management/user")
+@RequestMapping("/api/admin/user")
 public class RestControllerAdminUser extends ControllerAbstract {
 
     private static final Logger LOGGER = LogFactory.getLogger(RestControllerAdminUser.class.getName());
