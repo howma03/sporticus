@@ -424,7 +424,7 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 			if (userPosition >= 2) {
 				IGroupMember gm = members.get(userPosition - 2);
 				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
-					g.addAbove(new DtoGroupMemberOrdered(gm).setPosition(+2));
+					g.addAbove(addDetails(actor, new DtoGroupMemberOrdered(gm).setPosition(+2)));
 				}
 			}
 			if (userPosition >= 1) {
@@ -434,13 +434,13 @@ public class ServiceLadderImplRepository implements IServiceLadder {
 				}
 			}
 
-			if (userPosition <= members.size() - 1) {
+			if (userPosition < members.size() - 1) {
 				IGroupMember gm = members.get(userPosition + 1);
 				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
 					g.addBelow(addDetails(actor, new DtoGroupMemberOrdered(gm).setPosition(-1)));
 				}
 			}
-			if (userPosition <= members.size() - 2) {
+			if (userPosition < members.size() - 2) {
 				IGroupMember gm = members.get(userPosition + 2);
 				if (events.findActiveChallengesBetween(userId, gm.getUserId()).size() == 0) {
 					g.addBelow(addDetails(actor, new DtoGroupMemberOrdered(gm).setPosition(-2)));

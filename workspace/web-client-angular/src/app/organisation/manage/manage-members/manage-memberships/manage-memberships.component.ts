@@ -9,7 +9,6 @@ import {MatDialog} from '@angular/material';
 })
 export class ManageMembershipsComponent implements OnInit {
 
-
   @Input()
   organisationId: number;
 

@@ -13,9 +13,8 @@ export class ManageMainComponent implements OnInit {
   constructor(private organisationService: OrganisationService, private router: Router, private route: ActivatedRoute) {
   }
 
-
   organisations: Organisation[] = [];
-  private organisationId: number = null;
+  organisationId: number = null;
 
   get organisation(): Organisation {
     return this.organisations.find(org => org.id === this.organisationId);
@@ -56,6 +55,9 @@ export class ManageMainComponent implements OnInit {
     });
   }
 
+  onOrganisationSelect(a) {
+    this.organisationId = a.value;
+  }
 
   updateRouter() {
     if (this.organisationId != null && this.subComponent != null) {

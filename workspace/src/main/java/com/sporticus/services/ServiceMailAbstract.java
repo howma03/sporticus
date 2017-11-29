@@ -26,20 +26,20 @@ public abstract class ServiceMailAbstract implements IServiceMail {
 
     private static final Logger LOGGER = LogFactory.getLogger(ServiceMailAbstract.class.getName());
 
-    static final String VAR_NAME_COMPANY = "company";
-    static final String VAR_NAME_PRODUCT = "product";
-    static final String VAR_NAME_USER = "user";
-    static final String VAR_NAME_WEB_ADDRESS = "webAddress";
-    static final String VAR_NAME_SUPPORT_EMAIL = "supportEmail";
-    static final String VAR_NAME_RESET_PASSWORD_ID = "id";
-	static final String COMPANY = "Sporticus Ltd";
-	static final String PRODUCT = "Sporticus";
-	static final String SENDER_EMAIL_ADDRESS = "sporticus.app@gmail.com";
-	static final String SUBJECT_SUCCESSFUL_REGISTRATION = "Registration successful";
-    static final String SUBJECT_PASSWORD_RESET = "Password Reset";
-    static final String TEMPLATE_LOCATION_FOR_EMAIL_VERIFICATION = "registration-verification.vm";
-    static final String TEMPLATE_LOCATION_FOR_EMAIL_VERIFICATION_INVITED = "registration-invitation.vm";
-    static final String TEMPLATE_LOCATION_FOR_PASSWORD_RESET = "registration-reset-password.vm";
+	private static final String VAR_NAME_COMPANY = "company";
+	private static final String VAR_NAME_PRODUCT = "product";
+	private static final String VAR_NAME_USER = "user";
+	private static final String VAR_NAME_WEB_ADDRESS = "webAddress";
+	private static final String VAR_NAME_SUPPORT_EMAIL = "supportEmail";
+	private static final String VAR_NAME_RESET_PASSWORD_ID = "id";
+	private static final String COMPANY = "Sporticus Ltd";
+	private static final String PRODUCT = "Sporticus";
+	private static final String SENDER_EMAIL_ADDRESS = "sporticus.app@gmail.com";
+	private static final String SUBJECT_SUCCESSFUL_REGISTRATION = "Registration successful";
+	private static final String SUBJECT_PASSWORD_RESET = "Password Reset";
+	private static final String TEMPLATE_LOCATION_FOR_EMAIL_VERIFICATION = "registration-verification.vm";
+	private static final String TEMPLATE_LOCATION_FOR_EMAIL_VERIFICATION_INVITED = "registration-invitation.vm";
+	private static final String TEMPLATE_LOCATION_FOR_PASSWORD_RESET = "registration-reset-password.vm";
 
     protected String emailAddressForSender = SENDER_EMAIL_ADDRESS;
 

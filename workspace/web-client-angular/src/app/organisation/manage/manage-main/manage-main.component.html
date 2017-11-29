@@ -1,5 +1,5 @@
 <mat-form-field>
-  <mat-select [value]="organisationId">
+  <mat-select [value]="organisationId" (change)="onOrganisationSelect($event)">
     <mat-option *ngFor="let organisation of organisations" [value]="organisation.id">
       {{organisation.name}}
     </mat-option>
@@ -22,12 +22,11 @@
     </div>
 
   </mat-tab>
-  <mat-tab label="Competitions">
+  <mat-tab label="Groups">
     <div class="inner">
-      <app-manage-competitions class="inner" [organisationId]="organisationId">
-      </app-manage-competitions>
+      <app-manage-group-main class="inner" [organisationId]="organisationId">
+      </app-manage-group-main>
     </div>
-
   </mat-tab>
 </mat-tab-group>
 
