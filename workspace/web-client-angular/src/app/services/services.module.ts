@@ -11,6 +11,7 @@ import {AgendaService} from "./agenda.service";
 import {PushService} from "./push.service";
 import {EventService} from './event.service';
 import {OrganisationGroupsService} from "./organisation-groups.service";
+import {GroupMemberService} from "./group-member.service";
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import {OrganisationGroupsService} from "./organisation-groups.service";
     ChallengeService,
     ErrorHandlingService,
     EventService,
+    GroupMemberService,
     UsersService,
     RegistrationService,
     OrganisationService,

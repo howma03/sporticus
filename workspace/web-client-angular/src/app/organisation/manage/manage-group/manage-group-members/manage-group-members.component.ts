@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {GroupMemberService} from '../../../../services/group-member.service';
 
 @Component({
   selector: 'app-manage-group-members',
@@ -10,10 +11,17 @@ export class ManageGroupMembersComponent implements OnInit {
   @Input()
   public group;
 
-  constructor() {
+  members = [];
+
+  constructor(
+    public groupMemberService: GroupMemberService
+  ) {
   }
 
   ngOnInit() {
+    this.groupMemberService.retrieveAll(this.group.id).subscribe(members => {
+      this.members = members.data;
+    });
   }
 
 }

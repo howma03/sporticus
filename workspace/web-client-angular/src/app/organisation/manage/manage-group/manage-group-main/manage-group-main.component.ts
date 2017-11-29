@@ -12,9 +12,9 @@ export class ManageGroupMainComponent implements OnInit {
   public organisationId: number;
 
   selectedGroup: Group = <Group> {
-    id: -1,
-    name: 'carrot'
+    id: -1
   };
+
 
   groups: Group[] = [];
   groupId: number = null;
