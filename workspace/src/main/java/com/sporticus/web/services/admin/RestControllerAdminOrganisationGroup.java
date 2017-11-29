@@ -45,9 +45,9 @@ public class RestControllerAdminOrganisationGroup extends ControllerAbstract {
 
 	/**
 	 * Function to create an group
-	 * <p>
+	 *
 	 * Only a system administrator or an organisation owner can create a group
-	 * <p>
+	 *
 	 * TODO: we will add monetery considerations later
 	 *
 	 * @param group
