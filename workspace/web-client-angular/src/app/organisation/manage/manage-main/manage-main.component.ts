@@ -1,4 +1,4 @@
-import {Component, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Organisation, OrganisationService} from '../../../services/organisation.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {isNumeric} from 'rxjs/util/isNumeric';
@@ -13,9 +13,8 @@ export class ManageMainComponent implements OnInit {
   constructor(private organisationService: OrganisationService, private router: Router, private route: ActivatedRoute) {
   }
 
-
   organisations: Organisation[] = [];
-  private organisationId: number = null;
+  organisationId: number = null;
 
   get organisation(): Organisation {
     return this.organisations.find(org => org.id === this.organisationId);

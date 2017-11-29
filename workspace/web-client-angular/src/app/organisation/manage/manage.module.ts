@@ -8,6 +8,7 @@ import {ManageMembersModule} from "./manage-members/manage-members.module";
 import {MangeRoutingModule} from "./manage-routing.module";
 import {ServicesModule} from "../../services/services.module";
 import {ReactiveFormsModule} from "@angular/forms";
+import {ManageGroupModule} from "./manage-group/manage-group.module";
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import {ReactiveFormsModule} from "@angular/forms";
     ServicesModule,
     ManageCompetitionsModule,
     ManageMembersModule,
+    ManageGroupModule,
     // Keep Routing Modules last
     MangeRoutingModule
   ],
