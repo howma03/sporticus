@@ -21,6 +21,9 @@ export class ChallengeFormComponent implements OnInit {
   @Input()
   ladder: Ladder;
 
+  @Input()
+  startDate: Date;
+
   @Output()
   done = new EventEmitter<LadderUser>();
 
@@ -52,15 +55,17 @@ export class ChallengeFormComponent implements OnInit {
 
       let newDate =  new Date();
       let newEndDate =  new Date();
-
+      if (this.startDate == null) {
+        this.startDate = new Date();
+      }
 
       this.rung.challenger = {
         id: null,
         name: 'New Challenge',
         created: newDate,
         status: 'PROPOSED',
-        dateTime: newDate,
-        dateTimeEnd: new Date(newDate.getTime() + (60*60*1000)),
+        dateTime: this.startDate,
+        dateTimeEnd: new Date(this.startDate.getTime() + (60*60*1000)),
         challengerId: this.authService.getCurrentUser().id,
         challengedId: this.rung.userId,
         scoreChallenger: null,

@@ -164,6 +164,7 @@ export class CalendarWrapperComponent implements OnInit {
     let dialogRef = this.dialog.open(ChallengeDialogComponent, {
       disableClose: true,
       data: {
+        startDate: new Date(this.dateSelected),
         ladder: ladder,
         rung: ladderUser
       }

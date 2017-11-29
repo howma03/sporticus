@@ -11,11 +11,13 @@ export class ChallengeDialogComponent implements OnInit {
 
   private rung: LadderUser;
   private ladder: Ladder;
+  private startDate: Date;
 
   constructor(public dialogRef: MatDialogRef<ChallengeDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.rung = this.data.rung;
     this.ladder = this.data.ladder;
+    this.startDate = this.data.startDate;
   }
 
   ngOnInit() {
