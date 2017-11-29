@@ -15,9 +15,11 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MenuItemComponent} from './menu-item/menu-item.component';
 import { UnavailableDialogComponent } from './unavailable-dialog/unavailable-dialog.component';
 import { UnavailableFormComponent } from './unavailable-form/unavailable-form.component'
+import {ChallengeModule} from '../challenge/challenge.module';
 
 @NgModule({
   imports: [
+    ChallengeModule,
     CommonModule,
     FullCalendarModule,
     MatFormFieldModule,

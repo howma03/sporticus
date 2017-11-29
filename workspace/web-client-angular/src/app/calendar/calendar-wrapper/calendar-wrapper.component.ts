@@ -9,7 +9,8 @@ import {NavItem} from '../nav-item';
 import {UnavailableDialogComponent} from '../unavailable-dialog/unavailable-dialog.component';
 import {ChallengeService, LadderNode} from '../../services/challenge.service';
 import {User} from '../../services/users.service';
-import {LadderUser} from '../../services/ladder.service';
+import {Ladder, LadderUser} from '../../services/ladder.service';
+import {ChallengeDialogComponent} from '../../challenge/challenge-dialog/challenge-dialog.component';
 
 @Component({
   selector: 'app-calendar-wrapper',
@@ -39,10 +40,15 @@ export class CalendarWrapperComponent implements OnInit {
    */
   menuTop = "";
 
+  /**
+   * The menu items to build for clicking on a day. This allows creation of events for busy times
+   * and for ladder challenges.
+   */
+  navItems: NavItem[] = null;
+
   @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
 
   @ViewChildren(MatMenuTrigger) menuTriggers: QueryList<MatMenuTrigger>;
-
 
   @ViewChild('dayMenuTrigger') dayMenu: MatMenuTrigger;
 
@@ -54,6 +60,10 @@ export class CalendarWrapperComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
+  /**
+   * On startup we get all events to populate the calendar and we build the menu for
+   * creating calendar events.
+   */
   ngOnInit() {
     this.eventService.retrieveAll()
       .map(list=>list.data)
@@ -83,8 +93,8 @@ export class CalendarWrapperComponent implements OnInit {
       .subscribe((ladders : LadderNode[]) => {
         let menuPart = ladders.map(ladder => {
 
-          let childrenAbove = ladder.above.map(user => this.userToMenu(user));
-          let childrenBelow = ladder.below.map(user => this.userToMenu(user));
+          let childrenAbove = ladder.above.map(user => this.userToMenu(user, ladder));
+          let childrenBelow = ladder.below.map(user => this.userToMenu(user, ladder));
 
           return {
             displayName: ladder.name,
@@ -113,12 +123,13 @@ export class CalendarWrapperComponent implements OnInit {
    * @param {User} user
    * @returns {{displayName: string; iconName: string; route: any}}
    */
-  private userToMenu(user : LadderUser) {
+  private userToMenu(user : LadderUser, ladder : Ladder) {
     {
       let position = (user.position > 0) ? "above" : "below";
       return {
         displayName: `${user.userName} (${Math.abs(user.position)} ${position})`,
         iconName: 'person',
+        command: () => this.createChallenge(user, ladder),
         route: null
       }
     }
@@ -138,7 +149,7 @@ export class CalendarWrapperComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(challenge => {
-      //this.reload();
+      this.reload();
     });
   }
 
@@ -167,45 +178,51 @@ export class CalendarWrapperComponent implements OnInit {
 
   eventClick(model: any) {
     alert('eventClick');
-    // model = {
-    //   event: {
-    //     id: model.event.id,
-    //     start: model.event.start,
-    //     end: model.event.end,
-    //     title: model.event.title,
-    //     allDay: model.event.allDay
-    //     // other params
-    //   },
-    //   duration: {}
-    // }
-    // this.displayEvent = model;
   }
   updateEvent(model: any) {
     alert('updateEvent');
-    // model = {
-    //   event: {
-    //     id: model.event.id,
-    //     start: model.event.start,
-    //     end: model.event.end,
-    //     title: model.event.title
-    //     // other params
-    //   },
-    //   duration: {
-    //     _data: model.duration._data
-    //   }
-    // }
-    // this.displayEvent = model;
   }
 
-  navItems: NavItem[] = [
-    {
-      displayName: 'Register Unavailable Times',
-      iconName: 'group',
-      command: () => this.registerUnavailable()
-    },
-    {
-      displayName: 'Schedule Match',
-      iconName: 'games'
-    }
-  ];
+
+  /**
+   * Create a new challenge against another player in the ladder
+   * @param {LadderUser} ladderUser the player being challenged
+   */
+  createChallenge(ladderUser : LadderUser, ladder : Ladder) {
+    let dialogRef = this.dialog.open(ChallengeDialogComponent, {
+      disableClose: true,
+      data: {
+        ladder: ladder,
+        rung: ladderUser
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(challenge => {
+     this.reload();
+    });
+
+  }
+
+  /**
+   * Currently we reload the calendar after every major interaction.
+   * Not efficient but it works for now.
+   */
+  reload() {
+    debugger;
+    this.eventService.retrieveAll()
+      .map(list=>list.data)
+      .subscribe((events: Event[])=>{
+        let calendarEvents = events.map(event => {
+          return {
+            title: event.description,
+            start: event.dateTime
+          }
+        });
+        // TODO: need to clarify why this does not work
+        //     this.ucCalendar.fullCalendar('updateEvents', calendarEvents);
+        this.ucCalendar.fullCalendar('removeEvents');
+        this.ucCalendar.fullCalendar('addEventSource', calendarEvents);
+      });
+  }
+
 }
