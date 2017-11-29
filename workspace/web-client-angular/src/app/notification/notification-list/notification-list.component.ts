@@ -36,9 +36,15 @@ export class NotificationListComponent implements OnInit {
       });
   }
 
-  markRead() {}
+  markRead(notification) {
+    notification.status = 'READ';
+    this.notificationService.updateOne(notification.id, notification);
+  }
 
-  markUnread() {}
+  markUnread(notification) {
+    notification.status = 'UNREAD';
+    this.notificationService.updateOne(notification.id, notification);
+  }
 
 
   getTooltip(item ) {

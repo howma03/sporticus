@@ -57,7 +57,7 @@ export class MainComponent implements OnInit {
     {
       icon: 'hpe-home',
       title: 'Home',
-      select: () => this.router.navigate(['main/home'])
+      select: () => this.goHome()
     },
     {
       title: 'Track Competitions',
@@ -139,37 +139,19 @@ export class MainComponent implements OnInit {
    * @param {PageHeaderIconMenu} menu The parent menu to attach to
    */
   createNotificationsMenu(menu: PageHeaderIconMenu) {
-
-
+    let newNotificationCount = 0;
     let broadcastCount = 0;
     let ladderCount = 0;
 
-    if (this.notifications.length === 0) {
-      menu.dropdown = [
-        {
-          icon: 'hpe-chat',
-          title: 'Loading...',
-          divider: true,
-          select: () => {
-            this.gotoNotification();
-          }
-        }];
-      return;
-    }
-
     let i;
-
     const menuArray = [];
 
-    if (this.notifications.length === 0) {
-      menu.dropdown = [
-        {
-          icon: 'hpe-chat',
-          title: 'You have no new notifications',
-        }];
-    }
-
     for (i = 0; i < this.notifications.length; i++) {
+      if (this.notifications[i].status === 'READ') {
+        break;
+      }
+      newNotificationCount++;
+
      if (this.notifications[i].title === 'Broadcast') {
        broadcastCount++;
      }
@@ -178,27 +160,47 @@ export class MainComponent implements OnInit {
       }
     }
 
-    if (broadcastCount > 0) {
-      menuArray.push({
-        icon: 'fa fa-bullhorn',
-        title: 'You have ' + broadcastCount + ' broadcasts',
-        select: () => {
+    if (newNotificationCount === 0) {
+      menu.dropdown = [
+        {
+          icon: 'hpe-chat',
+          title: 'You have no new notifications',
+          select: () => {
+            this.gotoNotification();
+          }
+        }];
+        return;
+    }
+
+    menuArray.push({
+      icon: 'hpe-icon hpe-notification',
+      title: 'Notification centre',
+      select: () => {
         this.gotoNotification();
       }
-      });
-    }
+    });
 
     if (ladderCount > 0) {
       menuArray.push({
         icon: 'hpe-icon hpe-target',
-        title: 'You have received ' + ladderCount + ' ladder challenge',
+        title: ladderCount + (ladderCount === 1 ? ' new ladder challenge' : ' new ladder challenges'),
+        select: () => {
+          this.router.navigate(['main/track-competitions']);
+        }
+      });
+    }
+
+    if (broadcastCount > 0) {
+      menuArray.push({
+        icon: 'fa fa-bullhorn',
+        title: broadcastCount + (broadcastCount === 1 ? ' unread broadcast' : ' unread broadcasts'),
         select: () => {
           this.gotoNotification();
         }
       });
     }
 
-      menu.dropdown = menuArray;
+    menu.dropdown = menuArray;
   }
 
   getUserName(): string {
