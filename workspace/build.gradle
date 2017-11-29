@@ -102,6 +102,7 @@ dependencies {
 
     compile project (':util')
     compile project (':domain')
+    //compile project (':web-client-angular')
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'junit:junit:4.12'
@@ -120,11 +121,16 @@ task versionInfo {
     versionFile.write(builder.toString(), 'UTF-8')
 }
 
-task copyVersionFile(type: Copy, dependsOn: versionInfo) {
-    from 'version.json'
-    into 'src/main/webapp/WEB-INF'
+war {
+	webInf {
+		from 'version.json'
+		from (project(':web-client-angular').file('dist')) {
+			into 'app'
+		}
+	}
+
 }
-war.dependsOn copyVersionFile
+war.dependsOn(':web-client-angular:build')
 
 subprojects {
 	if (it.name != 'web-client-angular') {
