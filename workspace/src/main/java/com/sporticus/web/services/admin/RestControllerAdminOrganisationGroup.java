@@ -44,7 +44,7 @@ public class RestControllerAdminOrganisationGroup extends ControllerAbstract {
 	}
 
 	/**
-	 * Function to create an group
+	 * Function to create an organisation group
 	 *
 	 * Only a system administrator or an organisation owner can create a group
 	 *
@@ -72,7 +72,7 @@ public class RestControllerAdminOrganisationGroup extends ControllerAbstract {
 	}
 
 	/**
-	 * Function to delete an organisation - only the owner of an Organisation (or system administrator) can delete it
+	 * Function to delete an organisation's group - only the owner of an Organisation (or system administrator) can delete it
 	 *
 	 * @param orgId
 	 * @param groupId
@@ -106,7 +106,7 @@ public class RestControllerAdminOrganisationGroup extends ControllerAbstract {
 	}
 
 	/**
-	 * Return an organisation given an identifier
+	 * Return an organisation's group given identifiers
 	 *
 	 * @param orgId
 	 * @param groupId

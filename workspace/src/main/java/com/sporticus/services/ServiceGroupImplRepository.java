@@ -2,16 +2,20 @@ package com.sporticus.services;
 
 import com.sporticus.domain.entities.Group;
 import com.sporticus.domain.entities.GroupMember;
+import com.sporticus.domain.entities.Relationship;
+import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.domain.interfaces.IGroupMember.Permission;
 import com.sporticus.domain.interfaces.IGroupMember.Status;
 import com.sporticus.domain.interfaces.IOrganisation;
+import com.sporticus.domain.interfaces.IRelationship;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryGroup;
 import com.sporticus.domain.repositories.IRepositoryGroupMember;
 import com.sporticus.domain.repositories.IRepositoryOrganisation;
 import com.sporticus.domain.repositories.IRepositoryUser;
+import com.sporticus.interfaces.IServiceEvent;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceMail;
 import com.sporticus.interfaces.IServiceOrganisation;
@@ -19,17 +23,20 @@ import com.sporticus.interfaces.IServiceOrganisation.ServiceOrganisationExceptio
 import com.sporticus.interfaces.IServiceOrganisation.ServiceOrganisationExceptionNotFound;
 import com.sporticus.interfaces.IServicePasswordGenerator;
 import com.sporticus.interfaces.IServiceRegistration;
+import com.sporticus.interfaces.IServiceRelationship;
 import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.services.converters.Converter;
 import com.sporticus.services.dto.DtoGroup;
 import com.sporticus.services.dto.DtoGroupMember;
 import com.sporticus.services.dto.DtoList;
+import com.sporticus.types.RelationshipType;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
 import org.apache.commons.collections.IteratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,6 +64,12 @@ public class ServiceGroupImplRepository implements IServiceGroup {
 
     @Autowired
     private IServiceUser serviceUser;
+
+    @Autowired
+    private IServiceRelationship serviceRelationship;
+
+    @Autowired
+    private IServiceEvent serviceEvent;
 
     @Autowired
     private IServiceOrganisation serviceOrganisation;
@@ -140,6 +153,49 @@ public class ServiceGroupImplRepository implements IServiceGroup {
         }
     }
 
+    @Transactional
+    @Override
+    public IEvent createGroupEvent(IUser actor, long groupId, IEvent event) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
+        final IGroup group = this.repositoryGroup.findOne(groupId);
+        if (group == null) {
+            String message = "Failed to find group - id=" + groupId;
+            LOGGER.warn(() -> message);
+            throw new ServiceGroupExceptionNotFound(message);
+        }
+
+        validate(actor, group);
+
+        event = serviceEvent.create(actor, event);
+        IRelationship relationship = new Relationship()
+                .setBiDirectional(true)
+                .setSourceType("Group")
+                .setSourceId(groupId)
+                .setDestinationType("Event")
+                .setDestinationId(event.getId())
+                .setType(RelationshipType.EVENT.toString());
+
+        serviceRelationship.create(relationship);
+        return event;
+    }
+
+    @Override
+    public List<IEvent> readGroupEvents(IUser actor, long groupId) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
+        final IGroup group = this.repositoryGroup.findOne(groupId);
+        if (group == null) {
+            String message = "Failed to find group - id=" + groupId;
+            LOGGER.warn(() -> message);
+            throw new ServiceGroupExceptionNotFound(message);
+        }
+
+        List<IRelationship> list = serviceRelationship.findBySourceTypeAndSourceIdAndType("Group", group.getId(), "Event");
+
+        return list.stream().map(r -> {
+            return serviceEvent.readEvent(actor, r.getDestinationId());
+        }).collect(Collectors.toList());
+    }
+
     @Override
     public List<IGroup> readAllGroups(final IUser actor) throws ServiceGroupExceptionNotAllowed {
         if (!actor.isAdmin()) {
@@ -172,7 +228,6 @@ public class ServiceGroupImplRepository implements IServiceGroup {
         try {
             final IOrganisation foundOrganisation = this.serviceOrganisation.readOrganisation(actor, organisation.getId());
             return this.repositoryGroup.findByOwnerOrganisationId(organisation.getId());
-
         } catch (ServiceOrganisationExceptionNotAllowed ex) {
             LOGGER.warn(() -> "Operation limited to organisation owner - id=" + organisation.getId());
             throw new ServiceGroupExceptionNotAllowed(ex.getMessage(), ex);
@@ -626,6 +681,4 @@ public class ServiceGroupImplRepository implements IServiceGroup {
 		}
 		repositoryGroupMember.delete(groupMemberId);
 	}
-
-
 }

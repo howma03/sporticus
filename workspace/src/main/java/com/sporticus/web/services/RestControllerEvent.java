@@ -38,7 +38,7 @@ public class RestControllerEvent extends ControllerAbstract {
      * Function to create an Event
      *
      * @param event
-     * @return ResponseEntity<DtoEvent>
+     * @return ResponseEntity
      */
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody final DtoEvent event) {
@@ -50,7 +50,7 @@ public class RestControllerEvent extends ControllerAbstract {
      * Function to delete an event
      *
      * @param id
-     * @return ResponseEntity<?>
+     * @return ResponseEntity
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable("id") final long id) {
@@ -70,7 +70,7 @@ public class RestControllerEvent extends ControllerAbstract {
      * Return an event given an identifier
      *
      * @param id
-     * @return ResponseEntity<DtoEvent>
+     * @return ResponseEntity
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> read(@PathVariable("id") final long id) {
@@ -90,7 +90,7 @@ public class RestControllerEvent extends ControllerAbstract {
     /**
      * Function to read all Future events for logged-in user
      *
-     * @return ResponseEntity<DtoEvent>
+     * @return ResponseEntity
      */
     @RequestMapping(value = "agenda", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> readAgenda() {
@@ -110,7 +110,7 @@ public class RestControllerEvent extends ControllerAbstract {
 
     /**
      * Function returns all events for the logged-in user
-     * @return ResponseEntity<?>
+     * @return ResponseEntity
      */
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> readAll() {
@@ -124,7 +124,7 @@ public class RestControllerEvent extends ControllerAbstract {
      * Function to update an Event
      * @param id
      * @param event
-     * @return ResponseEntity<?>
+     * @return ResponseEntity
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> update(@PathVariable("id") final long id,

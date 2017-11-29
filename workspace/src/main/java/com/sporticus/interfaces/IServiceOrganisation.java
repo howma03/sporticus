@@ -31,18 +31,20 @@ public interface IServiceOrganisation {
 	IOrganisation updateOrganisation(IUser actor, IOrganisation organisation) throws ServiceOrganisationExceptionNotAllowed,
 			ServiceOrganisationExceptionNotFound;
 
-	IGroupMember addMember(IUser loggedInUser, Long orgId, Long userId);
-
-	IGroupMember addMember(IUser loggedInUser, Long orgId, IUser user);
-
 	/**
 	 * Membership functions
 	 */
 
+	IGroupMember addMember(IUser actor, Long orgId, Long userId) throws ServiceOrganisationExceptionNotAllowed,
+			ServiceOrganisationExceptionNotFound;
+
+	IGroupMember addMember(IUser actor, Long orgId, IUser user) throws ServiceOrganisationExceptionNotAllowed,
+			ServiceOrganisationExceptionNotFound;
+
 	List<IGroupMember> readMembers(IUser actor, long organisationId) throws ServiceOrganisationExceptionNotAllowed,
 			ServiceOrganisationExceptionNotFound;
 
-	void removeMember(IUser loggedInUser, Long orgId, Long userId);
+	void removeMember(IUser actor, Long orgId, Long userId);
 
 
 	final class ServiceOrganisationExceptionNotAllowed extends RuntimeException {

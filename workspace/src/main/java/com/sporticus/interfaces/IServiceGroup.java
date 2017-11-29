@@ -1,6 +1,7 @@
 package com.sporticus.interfaces;
 
 import com.sporticus.domain.entities.GroupMember;
+import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IGroup;
 import com.sporticus.domain.interfaces.IGroupMember;
 import com.sporticus.domain.interfaces.IGroupMember.Permission;
@@ -36,6 +37,9 @@ public interface IServiceGroup {
 	 */
 
 	IGroup createGroup(IUser actor, IOrganisation organisation, IGroup group) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
+
+	IEvent createGroupEvent(IUser actor, long groupId, IEvent event) throws ServiceGroupExceptionNotAllowed,
 			ServiceGroupExceptionNotFound;
 
 	void deleteGroup(IUser actor, Long id) throws ServiceGroupExceptionNotAllowed,
@@ -101,6 +105,9 @@ public interface IServiceGroup {
 	List<IUser> readGroupAdmins(IUser actor, long groupId) throws ServiceGroupExceptionNotAllowed;
 
 	List<IUser> readGroupAdminsActive(IUser actor, long groupId) throws ServiceGroupExceptionNotAllowed;
+
+	List<IEvent> readGroupEvents(IUser actor, long groupId) throws ServiceGroupExceptionNotAllowed,
+			ServiceGroupExceptionNotFound;
 
 	List<IGroup> readGroups(IUser actor, IOrganisation organisation) throws ServiceGroupExceptionNotAllowed,
 			ServiceGroupExceptionNotFound;

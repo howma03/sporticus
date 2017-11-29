@@ -2,7 +2,8 @@ package com.sporticus.types;
 
 public enum RelationshipType {
 
-	CHALLENGE("Challenge");
+	CHALLENGE("Challenge"),
+	EVENT("Event");
 
 	private String displayName = "";
 	RelationshipType(String displayName){

@@ -125,7 +125,8 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
 	 * @return IGroupMember
 	 */
 	@Override
-	public IGroupMember addMember(IUser actor, Long orgId, Long userId) {
+	public IGroupMember addMember(IUser actor, Long orgId, Long userId) throws ServiceOrganisationExceptionNotAllowed,
+			ServiceOrganisationExceptionNotFound {
 		LOGGER.debug(() -> String.format("Adding Organisation Member - orgId=[%d] userId=[%d]", orgId, userId));
 		IOrganisation organisation = this.readOrganisation(actor, orgId);
 		IUser user = serviceUser.findOne(userId);
