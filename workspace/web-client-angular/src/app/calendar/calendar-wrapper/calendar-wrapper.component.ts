@@ -87,35 +87,7 @@ export class CalendarWrapperComponent implements OnInit {
         };
       });
 
-
-    // Get the available challenges in order to generate a challenge menu
-    this.challengeService.getAvailableChallenges()
-      .subscribe((ladders : LadderNode[]) => {
-        let menuPart = ladders.map(ladder => {
-
-          let childrenAbove = ladder.above.map(user => this.userToMenu(user, ladder));
-          let childrenBelow = ladder.below.map(user => this.userToMenu(user, ladder));
-
-          return {
-            displayName: ladder.name,
-            iconName: 'group',
-            children: childrenAbove.concat(childrenBelow)
-          };
-        });
-
-        this.navItems = [
-          {
-            displayName: 'Register Unavailable Times',
-            iconName: 'group',
-            command: () => this.registerUnavailable()
-          },
-          {
-            displayName: 'Schedule Match',
-            iconName: 'games',
-            children: menuPart
-          }
-        ];
-      });
+    this.buildMenu();
   }
 
   /**
@@ -207,8 +179,7 @@ export class CalendarWrapperComponent implements OnInit {
    * Currently we reload the calendar after every major interaction.
    * Not efficient but it works for now.
    */
-  reload() {
-    debugger;
+  private reload() {
     this.eventService.retrieveAll()
       .map(list=>list.data)
       .subscribe((events: Event[])=>{
@@ -223,6 +194,38 @@ export class CalendarWrapperComponent implements OnInit {
         this.ucCalendar.fullCalendar('removeEvents');
         this.ucCalendar.fullCalendar('addEventSource', calendarEvents);
       });
+    this.buildMenu();
   }
 
+  private buildMenu() {
+    // Get the available challenges in order to generate a challenge menu
+    this.challengeService.getAvailableChallenges()
+      .subscribe((ladders : LadderNode[]) => {
+        let menuPart = ladders.map(ladder => {
+
+          let childrenAbove = ladder.above.map(user => this.userToMenu(user, ladder));
+          let childrenBelow = ladder.below.map(user => this.userToMenu(user, ladder));
+
+          return {
+            displayName: ladder.name,
+            iconName: 'group',
+            children: childrenAbove.concat(childrenBelow)
+          };
+        });
+
+        this.navItems = [
+          {
+            displayName: 'Register Unavailable Times',
+            iconName: 'group',
+            command: () => this.registerUnavailable()
+          },
+          {
+            displayName: 'Schedule Match',
+            iconName: 'games',
+            children: menuPart
+          }
+        ];
+      });
+
+  }
 }
