@@ -6,16 +6,21 @@ import {ManageGroupDetailsComponent} from './manage-group-details/manage-group-d
 import {ManageGroupEventsComponent} from './manage-group-events/manage-group-events.component';
 import {MatSelectModule, MatTabsModule} from '@angular/material';
 import {ServicesModule} from '../../../services/services.module';
+import { CreateGroupEventComponent } from './create-group-event/create-group-event.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [
     CommonModule,
     MatTabsModule,
     MatSelectModule,
+    FormsModule,
     ServicesModule
   ],
-  declarations: [ManageGroupMainComponent, ManageGroupMembersComponent, ManageGroupDetailsComponent, ManageGroupEventsComponent],
-  exports: [ManageGroupMainComponent]
+  declarations: [ManageGroupMainComponent, ManageGroupMembersComponent, ManageGroupDetailsComponent, ManageGroupEventsComponent, CreateGroupEventComponent],
+  exports: [
+    ManageGroupMainComponent
+  ]
 })
 export class ManageGroupModule {
 }

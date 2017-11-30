@@ -1,5 +1,25 @@
-<p>
-  manage-group-events works!
-</p>
-
 Events count {{eventsCount}}
+
+
+<div>
+  <br/><br/>
+  <button type="button" class="btn button-primary" (click)="openModal()">
+    <span class="hpe-icon hpe-notification" aria-hidden="true"></span>&nbsp;Create event
+  </button>
+</div>
+
+<table class="table table-hover">
+  <thead>
+  <tr class="table-header-dark">
+    <th>Id</th>
+    <th>Name</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let event of events" uxHoverActionContainer>
+    <td>{{ event.id }}</td>
+    <td>{{ event.name }}</td>
+  </tr>
+  </tbody>
+</table>

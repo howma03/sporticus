@@ -19,7 +19,7 @@ export class ManageGroupMembersComponent implements OnInit {
 
   private _group;
 
-  members = [];
+  members = {};
 
   groupMembersCount = 0;
 
@@ -33,8 +33,7 @@ export class ManageGroupMembersComponent implements OnInit {
 
   getGroupMembers() {
     this.groupMemberService.retrieveAll(this._group.id).subscribe(members => {
-      this.members = members.data;
-      this.groupMembersCount = this.members.length;
+      this.members = members;
     });
   }
 

@@ -1,0 +1,21 @@
+<p>
+  create-group-event works!
+</p>
+
+
+<form #userForm="ngForm" (ngSubmit)="makeUserChange()">
+
+  <div class="form-group">
+    <label class="form-label case-label">Name</label>
+    <input
+      type="text" placeholder="Enter Name" class="form-control" name="name"
+      [(ngModel)]="details.name"/>
+  </div>
+
+  <div class="marquee-footer">
+    <button type="button" style="width: 80px" class="btn button-primary m-r-xs" type="submit">{{submitText}}
+    </button>
+    <button type="button" style="width: 80px;" class="btn button-secondary" (click)="cancel()">Cancel</button>
+  </div>
+
+</form>

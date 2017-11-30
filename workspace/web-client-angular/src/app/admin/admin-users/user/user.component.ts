@@ -44,9 +44,9 @@ export class UserComponent implements OnInit {
     };
 
     if (this.editMode === true) {
-      this.editUser(user)
+      this.editUser(user);
     } else {
-      this.addUser(user)
+      this.addUser(user);
     }
   }
 
