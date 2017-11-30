@@ -20,6 +20,10 @@ export class ManageMembershipsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadUsers();
+  }
+
+  loadUsers() {
     this.membersService.retrieveAll(this.organisationId).subscribe(userList => this.users = userList.data);
   }
 
@@ -33,7 +37,7 @@ export class ManageMembershipsComponent implements OnInit {
 
   openDeleteDialog(item: User) {
     const title = 'Confirm Removal';
-    const description = `Are you sure you want to delete the user - '${item.firstName} ${item.lastName}`;
+    const description = `Are you sure you want to remove the user from your organisation? - ${item.firstName} ${item.lastName}`;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
@@ -45,12 +49,12 @@ export class ManageMembershipsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
-        this.deleteUser(item.id);
+        this.removeUser(item.id);
       }
     });
   }
 
-  deleteUser(userId: number) {
-    this.membersService.removeOne(this.organisationId, userId);
+  removeUser(userId: number) {
+    this.membersService.removeOne(this.organisationId, userId).subscribe(() => this.loadUsers());
   }
 }

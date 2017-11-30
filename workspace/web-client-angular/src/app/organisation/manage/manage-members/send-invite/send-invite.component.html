@@ -30,5 +30,5 @@
     <mat-error *ngIf="emailInput.hasError('alreadyIn')">You have already entered that email address</mat-error>
   </mat-form-field>
   <br/>
-  <button mat-raised-button type="submit" [disabled]="users.length === 0" (click)="send()">Send</button>
+  <button mat-raised-button type="submit" [disabled]="users.length === 0">Send</button>
 </form>
