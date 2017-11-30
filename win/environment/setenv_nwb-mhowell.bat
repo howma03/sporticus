@@ -21,4 +21,7 @@ set SENCHA_HOME=C:\tools\Sencha\Cmd\6.5.0.180
 set SENCHA_CMD=%SENCHA_HOME%
 set SENCHA_CMD_3_0_0=%SENCHA_HOME%
 
+set NPM_HOME=C:\Program Files\nodejs"
+
+
 :end

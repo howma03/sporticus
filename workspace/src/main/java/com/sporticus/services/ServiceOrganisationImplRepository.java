@@ -288,6 +288,4 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
 
 	    return repositoryGroup.save((Group) group);
     }
-
-
 }
