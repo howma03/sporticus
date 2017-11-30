@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/admin/group")
 public class RestControllerAdminGroupMember extends ControllerAbstract {
@@ -41,7 +43,7 @@ public class RestControllerAdminGroupMember extends ControllerAbstract {
 		try {
 			IUser actor = getLoggedInUser();
 			return new ResponseEntity<>(serviceGroup.getGroupMembershipsForGroup(actor, groupId)
-					.stream().map(gm -> serviceGroup.convertToDtoGroupMember(gm)), HttpStatus.OK);
+					.stream().map(gm -> serviceGroup.convertToDtoGroupMember(gm)).collect(Collectors.toList()), HttpStatus.OK);
 		} catch (ServiceGroupExceptionNotFound ex) {
 			return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
 		} catch (ServiceGroupExceptionNotAllowed ex) {
