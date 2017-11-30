@@ -4,7 +4,6 @@ import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.interfaces.IServiceGroup;
 import com.sporticus.interfaces.IServiceGroup.ServiceGroupExceptionNotAllowed;
 import com.sporticus.interfaces.IServiceGroup.ServiceGroupExceptionNotFound;
-import com.sporticus.services.dto.DtoGroup;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
 import com.sporticus.web.controllers.ControllerAbstract;
@@ -41,7 +40,8 @@ public class RestControllerAdminGroupMember extends ControllerAbstract {
 		LOGGER.debug(() -> String.format("Reading Group Members - groupId=[%d]", groupId));
 		try {
 			IUser actor = getLoggedInUser();
-			return new ResponseEntity<>(new DtoGroup(serviceGroup.readGroup(actor, groupId)), HttpStatus.OK);
+			return new ResponseEntity<>(serviceGroup.getGroupMembershipsForGroup(actor, groupId)
+					.stream().map(gm -> serviceGroup.convertToDtoGroupMember(gm)), HttpStatus.OK);
 		} catch (ServiceGroupExceptionNotFound ex) {
 			return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
 		} catch (ServiceGroupExceptionNotAllowed ex) {
