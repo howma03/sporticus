@@ -285,7 +285,8 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
         group.setType(GROUP_TYPE_MEMBERS);
         group.setDescription(String.format("Organisation [%s] - Member's Group",
                 organisation.getName()));
-        return group;
+
+	    return repositoryGroup.save((Group) group);
     }
 
 
