@@ -33,7 +33,8 @@ import {GroupEventService} from "./group-event.service";
     PushService,
     LadderService,
     ProfileService,
-    AgendaService
+    AgendaService,
+    GroupEventService
   ],
   declarations: [
   ]

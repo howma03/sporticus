@@ -88,6 +88,22 @@ public class ServiceRelationshipImplRepository implements IServiceRelationship {
 	}
 
 	@Override
+	public List<IRelationship> findBySourceTypeAndSourceIdAndDestinationTypeAndDestinationIdAndType(String sourceType, Long sourceId, String destinationType, Long destinationId, String relationshipType) {
+		return repositoryRelationship.findBySourceTypeAndSourceIdAndDestinationTypeAndDestinationIdAndType(sourceType, sourceId, destinationType, destinationId, relationshipType);
+	}
+
+	@Override
+	public IRelationship update(IRelationship relationship) throws ServiceRelationshipExceptionNotFound {
+
+		IRelationship found = repositoryRelationship.findOne(relationship.getId());
+		if (found == null) {
+			throw new ServiceRelationshipExceptionNotFound("Cannot find relationship id=" + relationship.getId());
+		}
+		IRelationship.COPY(relationship, found);
+		return repositoryRelationship.save((Relationship) found);
+	}
+
+	@Override
 	public void delete(long relationshipId) {
 		// TODO: provide the actor so we can verify they are allowed to delete the relationship
 		repositoryRelationship.delete(relationshipId);

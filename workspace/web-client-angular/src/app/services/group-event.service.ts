@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
 import {List} from "./list";
+import {Event} from "./event.service";
 
 @Injectable()
 export class GroupEventService {
@@ -29,7 +30,3 @@ export class GroupEventService {
 
 }
 
-export interface Event {
-  id: number;
-  name?: string;
-}

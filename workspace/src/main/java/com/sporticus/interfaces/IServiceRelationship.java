@@ -6,6 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IServiceRelationship {
+	List<IRelationship> findBySourceTypeAndSourceIdAndDestinationTypeAndDestinationIdAndType(String sourceType, Long sourceId, String destinationType, Long destinationId, String relatationshipType);
+
+	/**
+	 * Function to update a relationship
+	 *
+	 * @param relationship
+	 * @return
+	 */
+	IRelationship update(IRelationship relationship);
 
 	/**
 	 * Finds the relationships to a given list
@@ -17,25 +26,6 @@ public interface IServiceRelationship {
 	 */
 	List<Relationships> findRelationships(String subjectType, Long subjectId) throws ServiceRelationshipExceptionNotFound;
 
-	final class ServiceRelationshipExceptionNotAllowed extends RuntimeException {
-		public ServiceRelationshipExceptionNotAllowed(String message) {
-			super(message);
-		}
-
-		public ServiceRelationshipExceptionNotAllowed(final String message, final Exception ex) {
-			super(message, ex);
-		}
-	}
-
-	final class ServiceRelationshipExceptionNotFound extends RuntimeException {
-		public ServiceRelationshipExceptionNotFound(String message) {
-			super(message);
-		}
-
-		public ServiceRelationshipExceptionNotFound(final String message, final Exception ex) {
-			super(message, ex);
-		}
-	}
 
 	/**
 	 * Function to create a relationship
@@ -73,6 +63,27 @@ public interface IServiceRelationship {
 
 	List<IRelationship> findBySourceTypeAndSourceId(String type, Long id);
 	List<IRelationship> findByDestinationTypeAndDestinationId(String type, Long id);
+
+	final class ServiceRelationshipExceptionNotAllowed extends RuntimeException {
+		public ServiceRelationshipExceptionNotAllowed(String message) {
+			super(message);
+		}
+
+		public ServiceRelationshipExceptionNotAllowed(final String message, final Exception ex) {
+			super(message, ex);
+		}
+	}
+
+	final class ServiceRelationshipExceptionNotFound extends RuntimeException {
+		public ServiceRelationshipExceptionNotFound(String message) {
+			super(message);
+		}
+
+		public ServiceRelationshipExceptionNotFound(final String message, final Exception ex) {
+			super(message, ex);
+		}
+	}
+
 
 	/**
 	 * Function to delete a relationship

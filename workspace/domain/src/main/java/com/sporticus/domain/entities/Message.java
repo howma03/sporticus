@@ -38,7 +38,7 @@ public class Message implements IMessage {
 	@Column(nullable = false)
 	private String subject;
 
-	@Column(nullable = true)
+	@Column(columnDefinition = "TEXT")
 	private String body;
 
 	@Column(nullable = true)
