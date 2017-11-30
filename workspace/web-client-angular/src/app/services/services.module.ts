@@ -35,8 +35,7 @@ import {EventAttendanceService} from "./event-attendance.service";
     PushService,
     LadderService,
     ProfileService,
-    AgendaService,
-    GroupEventService
+    AgendaService
   ],
   declarations: [
   ]
