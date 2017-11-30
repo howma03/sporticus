@@ -12,6 +12,7 @@ import {PushService} from "./push.service";
 import {EventService} from './event.service';
 import {OrganisationGroupsService} from "./organisation-groups.service";
 import {GroupMemberService} from "./group-member.service";
+import {GroupEventService} from "./group-event.service";
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import {GroupMemberService} from "./group-member.service";
     ErrorHandlingService,
     EventService,
     GroupMemberService,
+    GroupEventService,
     UsersService,
     RegistrationService,
     OrganisationService,

@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {GroupEventService} from "../../../../services/group-event.service";
 
 @Component({
   selector: 'app-manage-group-events',
@@ -7,13 +8,34 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class ManageGroupEventsComponent implements OnInit {
 
-  @Input()
-  public group;
+  get group() {
+    return this._group;
+  }
 
-  constructor() {
+  @Input()
+  set group(value) {
+    this._group = value;
+    this.getGroupEvents();
+  }
+
+  private _group;
+
+  private events = [];
+
+  private eventsCount = -1;
+
+  constructor(
+    public groupEventService: GroupEventService
+  ) {
   }
 
   ngOnInit() {
   }
 
+  getGroupEvents() {
+    this.groupEventService.retrieveAll(this._group.id).subscribe(events => {
+      this.events = events.data;
+      this.eventsCount = this.events.length;
+    });
+  }
 }
