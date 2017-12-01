@@ -6,6 +6,7 @@ import {Event} from "./event.service";
 
 @Injectable()
 export class GroupEventService {
+
   constructor(private http: HttpClient) {
   }
 
@@ -27,6 +28,6 @@ export class GroupEventService {
       params: new HttpParams().set('id', eventId.toString(10))
     });
   }
-
 }
 
+export * from "./event.service";
