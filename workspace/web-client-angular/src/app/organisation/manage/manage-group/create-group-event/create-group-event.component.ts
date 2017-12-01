@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {Event, GroupEventService} from "../../../../services/group-event.service";
 import {ErrorHandlingService} from "../../../../services/error-handling.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
@@ -32,7 +32,8 @@ export class CreateGroupEventComponent implements OnInit {
   makeUserChange() {
     let user: Event = {
       id: this.details.id,
-      name: this.details.name
+      name: this.details.name,
+      type: this.details.type
     };
 
     if (this.editMode === true) {
