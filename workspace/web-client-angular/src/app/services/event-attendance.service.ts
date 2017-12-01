@@ -12,24 +12,24 @@ export class EventAttendanceService {
 
   baseUrl = '/api/admin/event';
 
-  public retrieveAll(eventId, expanded: Boolean): Observable<List<Event>> {
+  public retrieveAll(eventId, expanded: Boolean): Observable<List<Attendance>> {
     const url = this.baseUrl + `/${eventId}` + '/attendance';
 
-    return this.http.get<List<Event>>(url, {
+    return this.http.get<List<Attendance>>(url, {
       params: new HttpParams().set('expanded', JSON.stringify({
         expanded: expanded
       }))
     });
   }
 
-  public createOne(eventId, item: Attendance): Observable<Event> {
+  public createOne(eventId, item: Attendance): Observable<Attendance> {
     const url = this.baseUrl + `/${eventId}` + '/attendance';
-    return this.http.post<Event>(url, item);
+    return this.http.post<Attendance>(url, item);
   }
 
   public updateOne(eventId: number, attendanceId: number, attendance: Attendance): Observable<Attendance> {
     const url = this.baseUrl + `/${eventId}` + '/attendance' + `/${attendanceId}`;
-    return this.http.put<Attendance>(url, event, {
+    return this.http.put<Attendance>(url, attendance, {
       params: new HttpParams().set('id', eventId.toString(10))
     });
   }
@@ -37,6 +37,6 @@ export class EventAttendanceService {
 }
 
 export interface Attendance {
-  id: number;
+  id?: number;
   name?: string;
 }

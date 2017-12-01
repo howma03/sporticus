@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {Observable} from "rxjs/Observable";
-import {List} from "./list";
-import {Event} from "./event.service";
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs/Observable';
+import {List} from './list';
+import {Event} from './event.service';
 
 @Injectable()
 export class GroupEventService {
@@ -30,4 +30,4 @@ export class GroupEventService {
   }
 }
 
-export * from "./event.service";
+export * from './event.service';

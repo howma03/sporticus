@@ -16,6 +16,7 @@ import {EventAttendanceManagementComponent} from "../../../events/event-attendan
     EventAttendanceManagementComponent
   ],
   imports: [
+
     CommonModule,
     EventsModule,
     MatTabsModule,
