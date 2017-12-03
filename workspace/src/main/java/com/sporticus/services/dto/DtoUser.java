@@ -21,6 +21,7 @@ public class DtoUser implements IUser {
     private String firstName = "";
     private String lastName = "";
     private String verificationCode = "";
+	private String captchaResponse = "";
 
     public DtoUser() {
     }
@@ -33,10 +34,19 @@ public class DtoUser implements IUser {
         IUser.COPY(user, this);
     }
 
+
     @Override
     public Long getId() {
         return id;
     }
+
+	public String getCaptchaResponse() {
+		return captchaResponse;
+	}
+
+	public void setCaptchaResponse(String captchaResponse) {
+		this.captchaResponse = captchaResponse;
+	}
 
     @Override
     public DtoUser setId(final Long id) {

@@ -1,4 +1,4 @@
-package com.sporticus.services.Transaction;
+package com.sporticus.services.transactions;
 
 import java.util.ArrayList;
 import java.util.List;

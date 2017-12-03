@@ -3,14 +3,20 @@ package com.sporticus.domain.entities;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.util.Utility;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 @Entity
 @Table (name = "user")
-public class
-User implements IUser {
+public class User implements IUser {
 
     @Temporal(TemporalType.TIMESTAMP)
     private final Date created = new Date ();

@@ -1,5 +1,7 @@
 package com.sporticus;
 
+import com.sporticus.util.logging.LogFactory;
+import com.sporticus.util.logging.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -12,10 +14,12 @@ import javax.annotation.PostConstruct;
 @SpringBootApplication
 @PropertySource("classpath:default-application.properties")
 @PropertySource("classpath:overridden.properties")
-@PropertySource(ignoreResourceNotFound = true, value="file:c:/sporticus.properties")
+@PropertySource(ignoreResourceNotFound = false, value = "file:c:\\sporticus.properties")
 @PropertySource(ignoreResourceNotFound = true, value="file:/etc/sporticus/db.properties")
 @ComponentScan("com.sporticus.*")
 public class Application extends SpringBootServletInitializer {
+
+    private static final Logger LOGGER = LogFactory.getLogger(Application.class.getName());
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

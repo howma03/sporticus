@@ -94,6 +94,9 @@ dependencies {
     // Version file related
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
 
+	// Re-Captcha Related
+	compile 'org.glassfish:javax.json:1.0.2'
+
     //client webjars
     compile 'org.webjars:jquery:3.0.0-alpha1'
     compile 'org.webjars:sockjs-client:1.0.0'

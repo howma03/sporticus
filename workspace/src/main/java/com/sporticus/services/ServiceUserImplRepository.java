@@ -33,13 +33,13 @@ public class ServiceUserImplRepository implements IServiceUser {
 
     private static final Logger LOGGER = LogFactory.getLogger(ServiceUserImplRepository.class.getName());
 
-    @Autowired
-    private IRepositoryUser repositoryUser;
-
     public static void main(String[] args){
        final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
        System.out.println("Password="+ENCODER.encode("S0uthern"));
     }
+
+	@Autowired
+	private IRepositoryUser repositoryUser;
 
     public ServiceUserImplRepository() {
     }
