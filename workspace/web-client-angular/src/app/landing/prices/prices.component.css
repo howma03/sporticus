@@ -6,8 +6,6 @@
   height:100%;
 }
 
-
-
 /*================================
 ========= Price Section ==========
 ================================*/
@@ -77,9 +75,6 @@
   color:#a0d48c;
   border-color:#a0d48c;
 }
-
-
-
 
 
 /*========================
@@ -381,13 +376,3 @@ textarea.form-control {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#28ab95', endColorstr='#7bd1a0',GradientType=1 );
 }
 
-.whatsit h1,
-.whatsit h2,
-.section-title h1,
-.feature h2,
-#testimonial-slider .item h2,
-.twitter-feed h1,
-#download-apps h1 {
-  letter-spacing:-2px;
-  font-weight:700;
-}

@@ -13,10 +13,9 @@
       <form (ngSubmit)="doRegister()" #registerForm="ngForm">
         Please provide your details below<br/><br/>
 
-
         <mat-form-field>
             <input matInput #name placeholder="First Name" name="firstName"
-                   [(ngModel)]="registrationDetails.firstName"/>
+                   [(ngModel)]="registrationDetails.firstName" autocomplete="off"/>
         </mat-form-field>
 
         <mat-form-field>
@@ -26,21 +25,21 @@
           <br/>
         <mat-form-field>
           <input matInput #email type="email" placeholder="Email" name="email"
-                 ngModel email="true"
-                 required
+                 ngModel email="true" required
                  [(ngModel)]="registrationDetails.email" autocomplete="off"/>
         </mat-form-field>
 
         <br/>
         <mat-form-field>
           <input matInput #password type="password" placeholder="Password" name="password"
-                 required
-                 [(ngModel)]="registrationDetails.password"/>
+                 required [(ngModel)]="registrationDetails.password" autocomplete="off"/>
         </mat-form-field>
 
         <br/>
 
-        <p-captcha siteKey="6Lc5gzoUAAAAAEfcIq1z8GiMxAVkQW1BS4FYMyQf" (onResponse)="showResponse($event)"></p-captcha>
+        <p-captcha siteKey="6Lc5gzoUAAAAAEfcIq1z8GiMxAVkQW1BS4FYMyQf"
+                   (onResponse)="showResponse($event)"
+                   (onExpire)="showExpire($event)"></p-captcha>
 
         <br/>
 
