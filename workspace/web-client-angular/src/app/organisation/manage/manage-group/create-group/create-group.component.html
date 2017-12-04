@@ -1,0 +1,14 @@
+<h2>Create Group</h2>
+<form (ngSubmit)="onSave()" [formGroup]="groupForm">
+  <mat-form-field>
+    <input matInput placeholder="Name" name="name" formControlName="name" title="Name"/>
+    <mat-error *ngIf="name.hasError('required')">Please enter a value</mat-error>
+  </mat-form-field>
+  <br/>
+  <button type="submit" [disabled]="groupForm.pristine || !groupForm.valid" mat-raised-button>
+    Save
+  </button>
+  <button type="button" mat-raised-button (click)="onCancel()">
+    Cancel
+  </button>
+</form>

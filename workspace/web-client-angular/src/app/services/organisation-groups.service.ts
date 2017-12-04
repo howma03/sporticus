@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
 import {List} from "./list";
@@ -44,6 +44,6 @@ export class OrganisationGroupsService {
 }
 
 export interface Group {
-  id: number;
+  id?: number;
   name?: string;
 }

@@ -59,7 +59,6 @@ export class ManageOrganisationComponent implements OnInit, OnChanges {
     });
   }
 
-
   loadOrganisation() {
     if (this._organisationId != null) {
       this.organisationService.retrieveOne(this._organisationId)
@@ -94,7 +93,5 @@ export class ManageOrganisationComponent implements OnInit, OnChanges {
     this.ngOnChanges();
     this.done.emit(this.organisation);
   }
-
-
 
 }

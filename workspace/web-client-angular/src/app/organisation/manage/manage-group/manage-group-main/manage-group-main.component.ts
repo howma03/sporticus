@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Group, OrganisationGroupsService} from '../../../../services/organisation-groups.service';
+import {MatDialog} from '@angular/material';
+import {CreateGroupDialogComponent} from '../create-group-dialog/create-group-dialog.component';
 
 @Component({
   selector: 'app-manage-group-main',
@@ -28,8 +30,8 @@ export class ManageGroupMainComponent implements OnInit {
   groupId: number = null;
 
 
-  constructor(
-    private organisationGroupsService: OrganisationGroupsService
+  constructor(private dialog: MatDialog,
+              private organisationGroupsService: OrganisationGroupsService
   ) {
   }
 
@@ -48,6 +50,14 @@ export class ManageGroupMainComponent implements OnInit {
 
   onGroupSelect(group) {
     this.selectedGroup = group;
+  }
+
+  showCreateGroupDialog() {
+    this.dialog.open(CreateGroupDialogComponent, {
+      data: {
+        organisationId: this.organisationId
+      }
+    });
   }
 
 }
