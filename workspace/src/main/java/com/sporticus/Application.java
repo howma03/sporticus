@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 @SpringBootApplication
 @PropertySource("classpath:default-application.properties")
 @PropertySource("classpath:overridden.properties")
-@PropertySource(ignoreResourceNotFound = false, value = "file:c:\\sporticus.properties")
+@PropertySource(ignoreResourceNotFound = true, value = "file:c:\\sporticus.properties")
 @PropertySource(ignoreResourceNotFound = true, value="file:/etc/sporticus/db.properties")
 @ComponentScan("com.sporticus.*")
 public class Application extends SpringBootServletInitializer {

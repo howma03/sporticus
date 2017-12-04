@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Group, OrganisationGroupsService} from "../../../../services/organisation-groups.service";
+import {Group, OrganisationGroupsService} from '../../../../services/organisation-groups.service';
 
 @Component({
   selector: 'app-manage-group-main',

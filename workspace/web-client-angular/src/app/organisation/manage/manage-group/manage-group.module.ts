@@ -6,14 +6,18 @@ import {ManageGroupDetailsComponent} from './manage-group-details/manage-group-d
 import {ManageGroupEventsComponent} from './manage-group-events/manage-group-events.component';
 import {MatSelectModule, MatTabsModule} from '@angular/material';
 import {ServicesModule} from '../../../services/services.module';
-import { CreateGroupEventComponent } from './create-group-event/create-group-event.component';
-import {FormsModule} from "@angular/forms";
-import {EventsModule} from "../../../events/events.module";
-import {EventAttendanceManagementComponent} from "../../../events/event-attendance-management/event-attendance-management.component";
+import {CreateGroupEventComponent} from './create-group-event/create-group-event.component';
+import {FormsModule} from '@angular/forms';
+import {EventsModule} from '../../../events/events.module';
+import {EventAttendanceManagementComponent} from '../../../events/event-attendance-management/event-attendance-management.component';
+
+import {AddGroupMemberDialogComponent} from './add-group-member-dialog/add-group-member-dialog.component';
+import {AddGroupMemberComponent} from './add-group-member/add-group-member.component';
 
 @NgModule({
   entryComponents: [
-    EventAttendanceManagementComponent
+    EventAttendanceManagementComponent,
+    AddGroupMemberDialogComponent
   ],
   imports: [
 
@@ -24,7 +28,8 @@ import {EventAttendanceManagementComponent} from "../../../events/event-attendan
     FormsModule,
     ServicesModule
   ],
-  declarations: [ManageGroupMainComponent, ManageGroupMembersComponent, ManageGroupDetailsComponent, ManageGroupEventsComponent, CreateGroupEventComponent],
+  declarations: [ManageGroupMainComponent, ManageGroupMembersComponent, ManageGroupDetailsComponent,
+    ManageGroupEventsComponent, CreateGroupEventComponent, AddGroupMemberDialogComponent, AddGroupMemberComponent],
   exports: [
     ManageGroupMainComponent
   ]

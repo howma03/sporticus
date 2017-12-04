@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
-import {List} from "./list";
+import {User} from './users.service';
 
 @Injectable()
 export class GroupMemberService {
@@ -10,13 +10,18 @@ export class GroupMemberService {
 
   baseUrl = '/api/admin/group';
 
-  public retrieveAll(groupId): Observable<List<Member>> {
-    const url = this.baseUrl + `/${groupId}` + '/member';
-    return this.http.get<List<Member>>(url);
+  public retrieveAll(groupId): Observable<User[]> {
+    const url = `${this.baseUrl}/${groupId}/member`;
+    return this.http.get<User[]>(url);
   }
-}
 
-export interface Member {
-  id: number;
-  name?: string;
+  public addOne(groupId: number, member: User) {
+    const url = `${this.baseUrl}/${groupId}/member`;
+    return this.http.post<User>(url, member);
+  }
+
+  public removeOne(groupId: number, member: User) {
+    const url = `${this.baseUrl}/${groupId}/member/${member.id}`;
+    return this.http.delete(url);
+  }
 }

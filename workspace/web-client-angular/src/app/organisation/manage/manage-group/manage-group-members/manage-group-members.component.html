@@ -1,5 +1,31 @@
-<p>
-  manage-group-members works!
-</p>
+<button class="btn button-primary" (click)="showAddMemberDialog()">
+  <span class="hpe-icon hpe-deployment" aria-hidden="true"></span> Add Member
+</button>
 
-group members count = {{groupMembersCount}}
+
+<div class="user__list" *ngIf="!members.length">
+  <p>No Members</p>
+</div>
+
+
+<div class="user__list" *ngIf="members.length">
+  <table class="table table-hover">
+    <thead>
+    <tr class="table-header-dark">
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="hover-action-container" *ngFor="let item of members" uxHoverActionContainer>
+      <td>{{ item.firstName }}</td>
+      <td>{{ item.lastName }}</td>
+      <td>
+        <i class="hpe-icon hpe-trash" (click)="openDeleteDialog(item)" tooltip="Remove User"
+           uxHoverAction></i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
