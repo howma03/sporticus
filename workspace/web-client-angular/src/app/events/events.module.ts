@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { EventAttendanceManagementComponent } from './event-attendance-management/event-attendance-management.component';
 import {SharedModule} from "primeng/primeng";
 import {DataTableModule} from "primeng/components/datatable/datatable";
+import { EventAttendanceDialogComponent } from './event-attendance-dialog/event-attendance-dialog.component';
 
 @NgModule({
   imports: [
@@ -10,8 +11,9 @@ import {DataTableModule} from "primeng/components/datatable/datatable";
     DataTableModule,
     SharedModule
   ],
-  declarations: [EventAttendanceManagementComponent],
+  declarations: [EventAttendanceManagementComponent, EventAttendanceDialogComponent],
   exports: [
+    EventAttendanceDialogComponent,
     EventAttendanceManagementComponent
   ]
 })

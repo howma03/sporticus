@@ -13,9 +13,11 @@ import {EventAttendanceManagementComponent} from '../../../events/event-attendan
 
 import {AddGroupMemberDialogComponent} from './add-group-member-dialog/add-group-member-dialog.component';
 import {AddGroupMemberComponent} from './add-group-member/add-group-member.component';
+import {EventAttendanceDialogComponent} from "../../../events/event-attendance-dialog/event-attendance-dialog.component";
 
 @NgModule({
   entryComponents: [
+    EventAttendanceDialogComponent,
     EventAttendanceManagementComponent,
     AddGroupMemberDialogComponent
   ],

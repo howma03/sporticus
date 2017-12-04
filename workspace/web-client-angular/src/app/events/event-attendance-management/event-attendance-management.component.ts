@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import {Attendance, EventAttendanceService} from "../../services/event-attendance.service";
+import {Component, Input, OnInit} from '@angular/core';
+import {Attendance, EventAttendanceService} from '../../services/event-attendance.service';
+import {Group} from '../../services/organisation-groups.service';
+import {Event} from '../../services/event.service';
 
 @Component({
   selector: 'app-event-attendance-management',
@@ -8,6 +10,12 @@ import {Attendance, EventAttendanceService} from "../../services/event-attendanc
 })
 export class EventAttendanceManagementComponent implements OnInit {
 
+  @Input()
+  group: Group;
+
+  @Input()
+  event: Event;
+
   displayDialog: boolean;
   newAttendance: boolean;
 
@@ -15,17 +23,12 @@ export class EventAttendanceManagementComponent implements OnInit {
 
   attendance: Attendance;
 
-  selectedAttendance: Attendance = new PrimeAttendance();
-
   constructor(
     private eventAttendanceService: EventAttendanceService
   ) { }
 
   ngOnInit() {
-    const tempEventId = 1;
-
-    this.eventAttendanceService.retrieveAll(tempEventId, true).subscribe(attendance => {
-      debugger;
+    this.eventAttendanceService.retrieveAll(this.event.id, true).subscribe(attendance => {
       this.attendances = attendance.data;
     });
   }
