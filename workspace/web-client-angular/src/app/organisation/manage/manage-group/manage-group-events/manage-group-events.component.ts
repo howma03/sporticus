@@ -3,6 +3,7 @@ import {GroupEventService} from '../../../../services/group-event.service';
 import {CreateGroupEventComponent} from "../create-group-event/create-group-event.component";
 import {MatDialog} from "@angular/material";
 import {EventAttendanceManagementComponent} from "../../../../events/event-attendance-management/event-attendance-management.component";
+import {EventAttendanceDialogComponent} from "../../../../events/event-attendance-dialog/event-attendance-dialog.component";
 
 @Component({
   selector: 'app-manage-group-events',
@@ -60,10 +61,9 @@ export class ManageGroupEventsComponent implements OnInit {
     });
   }
 
-  public openAttendanceModal(eventId): void {
-    let event = this.events.find(event => event.id === eventId);
+  public openAttendanceModal(event): void {
 
-    let dialogRef = this.dialog.open(EventAttendanceManagementComponent, {
+    let dialogRef = this.dialog.open(EventAttendanceDialogComponent, {
       data: {
         group: this.group,
         event: event

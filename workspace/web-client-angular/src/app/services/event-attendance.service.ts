@@ -16,9 +16,7 @@ export class EventAttendanceService {
     const url = this.baseUrl + `/${eventId}` + '/attendance';
 
     return this.http.get<List<Attendance>>(url, {
-      params: new HttpParams().set('expanded', JSON.stringify({
-        expanded: expanded
-      }))
+      params: new HttpParams().set('expanded', expanded.toString())
     });
   }
 

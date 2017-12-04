@@ -3,6 +3,8 @@ package com.sporticus.services;
 import com.sporticus.domain.entities.User;
 import com.sporticus.domain.interfaces.IUser;
 import com.sporticus.domain.repositories.IRepositoryUser;
+import com.sporticus.interfaces.IServiceGroup;
+import com.sporticus.interfaces.IServiceRelationship;
 import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.util.logging.LogFactory;
 import com.sporticus.util.logging.Logger;
@@ -40,6 +42,12 @@ public class ServiceUserImplRepository implements IServiceUser {
 
 	@Autowired
 	private IRepositoryUser repositoryUser;
+
+    @Autowired
+    private IServiceRelationship serviceRelationship;
+
+    @Autowired
+    private IServiceGroup serviceGroup;
 
     public ServiceUserImplRepository() {
     }
@@ -141,10 +149,18 @@ public class ServiceUserImplRepository implements IServiceUser {
         if (foundUser == null) {
             return;
         }
+
+        try {
+            // We will delete any group memberships and relationships for the user
+            serviceGroup.deleteGroupMembershipsForUser(null, userId);
+
+            serviceRelationship.deleteRelationships("User", userId);
+        } catch (Exception ex) {
+            LOGGER.warn(() -> "Exception occurred when attempting to delete user relationships and group memberships", ex);
+        }
+
         foundUser.setEnabled(false);
-
         repositoryUser.save(foundUser);
-
         // repositoryUser.delete(userId);
     }
 

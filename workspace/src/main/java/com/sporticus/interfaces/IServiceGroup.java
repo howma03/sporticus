@@ -66,6 +66,8 @@ public interface IServiceGroup {
 	void deleteGroupMember(IUser actor, Long groupMemberId) throws ServiceGroupExceptionNotAllowed,
 			ServiceGroupExceptionNotFound;
 
+	void deleteGroupMembershipsForUser(IUser actor, Long userId);
+
 	List<IGroupMember> getGroupMembershipsForGroup(IUser actor, Long groupId) throws ServiceGroupExceptionNotAllowed,
 			ServiceGroupExceptionNotFound;
 

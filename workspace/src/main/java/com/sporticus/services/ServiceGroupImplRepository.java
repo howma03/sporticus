@@ -509,6 +509,18 @@ public class ServiceGroupImplRepository implements IServiceGroup {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Function to delete group memberships for a given user
+     *
+     * @param actor
+     * @param userId
+     */
+    @Override
+    public void deleteGroupMembershipsForUser(IUser actor, Long userId) {
+        LOGGER.info(() -> "Deleting group memberships - userId=" + userId);
+        this.getGroupMembershipsForUser(actor, userId).stream().forEach(gm -> this.deleteGroupMember(actor, gm.getId()));
+    }
+
     /***
      * Returns a list of Group Memberships for a given user
      * @param userId
@@ -517,27 +529,12 @@ public class ServiceGroupImplRepository implements IServiceGroup {
     @Override
     public List<IGroupMember> getGroupMembershipsForUser(IUser actor, final Long userId) throws ServiceGroupExceptionNotAllowed,
             ServiceGroupExceptionNotFound {
+        // TODO: consider the actor
         final List<IGroupMember> list = new ArrayList<>();
         repositoryGroupMember
                 .findByUserId(userId)
                 .forEach(gm -> list.add(gm));
         return list;
-    }
-
-    /***
-     * Function to return the specific group membership
-     * @param userId
-     * @param groupId
-     * @return IGroupMember
-     */
-    @Override
-    public IGroupMember getGroupMembershipsForUser(IUser actor, final Long userId, final Long groupId) throws ServiceGroupExceptionNotAllowed,
-            ServiceGroupExceptionNotFound {
-        final List<GroupMember> list = repositoryGroupMember.findByGroupIdAndUserId(groupId, userId);
-        if(list == null || list.size() == 0) {
-            return null;
-        }
-        return list.get(0);
     }
 
     /***
@@ -672,13 +669,30 @@ public class ServiceGroupImplRepository implements IServiceGroup {
 	 */
 	@Override
 	public void deleteGroupMember(IUser actor, final Long groupMemberId) throws ServiceGroupExceptionNotAllowed,
-			ServiceGroupExceptionNotFound {
-		final IGroupMember found = this.repositoryGroupMember.findOne(groupMemberId);
-		if (found == null) {
-			String message = "Failed to find group membership - id=" + groupMemberId;
-			LOGGER.error(() -> message);
-			throw new ServiceGroupExceptionNotFound(message);
-		}
-		repositoryGroupMember.delete(groupMemberId);
-	}
+            ServiceGroupExceptionNotFound {
+        final IGroupMember found = this.repositoryGroupMember.findOne(groupMemberId);
+        if (found == null) {
+            String message = "Failed to find group membership - id=" + groupMemberId;
+            LOGGER.error(() -> message);
+            throw new ServiceGroupExceptionNotFound(message);
+        }
+        repositoryGroupMember.delete(groupMemberId);
+    }
+
+    /***
+     * Function to return the specific group membership
+     * @param userId
+     * @param groupId
+     * @return IGroupMember
+     */
+    @Override
+    public IGroupMember getGroupMembershipsForUser(IUser actor, final Long userId, final Long groupId) throws ServiceGroupExceptionNotAllowed,
+            ServiceGroupExceptionNotFound {
+        // TODO: consider the actor
+        final List<GroupMember> list = repositoryGroupMember.findByGroupIdAndUserId(groupId, userId);
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        return list.get(0);
+    }
 }

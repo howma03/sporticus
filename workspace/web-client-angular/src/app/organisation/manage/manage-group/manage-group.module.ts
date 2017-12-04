@@ -15,14 +15,17 @@ import {AddGroupMemberDialogComponent} from './add-group-member-dialog/add-group
 import {AddGroupMemberComponent} from './add-group-member/add-group-member.component';
 import {CreateGroupComponent} from './create-group/create-group.component';
 import {CreateGroupDialogComponent} from './create-group-dialog/create-group-dialog.component';
+import {EventAttendanceDialogComponent} from "../../../events/event-attendance-dialog/event-attendance-dialog.component";
 
 @NgModule({
   entryComponents: [
+    EventAttendanceDialogComponent,
     EventAttendanceManagementComponent,
     AddGroupMemberDialogComponent,
     CreateGroupDialogComponent
   ],
   imports: [
+
     CommonModule,
     EventsModule,
     MatTabsModule,

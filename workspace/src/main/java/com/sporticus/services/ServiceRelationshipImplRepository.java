@@ -110,6 +110,14 @@ public class ServiceRelationshipImplRepository implements IServiceRelationship {
 	}
 
 	@Override
+	public void deleteRelationships(String subjectType, Long subjectId) {
+		for (Relationships relationship : this.findRelationships(subjectType, subjectId)) {
+			relationship.getSources().stream().forEach(r -> delete(r.getId()));
+			relationship.getDestinations().stream().forEach(r -> delete(r.getId()));
+		}
+	}
+
+	@Override
 	public List<IRelationship> findByDestinationTypeAndDestinationIdAndType(String destinationType, Long destinationId, String type) {
 		return repositoryRelationship.findByDestinationTypeAndDestinationIdAndType(destinationType, destinationId, type);
 	}

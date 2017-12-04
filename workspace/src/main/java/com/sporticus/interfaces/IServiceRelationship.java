@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IServiceRelationship {
+
 	List<IRelationship> findBySourceTypeAndSourceIdAndDestinationTypeAndDestinationIdAndType(String sourceType, Long sourceId, String destinationType, Long destinationId, String relatationshipType);
 
 	/**
@@ -90,6 +91,15 @@ public interface IServiceRelationship {
 	 * @param relationshipId
 	 */
 	void delete(long relationshipId) ;
+
+	/**
+	 * Function to delete all relathips for a subject type (with id)
+	 *
+	 * @param subjectType
+	 * @param subjectId
+	 * @return
+	 */
+	void deleteRelationships(String subjectType, Long subjectId);
 
 	/**
 	 * Finds relationship of given type for subject and populates source and destintation relationships
