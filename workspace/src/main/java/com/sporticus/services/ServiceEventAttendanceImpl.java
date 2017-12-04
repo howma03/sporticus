@@ -1,12 +1,15 @@
 package com.sporticus.services;
 
 import com.sporticus.domain.entities.Relationship;
+import com.sporticus.domain.interfaces.IEvent;
 import com.sporticus.domain.interfaces.IEventAttended;
 import com.sporticus.domain.interfaces.IRelationship;
 import com.sporticus.domain.interfaces.IUser;
+import com.sporticus.interfaces.IServiceEvent;
 import com.sporticus.interfaces.IServiceEvent.ServiceEventExceptionNotFound;
 import com.sporticus.interfaces.IServiceEventAttendance;
 import com.sporticus.interfaces.IServiceRelationship;
+import com.sporticus.interfaces.IServiceUser;
 import com.sporticus.services.dto.DtoEventAttended;
 import com.sporticus.types.RelationshipType;
 import com.sporticus.util.logging.LogFactory;
@@ -24,6 +27,12 @@ public class ServiceEventAttendanceImpl implements IServiceEventAttendance {
 	private static final Logger LOGGER = LogFactory.getLogger(ServiceEventAttendanceImpl.class.getName());
 	@Autowired
 	private IServiceRelationship serviceRelationship;
+
+	@Autowired
+	private IServiceUser serviceUser;
+
+	@Autowired
+	private IServiceEvent serviceEvent;
 
 	public ServiceEventAttendanceImpl() {
 
@@ -105,6 +114,7 @@ public class ServiceEventAttendanceImpl implements IServiceEventAttendance {
 	public List<IEventAttended> readAttendanceForGroupAndUser(IUser actor, long groupId, long userId) {
 		// Find all events for group - then filter by user id
 		// Then filter by attended (user to event)
+		IUser user = serviceUser.findOne(userId);
 		return serviceRelationship.findBySourceTypeAndSourceIdAndType(
 				"Group", groupId,
 				RelationshipType.EVENT.toString())
@@ -116,7 +126,10 @@ public class ServiceEventAttendanceImpl implements IServiceEventAttendance {
 								"Event",
 								groupToEvent.getDestinationId(),
 								RelationshipType.ATTENDED.toString()).stream())
-				.map(r -> new DtoEventAttended(r.getDestinationId(), userId))
+				.map(r -> {
+					IEvent event = serviceEvent.readEvent(actor, r.getDestinationId());
+					return new DtoEventAttended(r.getId(), event, user);
+				})
 				.collect(Collectors.toList());
 	}
 

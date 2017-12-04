@@ -104,7 +104,7 @@ public class RestControllerAdminEventAttendance extends ControllerAbstract {
 				if (foundAttend.isPresent()) {
 					return foundAttend.get();
 				}
-				return new DtoEventAttended(eventId, u.getId());
+				return new DtoEventAttended(null, foundEvent, u);
 			}).collect(Collectors.toList());
 
 			return new ResponseEntity<>(new DtoList<>(list2), HttpStatus.OK);

@@ -17,15 +17,22 @@ public class DtoEventAttended implements IEventAttended {
 	private CurrencyUnit currency = Monetary.getCurrency("GBP");
 	private Money amount = Money.of(12, currency);
 
+	private Long id = null;
 	private long eventId = 0l;
 	private long userId = 0l;
+	private String firstName = "";
+	private String lastName = "";
 
-	public DtoEventAttended(IEvent event, IUser user) {
+	public DtoEventAttended(Long id, IEvent event, IUser user) {
+		this.id = id;
 		this.eventId = event.getId();
 		this.userId = user.getId();
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
 	}
 
-	public DtoEventAttended(long eventId, long userId) {
+	public DtoEventAttended(Long id, long eventId, long userId) {
+		this.id = id;
 		this.eventId = eventId;
 		this.userId = userId;
 	}
@@ -36,6 +43,33 @@ public class DtoEventAttended implements IEventAttended {
 		this.userId = relationship.getDestinationId();
 
 		parseMetaData(relationship.getMetaData());
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public IEventAttended setFirstName(String firstName) {
+		this.firstName = firstName;
+		return this;
+	}
+
+	public IEventAttended setId(Long id) {
+		this.id = id;
+		return this;
+	}
+
+	public IEventAttended setLastName(String lastName) {
+		this.lastName = lastName;
+		return this;
 	}
 
 	private void parseMetaData(String metaData) {
