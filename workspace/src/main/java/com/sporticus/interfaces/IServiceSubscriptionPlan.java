@@ -10,11 +10,15 @@ public interface IServiceSubscriptionPlan {
 
 	boolean isFeatureEnabled(IUser user, String featureName);
 
+	Subscription getSubscription(IUser user);
+
 	class Subscription {
 
 		Date created;
 		Date dateValidFrom;
 		Date dateValidTo;
+
+		Long organisationOwnerId;
 
 		boolean isFeatureEnabled(String featureName) {
 			return true;
