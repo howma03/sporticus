@@ -22,12 +22,9 @@ export class ManageGroupMainComponent implements OnInit {
 
   private _organisationId: number;
 
-  selectedGroup: Group = <Group> {
-    id: -1
-  };
-
   groups: Group[] = [];
   groupId: number = null;
+  selectedGroup: Group = null;
 
 
   constructor(private dialog: MatDialog,
@@ -48,14 +45,21 @@ export class ManageGroupMainComponent implements OnInit {
     });
   }
 
-  onGroupSelect(group) {
-    this.selectedGroup = group;
+  onGroupSelect(event) {
+    this.groupId = event.value;
+    this.selectedGroup = this.groups.find(group => group.id === this.groupId);
   }
 
   showCreateGroupDialog() {
     this.dialog.open(CreateGroupDialogComponent, {
       data: {
         organisationId: this.organisationId
+      }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        this.groups.push(result);
+        this.groupId = result.id;
+        this.selectedGroup = result;
       }
     });
   }

@@ -5,6 +5,12 @@
     <mat-error *ngIf="name.hasError('required')">Please enter a value</mat-error>
   </mat-form-field>
   <br/>
+  <mat-form-field>
+    <textarea matInput placeholder="Description" name="description" formControlName="description"
+              title="Description"></textarea>
+    <mat-error *ngIf="description.hasError('required')">Please enter a value</mat-error>
+  </mat-form-field>
+  <br/>
   <button type="submit" [disabled]="groupForm.pristine || !groupForm.valid" mat-raised-button>
     Save
   </button>

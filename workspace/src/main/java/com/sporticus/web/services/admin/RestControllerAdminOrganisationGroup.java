@@ -62,7 +62,7 @@ public class RestControllerAdminOrganisationGroup extends ControllerAbstract {
 			IOrganisation organisation = serviceOrganisation.readOrganisation(actor, orgId);
 
 			return new ResponseEntity<>(new DtoGroup(serviceGroup.createGroup(actor,
-					organisation, group)), HttpStatus.NO_CONTENT);
+					organisation, group)), HttpStatus.OK);
 		} catch (ServiceOrganisationExceptionNotFound | ServiceGroupExceptionNotFound ex) {
 			return new ResponseEntity<>(ex, HttpStatus.NOT_FOUND);
 		} catch (ServiceOrganisationExceptionNotAllowed | ServiceGroupExceptionNotAllowed ex) {

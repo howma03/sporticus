@@ -2,7 +2,6 @@ import {Component, Input, OnInit} from '@angular/core';
 import {GroupEventService} from '../../../../services/group-event.service';
 import {CreateGroupEventComponent} from "../create-group-event/create-group-event.component";
 import {MatDialog} from "@angular/material";
-import {EventAttendanceManagementComponent} from "../../../../events/event-attendance-management/event-attendance-management.component";
 import {EventAttendanceDialogComponent} from "../../../../events/event-attendance-dialog/event-attendance-dialog.component";
 
 @Component({
@@ -19,7 +18,9 @@ export class ManageGroupEventsComponent implements OnInit {
   @Input()
   set group(value) {
     this._group = value;
-    this.getGroupEvents();
+    if (value) {
+      this.getGroupEvents();
+    }
   }
 
   private _group;

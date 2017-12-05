@@ -18,8 +18,8 @@ export class CreateGroupDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  close() {
-    this.dialogRef.close();
+  close(group?) {
+    this.dialogRef.close(group);
   }
 
 }
