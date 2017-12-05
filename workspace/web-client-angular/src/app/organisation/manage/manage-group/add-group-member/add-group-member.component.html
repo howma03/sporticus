@@ -1,11 +1,11 @@
 <h2>Add Group Members</h2>
 
-<div class="user__list" *ngIf="!orgMembers.length">
+<div *ngIf="!orgMembers.length">
   <p>All Organisation Members are already in this group</p>
 </div>
 
 
-<div class="user__list" *ngIf="orgMembers.length">
+<div class="user-list" *ngIf="orgMembers.length">
   <table class="table table-hover">
     <thead>
     <tr class="table-header-dark">
@@ -14,8 +14,8 @@
       <th></th>
     </tr>
     </thead>
-    <tbody>
-    <tr class="hover-action-container" *ngFor="let item of orgMembers" uxHoverActionContainer>
+    <tbody class="user-list-body">
+    <tr class="hover-action-container" *ngFor="let item of currentPage" uxHoverActionContainer>
       <td>{{ item.firstName }}</td>
       <td>{{ item.lastName }}</td>
       <td>
@@ -25,4 +25,10 @@
     </tr>
     </tbody>
   </table>
+  <button [disabled]="firstPage ? '' : null" class="btn button-primary" (click)="showPreviousPage()">
+    <span class="hpe-icon hpe-deployment" aria-hidden="true"></span> Prev
+  </button>
+  <button [disabled]="lastPage ? '' : null" class="btn button-primary" (click)="showNextPage()">
+    <span class="hpe-icon hpe-deployment" aria-hidden="true"></span> Next
+  </button>
 </div>

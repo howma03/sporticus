@@ -21,6 +21,26 @@ export class AddGroupMemberComponent implements OnInit {
 
   orgMembers: User[] = [];
 
+  private static get pageSize() {
+    return 10;
+  }
+
+  page = 0;
+
+  get currentPage() {
+    return this.orgMembers.slice(this.page * AddGroupMemberComponent.pageSize, (this.page + 1) * AddGroupMemberComponent.pageSize);
+  }
+
+
+  get firstPage() {
+    return this.page === 0;
+  }
+
+  get lastPage() {
+    return this.page === Math.floor(this.orgMembers.length / AddGroupMemberComponent.pageSize);
+  }
+
+
 
   constructor(private membersService: OrganisationUsersService,
               private groupMemberService: GroupMemberService) {
@@ -42,4 +62,11 @@ export class AddGroupMemberComponent implements OnInit {
     });
   }
 
+  showPreviousPage() {
+    this.page--;
+  }
+
+  showNextPage() {
+    this.page++;
+  }
 }
