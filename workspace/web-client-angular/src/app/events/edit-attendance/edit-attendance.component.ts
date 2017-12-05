@@ -1,5 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Attendance} from "../../services/event-attendance.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-edit-attendance',
@@ -14,9 +15,42 @@ export class EditAttendanceComponent implements OnInit {
   @Input()
   event: Event;
 
-  constructor() { }
+
+  @Output()
+  public done = new EventEmitter<any>();
+
+  attendanceForm: FormGroup;
+
+  get amount() {
+    return this.attendanceForm.get('amount');
+  }
+
+  constructor(private fb: FormBuilder) {
+    this.attendanceForm = this.fb.group({
+      amount: ['', [Validators.required]]
+    });
+  }
 
   ngOnInit() {
+  }
+
+  ngOnChanges() {
+    this.attendanceForm.reset({
+      amount: ''
+    });
+  }
+
+  onSave() {
+
+  }
+
+  onCancel() {
+    this.onDone();
+  }
+
+  onDone() {
+    this.ngOnChanges();
+    this.done.emit();
   }
 
 }

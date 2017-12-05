@@ -69,17 +69,13 @@ public class ConfigurationSecurity extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
 
-                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("**").permitAll()
                 .antMatchers("/resources/**").permitAll()
                 .antMatchers("/papi/**").permitAll()
-
-                .antMatchers("/login*").permitAll()
-                .antMatchers("/logout*").permitAll()
+                .antMatchers("/app*").permitAll()
                 .antMatchers("/app/**").permitAll()
                 .antMatchers("/accessDenied*").permitAll()
 
-                .antMatchers("/home*").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-                .antMatchers("/home/**").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
                 .antMatchers("/api/**").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
 
                 .anyRequest().authenticated()

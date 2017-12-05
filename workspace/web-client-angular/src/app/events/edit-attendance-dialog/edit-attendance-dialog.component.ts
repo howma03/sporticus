@@ -12,6 +12,7 @@ export class EditAttendanceDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<EditAttendanceDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) {
 
+
     this.attendance = data.attendance;
     this.event = data.event;
   }
@@ -20,6 +21,10 @@ export class EditAttendanceDialogComponent implements OnInit {
   public event: Event;
 
   ngOnInit() {
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 
 }

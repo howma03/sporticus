@@ -1,6 +1,16 @@
-<p>
-  edit-attendance works!
-</p>
+<h2>Edit attendance for {{attendance.firstName}} {{attendance.lastName}}</h2>
 
 
-Edit attendance for {{attendance.firstName}}
+<form (ngSubmit)="onSave()" [formGroup]="attendanceForm">
+  <mat-form-field>
+    <input matInput placeholder="Amount paid" name="amount" formControlName="amount" title="Amount paid"/>
+    <mat-error *ngIf="amount.hasError('required')">Please enter a value</mat-error>
+  </mat-form-field>
+  <br/>
+  <button type="submit" [disabled]="attendanceForm.pristine || !attendanceForm.valid" mat-raised-button>
+    Save
+  </button>
+  <button type="button" mat-raised-button (click)="onCancel()">
+    Cancel
+  </button>
+</form>

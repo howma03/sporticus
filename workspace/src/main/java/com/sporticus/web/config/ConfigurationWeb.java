@@ -3,16 +3,12 @@ package com.sporticus.web.config;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.resource.PathResourceResolver;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 import java.io.IOException;
 
@@ -26,25 +22,10 @@ public class ConfigurationWeb extends WebMvcConfigurerAdapter {
     private String apiPath = "/api";
     private String apiPublicPath = "/papi";
 
-    @Bean
-    public ViewResolver internalResourceViewResolver() {
-        InternalResourceViewResolver bean = new InternalResourceViewResolver();
-        bean.setViewClass(JstlView.class);
-        bean.setPrefix("/WEB-INF/jsp/");
-        bean.setSuffix(".jsp");
-        return bean;
-    }
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        if (!registry.hasMappingForPattern("/resources/**")) {
-            registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-        }
-        if (!registry.hasMappingForPattern("/webjars/**")) {
-            registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
-        }
         if (!registry.hasMappingForPattern("/app/**")) {
-            registry.addResourceHandler("/app/**").addResourceLocations("/resources/app/");
+            registry.addResourceHandler("/app/**").addResourceLocations("/WEB-INF/app/");
         }
         registry.addResourceHandler("/**")
                 .addResourceLocations(resourceProperties.getStaticLocations())
@@ -75,7 +56,8 @@ public class ConfigurationWeb extends WebMvcConfigurerAdapter {
             }
 
             LoggerFactory.getLogger(getClass()).info("Routing /" + resourcePath + " to /index.html");
-            resource = location.createRelative("/resources/app/" + resourcePath);
+            resource = location.createRelative("/WEB-INF/app/" + resourcePath);
+
             LoggerFactory.getLogger(getClass()).info("Routing to " + resource);
             if (resource.exists() && resource.isReadable()) {
                 return resource;
