@@ -18,18 +18,19 @@
       <app-manage-group-details class="inner" [group]="selectedGroup">
       </app-manage-group-details>
     </div>
-
   </mat-tab>
+
   <mat-tab label="Members">
     <div class="inner">
       <app-manage-group-members class="inner" [organisationId]="organisationId" [group]="selectedGroup">
       </app-manage-group-members>
     </div>
-
   </mat-tab>
+
   <mat-tab label="Events">
     <div class="inner">
-      <app-manage-group-events class="inner" [group]="selectedGroup">
+      <app-manage-group-events class="inner" [organisationId]="organisationId"
+                               [group]="selectedGroup">
       </app-manage-group-events>
     </div>
   </mat-tab>
