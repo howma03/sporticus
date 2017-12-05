@@ -41,9 +41,7 @@ export class EventAttendanceManagementComponent implements OnInit {
       data: {
         attendance: attendance,
         event: this.event
-      },
-      height: '500px',
-      width: '1200px',
+      }
     });
 
     dialogRef.afterClosed().subscribe((updateRequired) => {
