@@ -1,8 +1,38 @@
 Attendance
 
-<p-dataTable [value]="attendances" [editable]="true">
-  <p-column field="vin" header="First Name" [editable]="true"></p-column>
-  <p-column field="year" header="Surname" [editable]="true"></p-column>
-  <p-column field="year" header="Attended" [editable]="true"></p-column>
-  <p-column field="year" header="Paid" [editable]="true"></p-column>
-</p-dataTable>
+<table class="table table-hover">
+  <thead>
+  <tr class="table-header-dark">
+    <th>First Name</th>
+    <th>Surname</th>
+    <th>Attended</th>
+    <th></th>
+    <th>Paid</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let attendance of attendances" uxHoverActionContainer>
+    <td>{{ attendance.firstName }}</td>
+    <td>{{ attendance.lastName }}</td>
+
+    <td>
+      <div *ngIf="attendance.id == undefined">
+      <i class="fa fa-times  hover-action-icon" (click)="addAttendance(attendance)"></i>
+      </div>
+      <div *ngIf="attendance.id != undefined">
+        <i class="fa fa-cog  hover-action-icon" (click)="editAttendance(attendance)"></i>
+        <i class="fa fa-check  hover-action-icon" (click)="removeAttendance(attendance)"></i>
+      </div>
+    </td>
+    <td>
+      <div *ngIf="attendance.id == undefined">
+        Previously paid £ {{attendance.amount}}
+      </div>
+      <div *ngIf="attendance.id != undefined">
+        Paid £ {{attendance.amount}}
+      </div>
+
+    </td>
+  </tr>
+  </tbody>
+</table>

@@ -35,6 +35,7 @@ export class EventAttendanceService {
 }
 
 export interface Attendance {
+  attended?: boolean;
   id?: number;
   name?: string;
 }
