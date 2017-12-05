@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {Attendance} from "../../services/event-attendance.service";
+import {Event} from "../../services/event.service";
 
 @Component({
   selector: 'app-edit-attendance-dialog',

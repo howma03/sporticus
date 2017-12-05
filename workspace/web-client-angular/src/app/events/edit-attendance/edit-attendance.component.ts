@@ -1,6 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Attendance} from "../../services/event-attendance.service";
+import {Attendance, EventAttendanceService} from "../../services/event-attendance.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Event} from "../../services/event.service";
+import {ErrorHandlingService} from "../../services/error-handling.service";
+
 
 @Component({
   selector: 'app-edit-attendance',
@@ -25,7 +28,11 @@ export class EditAttendanceComponent implements OnInit {
     return this.attendanceForm.get('amount');
   }
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private eventAttendanceService: EventAttendanceService,
+    private fb: FormBuilder,
+    private errorHandlingService: ErrorHandlingService
+  ) {
     this.attendanceForm = this.fb.group({
       amount: ['', [Validators.required]]
     });
@@ -41,7 +48,14 @@ export class EditAttendanceComponent implements OnInit {
   }
 
   onSave() {
-
+    debugger;
+      this.eventAttendanceService.createOne(this.event.id, this.attendance).subscribe(success => {
+        if (success) {
+          this.onDone();
+        }
+      }, err => {
+        this.errorHandlingService.handleError(err);
+      });
   }
 
   onCancel() {
