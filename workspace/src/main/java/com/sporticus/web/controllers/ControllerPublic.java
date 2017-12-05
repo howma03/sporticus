@@ -9,23 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ControllerPublic {
 
-    @RequestMapping("/login")
-    public String login() {
-        return "public/login";
-    }
-
-    @RequestMapping("/home")
-    public String home() {
-        return "public/home";
-    }
-
-    @RequestMapping("/accessDenied")
-    public String accessDenied() {
-        return "public/accessDenied";
-    }
-
-    @RequestMapping("/error2")
+    @RequestMapping("/")
     public String errorHandler() {
-        return "public/error";
+        return "forward:/app/index.html";
     }
 }
