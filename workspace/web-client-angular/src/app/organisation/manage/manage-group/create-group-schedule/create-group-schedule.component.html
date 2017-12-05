@@ -1,0 +1,80 @@
+<div class="marquee-modal-window">
+
+  <div class="side-panel">
+    <div class="marquee-logo">
+      <i class="hpe-icon hpe-user hpe-5x text-secondary" aria-hidden="true"></i>
+    </div>
+
+    <div class="marquee-info-panel">
+      <h3 class="title">Group Event Schedule</h3>
+    </div>
+  </div>
+
+  <div class="main-panel">
+
+    <div class="marquee-header">
+      <h1 class="marquee-title">User</h1>
+    </div>
+
+    <div class="marquee-body case-modal">
+      <form #userForm="ngForm" (ngSubmit)="submit()">
+        <div class="form-group ">
+          <label class="form-label case-label">Name</label>
+
+          <input
+            type="text" placeholder="Enter Event Name" class="form-control" name="name"
+            [(ngModel)]="details.eventName"/>
+
+          <mat-form-field>
+            <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="details.dateFrom" name="dateFrom"
+                   placeholder="Choose a From Date">
+            <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+            <mat-datepicker #pickerFrom></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput [matDatepicker]="pickerTo" [(ngModel)]="details.dateTo" name="dateTo"
+                   placeholder="Choose a To Date">
+            <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+            <mat-datepicker #pickerTo></mat-datepicker>
+          </mat-form-field>
+
+          <mat-tab-group>
+            <mat-tab label="Members">
+              <div class="inner">
+
+                <app-manage-group-members class="inner" [organisationId]="organisationId" [group]="group">
+                </app-manage-group-members>
+
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Slots">
+              <div class="inner">
+                <!--
+                <app-manage-group-events class="inner" [group]="selectedGroup">
+                </app-manage-group-events>
+                -->
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Events">
+              <div class="inner">
+                <!--
+                <app-manage-group-events class="inner" [group]="selectedGroup">
+                </app-manage-group-events>
+                -->
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </form>
+    </div>
+
+    <div class="marquee-footer">
+      <button type="button" style="width: 80px" class="btn button-primary m-r-xs" type="submit">{{submitText}}
+      </button>
+      <button type="button" style="width: 80px;" class="btn button-secondary" (click)="cancel()">Cancel</button>
+    </div>
+  </div>
+</div>

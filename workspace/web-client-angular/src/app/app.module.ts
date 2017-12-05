@@ -17,6 +17,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {AuthModule} from "./auth/auth.module";
 import {MessageService} from 'primeng/components/common/messageservice';
 import {GrowlModule} from 'primeng/primeng';
+import {MatNativeDateModule} from "@angular/material";
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import {GrowlModule} from 'primeng/primeng';
     NotificationModule,
     // Keep routing module last!
     AppRoutingModule,
-    GrowlModule
+    GrowlModule,
+    MatNativeDateModule
   ],
   providers: [MessageService,
     {

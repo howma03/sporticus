@@ -28,23 +28,22 @@ export class CreateGroupEventComponent implements OnInit {
     this.group = this.data.group;
   }
 
-
-  makeUserChange() {
-    let user: Event = {
+  submit() {
+    const event: Event = {
       id: this.details.id,
       name: this.details.name,
       type: this.details.type
     };
 
     if (this.editMode === true) {
-      this.editUser(user);
+      this.performUpdateOperation(event);
     } else {
-      this.addUser(user);
+      this.performAddOperation(event);
     }
   }
 
-  addUser(user) {
-    this.groupEventService.createOne(this.group.id, user)
+  performAddOperation(entity) {
+    this.groupEventService.createOne(this.group.id, entity)
       .subscribe(success => {
         if (success) {
           this.closeWindow(true);
@@ -54,8 +53,8 @@ export class CreateGroupEventComponent implements OnInit {
       });
   }
 
-  editUser(user) {
-    this.groupEventService.updateOne(this.group.id, user.id, user)
+  performUpdateOperation(entity) {
+    this.groupEventService.updateOne(this.group.id, entity.id, entity)
       .subscribe(success => {
         if (success) {
           this.closeWindow(true);

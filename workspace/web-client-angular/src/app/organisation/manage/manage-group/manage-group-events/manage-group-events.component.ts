@@ -3,6 +3,7 @@ import {GroupEventService} from '../../../../services/group-event.service';
 import {CreateGroupEventComponent} from "../create-group-event/create-group-event.component";
 import {MatDialog} from "@angular/material";
 import {EventAttendanceDialogComponent} from "../../../../events/event-attendance-dialog/event-attendance-dialog.component";
+import {CreateGroupScheduleComponent} from "../create-group-schedule/create-group-schedule.component";
 
 @Component({
   selector: 'app-manage-group-events',
@@ -10,6 +11,12 @@ import {EventAttendanceDialogComponent} from "../../../../events/event-attendanc
   styleUrls: ['./manage-group-events.component.css']
 })
 export class ManageGroupEventsComponent implements OnInit {
+
+  private _organisationId: number;
+
+  get organisationId(): number {
+    return this._organisationId;
+  }
 
   get group() {
     return this._group;
@@ -24,6 +31,11 @@ export class ManageGroupEventsComponent implements OnInit {
   }
 
   private _group;
+
+  @Input()
+  set organisationId(value) {
+    this._organisationId = value;
+  }
 
   private events = [];
 
@@ -51,6 +63,24 @@ export class ManageGroupEventsComponent implements OnInit {
     let dialogRef = this.dialog.open(CreateGroupEventComponent, {
       data: {
         group: this.group
+      },
+      height: '900px',
+      width: '1200px',
+    });
+    dialogRef.afterClosed().subscribe((updateRequired) => {
+      if (updateRequired) {
+        this.getGroupEvents();
+      }
+    });
+  }
+
+  public openScheduleModal(itemId): void {
+    let item = this.events.find(item => item.id === itemId);
+
+    let dialogRef = this.dialog.open(CreateGroupScheduleComponent, {
+      data: {
+        group: this.group,
+        organisationId: this.organisationId
       },
       height: '900px',
       width: '1200px',

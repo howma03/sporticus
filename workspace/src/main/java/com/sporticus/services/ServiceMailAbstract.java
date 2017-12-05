@@ -9,7 +9,10 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
@@ -50,6 +53,18 @@ public abstract class ServiceMailAbstract implements IServiceMail {
     protected ServiceVelocityEngine velocityEngine;
 
     protected String alertMessage = "";
+
+	@Bean
+	@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	public Integer countRandom() {
+		return new Integer(/* rnd */01);
+	}
+
+	@Bean
+	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public Integer countSingleton() {
+		return new Integer(0);
+	}
 
     public ServiceMailAbstract() {
     }

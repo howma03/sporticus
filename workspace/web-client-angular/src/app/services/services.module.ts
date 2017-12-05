@@ -14,6 +14,7 @@ import {OrganisationGroupsService} from "./organisation-groups.service";
 import {GroupMemberService} from "./group-member.service";
 import {GroupEventService} from "./group-event.service";
 import {EventAttendanceService} from "./event-attendance.service";
+import {EventScheduleService} from "./event-schedule.service";
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import {EventAttendanceService} from "./event-attendance.service";
     PushService,
     LadderService,
     ProfileService,
-    AgendaService
+    AgendaService,
+    EventScheduleService
   ],
   declarations: [
   ]

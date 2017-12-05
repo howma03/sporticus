@@ -26,7 +26,6 @@ export class ManageGroupMainComponent implements OnInit {
   groupId: number = null;
   selectedGroup: Group = null;
 
-
   constructor(private dialog: MatDialog,
               private organisationGroupsService: OrganisationGroupsService
   ) {

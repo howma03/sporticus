@@ -4,7 +4,7 @@ import {ManageGroupMainComponent} from './manage-group-main/manage-group-main.co
 import {ManageGroupMembersComponent} from './manage-group-members/manage-group-members.component';
 import {ManageGroupDetailsComponent} from './manage-group-details/manage-group-details.component';
 import {ManageGroupEventsComponent} from './manage-group-events/manage-group-events.component';
-import {MatButtonModule, MatInputModule, MatSelectModule, MatTabsModule} from '@angular/material';
+import {MatButtonModule, MatDatepickerModule, MatInputModule, MatSelectModule, MatTabsModule} from '@angular/material';
 import {ServicesModule} from '../../../services/services.module';
 import {CreateGroupEventComponent} from './create-group-event/create-group-event.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -16,16 +16,17 @@ import {AddGroupMemberComponent} from './add-group-member/add-group-member.compo
 import {CreateGroupComponent} from './create-group/create-group.component';
 import {CreateGroupDialogComponent} from './create-group-dialog/create-group-dialog.component';
 import {EventAttendanceDialogComponent} from "../../../events/event-attendance-dialog/event-attendance-dialog.component";
+import {CreateGroupScheduleComponent} from './create-group-schedule/create-group-schedule.component';
 
 @NgModule({
   entryComponents: [
     EventAttendanceDialogComponent,
     EventAttendanceManagementComponent,
     AddGroupMemberDialogComponent,
-    CreateGroupDialogComponent
+    CreateGroupDialogComponent,
+    CreateGroupScheduleComponent
   ],
   imports: [
-
     CommonModule,
     EventsModule,
     MatTabsModule,
@@ -34,7 +35,8 @@ import {EventAttendanceDialogComponent} from "../../../events/event-attendance-d
     MatButtonModule,
     ReactiveFormsModule,
     FormsModule,
-    ServicesModule
+    ServicesModule,
+    MatDatepickerModule
   ],
   declarations: [
     ManageGroupMainComponent,
@@ -45,7 +47,8 @@ import {EventAttendanceDialogComponent} from "../../../events/event-attendance-d
     AddGroupMemberDialogComponent,
     AddGroupMemberComponent,
     CreateGroupComponent,
-    CreateGroupDialogComponent
+    CreateGroupDialogComponent,
+    CreateGroupScheduleComponent
   ],
   exports: [
     ManageGroupMainComponent
