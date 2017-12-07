@@ -1,5 +1,24 @@
-<br/><br/>
-Group description : {{group?.description}}<br/>
-Group type: {{group?.type}}<br/>
-Is enabled: {{group?.enabled}}<br/>
-Created: {{group?.createdString}}
+<br/>
+<form (ngSubmit)="onSave()" [formGroup]="groupForm">
+  <mat-form-field>
+    <input matInput placeholder="Name" name="name" formControlName="name" title="Group Name"/>
+    <mat-error *ngIf="name.hasError('required')">Please enter a name</mat-error>
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput placeholder="Description" name="description" formControlName="description" title="Group Description"/>
+    <mat-error *ngIf="description.hasError('required')">Please enter a description</mat-error>
+  </mat-form-field>
+  <br/>
+  <p>The group was created on {{group?.createdString}}</p><br/>
+  <p>Group type: {{group?.type}}</p><br/>
+  <p>Is enabled: {{group?.enabled}}</p><br/>
+
+  <br/>
+  <button type="submit" [disabled]="groupForm.pristine || !groupForm.valid" mat-raised-button>
+    Save
+  </button>
+  <button type="button" mat-raised-button (click)="onCancel()">
+    Reset
+  </button>
+</form>

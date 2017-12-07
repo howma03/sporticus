@@ -46,4 +46,9 @@ export class OrganisationGroupsService {
 export interface Group {
   id?: number;
   name?: string;
+  ownerOrganisationId?: number;
+  description?: string;
+  enabled?: boolean;
+  createdString?:string;
+  type?:string;
 }

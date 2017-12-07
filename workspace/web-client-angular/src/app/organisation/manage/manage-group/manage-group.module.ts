@@ -17,6 +17,7 @@ import {CreateGroupComponent} from './create-group/create-group.component';
 import {CreateGroupDialogComponent} from './create-group-dialog/create-group-dialog.component';
 import {EventAttendanceDialogComponent} from "../../../events/event-attendance-dialog/event-attendance-dialog.component";
 import {CreateGroupScheduleComponent} from './create-group-schedule/create-group-schedule.component';
+import {WizardModule} from "@ux-aspects/ux-aspects";
 
 @NgModule({
   entryComponents: [
@@ -36,7 +37,8 @@ import {CreateGroupScheduleComponent} from './create-group-schedule/create-group
     ReactiveFormsModule,
     FormsModule,
     ServicesModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    WizardModule
   ],
   declarations: [
     ManageGroupMainComponent,

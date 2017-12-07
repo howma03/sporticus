@@ -35,10 +35,11 @@ import {MatNativeDateModule} from "@angular/material";
     LadderModule,
     OrganisationModule,
     NotificationModule,
-    // Keep routing module last!
-    AppRoutingModule,
     GrowlModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    // Keep routing module last!
+    AppRoutingModule
+
   ],
   providers: [MessageService,
     {
