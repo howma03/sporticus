@@ -44,7 +44,6 @@ public class DemoDataLoader {
 	@Autowired
 	public DemoDataLoader(final IServiceUser serviceUser,
 	                      final IServiceGroup serviceGroup,
-	                      final IRepositoryGroupMember repositoryGroupMember,
 	                      final IServiceOrganisation serviceOrganisation,
 	                      final IServiceLadder serviceLadder) {
 		this.serviceUser = serviceUser;

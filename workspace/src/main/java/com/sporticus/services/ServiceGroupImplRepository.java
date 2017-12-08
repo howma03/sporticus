@@ -545,11 +545,11 @@ public class ServiceGroupImplRepository implements IServiceGroup {
     @Override
     public List<IGroupMember> getGroupMembershipsForGroup(IUser actor, final Long groupId) throws ServiceGroupExceptionNotAllowed,
             ServiceGroupExceptionNotFound {
-        final List<IGroupMember> list = new ArrayList<>();
-        repositoryGroupMember
+        return repositoryGroupMember
                 .findByGroupId(groupId)
-                .forEach(gm -> list.add(gm));
-        return list;
+                .stream()
+                .map(IGroupMember.class::cast)
+                .collect(Collectors.toList());
     }
 
     /***
@@ -571,7 +571,7 @@ public class ServiceGroupImplRepository implements IServiceGroup {
      * Determines whether a given user has access to a group (the user would need to be an admin, the group owner or a group admin
      * @param user
      * @param group
-     * @return Boolena
+     * @return Boolean
      */
     @Override
     public boolean isAllowedAccess(IUser actor, IUser user, IGroup group) throws ServiceGroupExceptionNotAllowed,

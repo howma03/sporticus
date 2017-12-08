@@ -27,11 +27,17 @@ public class ServiceRecapchaImpl implements IServiceRecapcha {
 	@Value("${recaptcha.site.key}")
 	private String sitekey = "";
 
-	// @Value("${recaptcha.private.key}")
-	private String secret = "6Lc5gzoUAAAAANJBFqqbzNS0m-MzOtTUZkfPuVhE";
+	@Value("${recaptcha.private.key}")
+	private String secret = "";
 
 	public ServiceRecapchaImpl() {
 
+	}
+
+	@PostConstruct
+	private void onInit() {
+		LOGGER.info(() -> "Constructed - recaptcha.site.key=" + sitekey);
+		LOGGER.info(() -> "Constructed - recaptcha.private.key=" + secret);
 	}
 
 	@Override
@@ -91,9 +97,4 @@ public class ServiceRecapchaImpl implements IServiceRecapcha {
 		}
 	}
 
-	@PostConstruct
-	private void onInit() {
-		LOGGER.info(() -> "Constructed - recaptcha.site.key=" + sitekey);
-		LOGGER.info(() -> "Constructed - recaptcha.private.key=" + secret);
-	}
 }
