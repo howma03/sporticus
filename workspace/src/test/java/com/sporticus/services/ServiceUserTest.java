@@ -6,6 +6,7 @@ import com.sporticus.domain.repositories.IRepositoryUser;
 import com.sporticus.interfaces.IServiceUser;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -25,6 +26,7 @@ import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class ServiceUserTest {
@@ -35,7 +37,6 @@ public class ServiceUserTest {
 	// We Autowired the beans so they are injected from the configuration
 	@Autowired
 	private IRepositoryUser repositoryUser;
-	private MockMvc mockMvc;
 
 	public static <T> void mockIterable(Iterable<T> iterable, T... values) {
 		Iterator<T> mockIterator = mock(Iterator.class);
@@ -97,7 +98,6 @@ public class ServiceUserTest {
 
 	@Before
 	public void setup() {
-		this.mockMvc = MockMvcBuilders.standaloneSetup(serviceUser).build();
 
 		User[] users = new User[10];
 		{
