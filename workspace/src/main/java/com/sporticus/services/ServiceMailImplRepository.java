@@ -1,6 +1,7 @@
 package com.sporticus.services;
 
 import com.sporticus.domain.entities.Message;
+import com.sporticus.domain.entities.User;
 import com.sporticus.domain.interfaces.IMessage.IMPORTANCE;
 import com.sporticus.domain.interfaces.IMessage.STATUS;
 import com.sporticus.domain.interfaces.IMessage.TYPE;
@@ -49,8 +50,11 @@ public class ServiceMailImplRepository extends ServiceMailAbstract implements IS
 
 		LOGGER.info(() -> String.format("Sending message - from=[%s], to=[%s]", from, to));
 
-		IUser sender = serviceUser.findUserByEmail(from);
 		IUser recipient = serviceUser.findUserByEmail(to);
+		IUser sender = serviceUser.findUserByEmail(from);
+		if(sender == null){
+			sender = recipient;
+		}
 
 		repositoryMessage.save((Message) new Message()
 				.setType(TYPE.EMAIL)

@@ -54,7 +54,7 @@ export class AuthService {
       return true;
     }).catch(err => {
       if (err instanceof HttpErrorResponse) {
-        if (err.status === 401) {
+        if (err.status === 401 || err.status == 403) {
           this.loggedIn = false;
           this.currentUser = null;
           return Observable.of(false);
@@ -76,7 +76,6 @@ export class AuthService {
       this.loggedIn = false;
       this.currentUser = null;
     })
-
   }
 }
 

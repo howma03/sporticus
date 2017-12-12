@@ -11,8 +11,11 @@ export class GroupMemberService {
   baseUrl = '/api/admin/group';
 
   public retrieveAll(groupId): Observable<User[]> {
-    const url = `${this.baseUrl}/${groupId}/member`;
-    return this.http.get<User[]>(url);
+    if(groupId){
+      const url = `${this.baseUrl}/${groupId}/member`;
+      return this.http.get<User[]>(url);
+    }
+    return new Observable<User[]>();
   }
 
   public addOne(groupId: number, member: User) {

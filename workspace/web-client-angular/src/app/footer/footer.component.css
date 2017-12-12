@@ -101,7 +101,7 @@
   .footer .col-custom.sm {
     float: left;
     width: 23%;
-    padding-top: 30px;
+    padding-top: 5px;
     clear: none;
   }
 }
@@ -119,10 +119,6 @@
 
   .footer .col-custom.md:first-child {
     padding-top: 0;
-  }
-
-  .footer .col-custom.md:last-child {
-    padding-top: 30px;
   }
 
   .footer .col-custom.sm {

@@ -126,22 +126,25 @@ public class ServiceRegistrationImplRepository implements IServiceRegistration {
             throw new ExceptionRegistrationFailure("Already Registered ");
         }
 
-        IUser newUser = null;
         try {
-            newUser = new User(userIn);
+            IUser newUser = new User(userIn);
 
             newUser.setPassword(ENCODER.encode(userIn.getPassword()));
+            newUser.setEnabled(false);
 
             newUser = userService.addUser(newUser);
 
             mailService.sendVerificationEmailForInvitation(newUser, inviter, group);
 
-        } catch(InvocationTargetException | IllegalAccessException | RuntimeException e) {
-            newUser.setEnabled(false);
+            newUser.setEnabled(true);
+
             userService.updateUser(newUser);
+
+            return newUser;
+
+        } catch(InvocationTargetException | IllegalAccessException | RuntimeException e) {
             throw new ExceptionRegistrationFailure("Registration failed", e);
         }
-        return newUser;
     }
 
     @Override

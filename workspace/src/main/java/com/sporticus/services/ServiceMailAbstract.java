@@ -93,7 +93,7 @@ public abstract class ServiceMailAbstract implements IServiceMail {
         this.velocityEngine = velocityEngine;
     }
 
-    private void sendEmail(final IUser user, final String inSubject, final String inTemplate, final Map<String, Object> values) {
+    private void sendEmail(final String fromEmail, final IUser to, final String inSubject, final String inTemplate, final Map<String, Object> values) {
         final Properties props = new Properties();
         props.setProperty("resource.loader", "class");
         props.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
@@ -115,7 +115,11 @@ public abstract class ServiceMailAbstract implements IServiceMail {
 
         final String inBody = writer.toString();
 
-        sendEmail(emailAddressForSender, user.getEmail(), inSubject, inBody);
+        sendEmail(fromEmail, to.getEmail(), inSubject, inBody);
+    }
+
+    private void sendEmail(final IUser to, final String inSubject, final String inTemplate, final Map<String, Object> values) {
+        sendEmail(emailAddressForSender, to, inSubject, inTemplate, values);
     }
 
     private void sendEmail(final IUser user, final String inSubject, final String inBody) {
@@ -194,8 +198,9 @@ public abstract class ServiceMailAbstract implements IServiceMail {
             sendEmail(user, inSubject, TEMPLATE_LOCATION_FOR_PASSWORD_RESET, values);
 
         } catch(final RuntimeException e) {
-            LOGGER.error(() -> "sendPasswordResetEmail failed - user=" + user);
-            throw new RuntimeException("sendPasswordResetEmail failed - user=" + user, e);
+            String message = "sendPasswordResetEmail failed - user=" + user;
+            LOGGER.error(() -> message);
+            throw new RuntimeException(message, e);
         }
     }
 
@@ -209,8 +214,9 @@ public abstract class ServiceMailAbstract implements IServiceMail {
             values.putAll(getValues(user));
             sendEmail(user, inSubject, inTemplateName, values);
         } catch(final RuntimeException e) {
-            LOGGER.error(() -> "sendGenericEmailFromTemplate failed - user=" + user);
-            throw new RuntimeException("sendGenericEmailFromTemplate failed - user=" + user, e);
+            String message = "sendGenericEmailFromTemplate failed - user=" + user;
+            LOGGER.error(() -> message);
+            throw new RuntimeException(message, e);
         }
     }
 }

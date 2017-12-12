@@ -38,7 +38,6 @@ public class RestControllerOrganisation extends ControllerAbstract {
     private IServiceGroup serviceGroup;
 
     public RestControllerOrganisation() {
-
     }
 
     /**

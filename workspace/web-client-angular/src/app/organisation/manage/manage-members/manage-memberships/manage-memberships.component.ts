@@ -48,8 +48,11 @@ export class ManageMembershipsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      debugger;
       if (result === true) {
         this.removeUser(item.id);
+      } else {
+        this.loadUsers();
       }
     });
   }

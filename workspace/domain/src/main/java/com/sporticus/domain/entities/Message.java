@@ -160,7 +160,7 @@ public class Message implements IMessage {
 	}
 
 	@Override
-	public IMessage setSubject(String title) {
+	public IMessage setSubject(String subject) {
 		this.subject = subject;
 		return this;
 	}

@@ -1,5 +1,8 @@
 package com.sporticus.web.config;
 
+import com.sporticus.util.logging.LogFactory;
+import com.sporticus.util.logging.Logger;
+import com.sporticus.web.controllers.ControllerAbstract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +17,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.session.InvalidSessionStrategy;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ConfigurationSecurity extends WebSecurityConfigurerAdapter {
+
+    private static final Logger LOGGER = LogFactory.getLogger(ConfigurationSecurity.class.getName());
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -38,8 +49,8 @@ public class ConfigurationSecurity extends WebSecurityConfigurerAdapter {
 //    }
 
     @Autowired
-    public ConfigurationSecurity(final UserDetailsService svc) {
-        this.userDetailsService = svc;
+    public ConfigurationSecurity(final UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
     @Autowired
@@ -59,8 +70,13 @@ public class ConfigurationSecurity extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
         http.sessionManagement().maximumSessions(2);
-        http.sessionManagement()
-                .invalidSessionUrl("/invalidSession.html");
+        http.sessionManagement().invalidSessionStrategy(new InvalidSessionStrategy() {
+            @Override
+            public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+                LOGGER.debug(()->"Invalid session seen");
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            }
+        });
 
         http.httpBasic().and()
 
@@ -69,7 +85,6 @@ public class ConfigurationSecurity extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
 
-                .antMatchers("**").permitAll()
                 .antMatchers("/resources/**").permitAll()
                 .antMatchers("/papi/**").permitAll()
                 .antMatchers("/app*").permitAll()

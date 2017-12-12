@@ -11,6 +11,6 @@ public class ControllerPublic {
 
     @RequestMapping("/")
     public String errorHandler() {
-	    return "forward:app/index.html";
+	    return "app/index.html";
     }
 }

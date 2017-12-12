@@ -408,12 +408,12 @@ public class ServiceGroupImplRepository implements IServiceGroup {
 
             LOGGER.info(() -> "Creating a User account for the new user - email=" + newUser.getEmail());
 
-            user.setPassword(passwordGenerator.generate());
-            user.setVerified(false);
+            newUser.setPassword(passwordGenerator.generate());
+            newUser.setVerified(false);
 
             // Register the user - send an email for membership invitation
 
-            user = serviceRegistration.registerWithInvitation(actor, user, inviter, group);
+            user = serviceRegistration.registerWithInvitation(actor, newUser, inviter, group);
 
         } else {
 

@@ -86,10 +86,10 @@ dependencies {
 	compile 'mysql:mysql-connector-java:5.1.39'
 
 	// Mail related
-    compile 'org.apache.velocity:velocity:1.7'
-    compile 'com.amazonaws:aws-java-sdk:1.8.3'
     compile 'javax.mail:mail:1.4.7'
     compile 'javax.mail:javax.mail-api:1.5.5'
+    compile 'org.apache.velocity:velocity:1.7'
+    compile 'com.amazonaws:aws-java-sdk:1.8.3'
 
     // Version file related
     compile 'com.googlecode.json-simple:json-simple:1.1.1'

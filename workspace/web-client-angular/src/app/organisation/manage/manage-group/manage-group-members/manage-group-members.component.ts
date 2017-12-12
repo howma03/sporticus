@@ -56,19 +56,22 @@ export class ManageGroupMembersComponent implements OnInit {
 
 
   showAddMemberDialog() {
-    // this.dialogRef =
-    this.dialog.open(AddGroupMemberDialogComponent, {
+    const dialogRef = this.dialog.open(AddGroupMemberDialogComponent, {
       data: {
         groupId: this.groupId,
         organisationId: this.organisationId,
         members: this.members
       }
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getGroupMembers();
+    });
   }
 
   openDeleteDialog(user: User) {
     const title = 'Confirm Removal';
-    const description = `Are you sure you want to remove the user from your organisation? - ${user.firstName} ${user.lastName}`;
+    const description = `Are you sure you want to remove the user: "${user.firstName} ${user.lastName}" from the group?`;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
