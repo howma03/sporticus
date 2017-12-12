@@ -64,7 +64,7 @@ public class DemoDataLoader {
 
 		LOGGER.debug(() -> "Checking users");
 		List<IUser> users = serviceUser.getAll();
-		if (users.size() == 1) {
+		if (users.size() == 0) {
 			users.addAll(generateUsers());
 		}
 
@@ -96,6 +96,15 @@ public class DemoDataLoader {
 		List<IUser> users = serviceUser.getAll();
 		LOGGER.debug(() -> "Adding some users");
 
+		addUser(users, new User()
+				.setAdmin(false)
+				.setFirstName("Test")
+				.setLastName("Test")
+				.setEmail("test@sporticus.com")
+				.setPassword(passwordEncoder.encode("S0uthern"))
+				.setVerified(true)
+				.setAdmin(true)
+				.setEnabled(true));
 		addUser(users, new User()
 				.setAdmin(false)
 				.setFirstName("Angela")
@@ -145,6 +154,7 @@ public class DemoDataLoader {
 					org = new Organisation()
 							.setEnabled(true)
 							.setCreated(new Date())
+							.setOwnerId(actor.getId())
 							.setAddress("Somewhere town")
 							.setName("Test Organisation")
 							.setOwnerId(users.get(0).getId())
@@ -157,7 +167,7 @@ public class DemoDataLoader {
 				// Create a ladder group
 
 				for (int i = 0; i < 2; i++) {
-					IGroup group = serviceLadder.createLadder(null,
+					IGroup group = serviceLadder.createLadder(actor,
 							"My Ladder Group " + i,
 							"Example ladder competition",
 							org);

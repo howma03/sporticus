@@ -61,13 +61,15 @@ public class ServiceOrganisationImplRepository implements IServiceOrganisation {
             organisation.setOwnerId(actor.getId());
         }
 
-        final Organisation newOrganisation = new Organisation();
+        Organisation newOrganisation = new Organisation();
         IOrganisation.COPY(organisation, newOrganisation);
 
-        // Create a group for the organisation's members
-        serviceGroup.createGroup(actor, organisation, createMembersGroup(organisation));
+        newOrganisation = repositoryOrganisation.save(newOrganisation);
 
-        return repositoryOrganisation.save(newOrganisation);
+		// Create a group for the organisation's members
+		serviceGroup.createGroup(actor, newOrganisation, createMembersGroup(newOrganisation));
+
+        return newOrganisation;
     }
 
     @Override
